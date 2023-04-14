@@ -59,7 +59,7 @@
                             <th>{{ __('adminstaticword.User') }}</th>
                             <th>{{ __('adminstaticword.Heading') }}</th>
                             <th>{{ __('adminstaticword.Detail') }}</th>
-                            <th>{{ __('adminstaticword.Text') }}</th>
+                            {{-- <th>{{ __('adminstaticword.Text') }}</th> --}}
                             @if(Auth::user()->role == 'admin')
                             <th>{{ __('adminstaticword.Approved') }}</th>
                             <th>{{ __('adminstaticword.Status') }}</th>
@@ -119,9 +119,9 @@
                                 <td style="width:100%">
                                  {{ preg_replace("/\r\n|\r|\n/",'',strip_tags(html_entity_decode(str_limit($item->detail, 60)))) }}
                                 </td>
-                                <td>
+                                {{-- <td>
                                   {{$item->text}}
-                                </td>
+                                </td> --}}
                                 
                                 @if(Auth::user()->role == 'admin')
                                 <td>

@@ -84,7 +84,7 @@
                                                     </div>
 
                                                      <!-- ButtonText -->
-                                                     <div class="col-md-6">
+                                                    {{-- <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label class="text-dark">{{ __('adminstaticword.ButtonText') }} : <span class="text-danger">*</span></label>
                                                             <input type="text" value="{{ old('text') }}" autofocus="" class="form-control @error('title') is-invalid @enderror" placeholder="{{ __('adminstaticword.Enter') }} {{ __('adminstaticword.ButtonText') }}" name="text" required="">
@@ -94,7 +94,7 @@
                                                                 </span>
                                                             @enderror
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
 
                                                    
 

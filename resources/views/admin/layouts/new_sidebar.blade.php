@@ -522,14 +522,14 @@
 								</li>
 							@endcan
 							<!-- pages start -->
-							@can(['pages.view'])
+							{{-- @can(['pages.view'])
 								<li class="{{ Nav::isResource('page') }}">
 									<a href="{{ url('page') }}" class="menu">
 										<i class="feather icon-file-text text-secondary"></i>
 										<span>{{ __('Pages') }}</span>
 									</a>
 								</li>
-							@endcan
+							@endcan --}}
 							<!-- pages end -->
 							<!-- report start  -->
 							@canany(['report.progress-report.manage', 'report.revenue-admin-report.manage', 'report.revenue-instructor-report.manage'])
@@ -712,12 +712,12 @@
 							<!-- front setting start  -->
 							@canany([
 								'front-settings.testimonial.view',
-								'front-settings.advertisement.view',
+								// 'front-settings.advertisement.view',
 								'front-settings.sliders.view',
 								'front-settings.fact-slider.view',
 								'category-sliders.manage',
 								'get-started.manage',
-								'widget.manage',
+								// 'widget.manage',
 								// 'front-settings.seo-directory.view',
 								'coming-soon.manage',
 								'terms-condition.manage',
@@ -733,10 +733,10 @@
 									class="{{ Nav::isResource('testimonial') }} {{ Nav::isResource('advertisement') }} {{ Nav::isResource('slider') }} {{ Nav::isResource('facts') }} {{ Nav::isRoute('category.slider') }} {{ Nav::isResource('getstarted') }} {{ Nav::isResource('trusted') }} {{ Nav::isRoute('widget.setting') }} {{ Nav::isRoute('terms') }} {{ Nav::isResource('directory') }} {{ Nav::isRoute('videosetting') }} {{ Nav::isRoute('breadcum') }} {{ Nav::isRoute('fact') }} {{ Nav::isRoute('joininstructor') }}">
 									<a href="javaScript:void();" class="menu"><i class="feather icon-monitor text-secondary"></i>
 										<span>{{ __('adminstaticword.FrontSetting') }}<div class="sub-menu truncate">
-												Testimonial, Advertisement, Slider, Fact Slider, Category Slider,
+												Testimonial, Slider, Fact Slider, Category Slider,
 												Get
 												Started,
-												Widget,
+												{{-- Widget, --}}
 												{{-- Seo Directory,  --}}
 												Coming Soon, Terms & Condition, Privacy
 												Policy, Login/Signup, Videosetting, Breadcumsetting,
@@ -750,10 +750,10 @@
 											<li class="{{ Nav::isResource('testimonial') }}"><a href="{{ url('testimonial') }}"><span>{{ __('adminstaticword.Testimonial') }}</span></a>
 											</li>
 										@endcan
-										@can(['front-settings.advertisement.view'])
+										{{-- @can(['front-settings.advertisement.view'])
 											<li class="{{ Nav::isResource('advertisement') }}"><a href="{{ url('advertisement') }}"><span>{{ __('adminstaticword.Advertisement') }}</span></a>
 											</li>
-										@endcan
+										@endcan --}}
 										@can(['front-settings.sliders.view'])
 											<li class="{{ Nav::isResource('slider') }}"><a href="{{ url('slider') }}"><span>{{ __('adminstaticword.Slider') }}</span></a>
 											</li>
@@ -777,10 +777,10 @@
                                                 href="{{ url('trusted') }}"><span>{{ __('adminstaticword.TrustedSlider') }}</span></a>
                                         </li>
                                     @endcan --}}
-										@can(['widget.manage'])
+										{{-- @can(['widget.manage'])
 											<li class="{{ Nav::isRoute('widget.setting') }}"><a href="{{ route('widget.setting') }}">{{ __('Widget') }}</a>
 											</li>
-										@endcan
+										@endcan --}}
 										{{-- @can(['front-settings.seo-directory.view'])
                                         <li class="{{ Nav::isResource('directory') }}"><a
                                                 href="{{ url('directory') }}"><span>{{ __('adminstaticword.Seo') }}

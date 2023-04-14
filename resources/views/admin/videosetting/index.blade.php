@@ -41,7 +41,7 @@
                                 {{ __('Please enter Url!') }}.
                             </div>
                         </div> 
-                        <div class="form-group col-md-12">
+                        {{-- <div class="form-group col-md-12">
                             <label class="text-dark">{{ __('Tittle') }}:</label>
                             <input name="tittle" value="{{ $videosetting->tittle }}" autofocus="" type="text"
                                 class="{{ $errors->has('text') ? ' is-invalid' : '' }} form-control"
@@ -49,8 +49,8 @@
                             <div class="invalid-feedback">
                                 {{ __('Please enter tittle!') }}.
                             </div>
-                        </div>
-                        <div class="form-group col-md-12">
+                        </div> --}}
+                        {{-- <div class="form-group col-md-12">
                             <label class="text-dark">{{ __('Description') }}:</label>
                             <input name="description" value="{{ $videosetting->description }}" autofocus="" type="text"
                                 class="{{ $errors->has('description') ? ' is-invalid' : '' }} form-control"
@@ -58,8 +58,8 @@
                             <div class="invalid-feedback">
                                 {{ __('Please enter description!') }}.
                             </div>
-                        </div>
-                        <div class="form-group col-md-12">
+                        </div> --}}
+                        {{-- <div class="form-group col-md-12">
                             <label class="text-dark" for="exampleInputSlug">{{ __('adminstaticword.Image') }}:
                             </label>
                             <div class="input-group mb-3">
@@ -82,7 +82,7 @@
                             <img src="{{ Avatar::create($videosetting->tittle)->toBase64() }}" alt="course"
                                 class="img-fluid">
                             @endif
-                        </div>
+                        </div> --}}
                     </div>
                     <div class="form-group">
                         <button type="reset" class="btn btn-danger-rgba mr-1"><i class="fa fa-ban"></i>

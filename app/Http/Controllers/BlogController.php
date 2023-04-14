@@ -48,7 +48,7 @@ class BlogController extends Controller
             'date' => 'required',
             'image' => 'required',
             'heading' => 'required',
-            'text' => 'required',
+            // 'text' => 'required',
             'detail' => 'required',
         ]);
 
