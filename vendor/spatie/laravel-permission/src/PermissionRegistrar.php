@@ -61,7 +61,7 @@ class PermissionRegistrar
     /**
      * PermissionRegistrar constructor.
      *
-     * @param  \Illuminate\Cache\CacheManager  $cacheManager
+     * @param \Illuminate\Cache\CacheManager $cacheManager
      */
     public function __construct(CacheManager $cacheManager)
     {
@@ -109,7 +109,7 @@ class PermissionRegistrar
     /**
      * Set the team id for teams/groups support, this id is used when querying permissions/roles
      *
-     * @param  int|string|\Illuminate\Database\Eloquent\Model  $id
+     * @param int|string|\Illuminate\Database\Eloquent\Model $id
      */
     public function setPermissionsTeamId($id)
     {
@@ -120,6 +120,7 @@ class PermissionRegistrar
     }
 
     /**
+     *
      * @return int|string
      */
     public function getPermissionsTeamId()
@@ -198,8 +199,9 @@ class PermissionRegistrar
     /**
      * Get the permissions based on the passed params.
      *
-     * @param  array  $params
-     * @param  bool  $onlyOne
+     * @param array $params
+     * @param bool $onlyOne
+     *
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getPermissions(array $params = [], bool $onlyOne = false): Collection
@@ -257,7 +259,7 @@ class PermissionRegistrar
     public function setRoleClass($roleClass)
     {
         $this->roleClass = $roleClass;
-        config()->set('permission.models.role', $roleClass);
+        config()->set('permission.models.role',  $roleClass);
         app()->bind(Role::class, $roleClass);
 
         return $this;
@@ -271,11 +273,6 @@ class PermissionRegistrar
     public function getCacheStore(): Store
     {
         return $this->cache->getStore();
-    }
-
-    protected function getPermissionsWithRoles(): Collection
-    {
-        return $this->getPermissionClass()->select()->with('roles')->get();
     }
 
     /**
@@ -313,9 +310,9 @@ class PermissionRegistrar
      */
     private function getSerializedPermissionsForCache()
     {
-        $this->except = config('permission.cache.column_names_except', ['created_at', 'updated_at', 'deleted_at']);
+        $this->except = config('permission.cache.column_names_except', ['created_at','updated_at', 'deleted_at']);
 
-        $permissions = $this->getPermissionsWithRoles()
+        $permissions = $this->getPermissionClass()->select()->with('roles')->get()
             ->map(function ($permission) {
                 if (! $this->alias) {
                     $this->aliasModelFields($permission);

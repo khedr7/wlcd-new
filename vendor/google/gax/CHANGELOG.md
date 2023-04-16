@@ -1,34 +1,5 @@
 # Changelog
 
-## [1.19.0](https://github.com/googleapis/gax-php/compare/v1.18.2...v1.19.0) (2023-01-27)
-
-
-### Features
-
-* Ensure cache is used in calls to ADC::onGCE ([#441](https://github.com/googleapis/gax-php/issues/441)) ([64a4184](https://github.com/googleapis/gax-php/commit/64a4184ab69d13104d269b15a55d4b8b2515b5a6))
-
-## [1.18.2](https://github.com/googleapis/gax-php/compare/v1.18.1...v1.18.2) (2023-01-06)
-
-
-### Bug Fixes
-
-* Ensure metadata return type is loaded into descriptor pool ([#439](https://github.com/googleapis/gax-php/issues/439)) ([a40cf8d](https://github.com/googleapis/gax-php/commit/a40cf8d87ac9aa45d18239456e2e4c96653f1a6c))
-* Implicit conversion from float to int warning ([#438](https://github.com/googleapis/gax-php/issues/438)) ([1cb62ad](https://github.com/googleapis/gax-php/commit/1cb62ad3d92ace0518017abc972e912b339f1b56))
-
-## [1.18.1](https://github.com/googleapis/gax-php/compare/v1.18.0...v1.18.1) (2022-12-06)
-
-
-### Bug Fixes
-
-* Message parameters in required querystring ([#430](https://github.com/googleapis/gax-php/issues/430)) ([77bc5e1](https://github.com/googleapis/gax-php/commit/77bc5e1cb8f347601d9237bf5164cf8b8ad8aa0f))
-
-## [1.18.0](https://github.com/googleapis/gax-php/compare/v1.17.0...v1.18.0) (2022-12-05)
-
-
-### Features
-
-* Add ResourceHelperTrait ([#428](https://github.com/googleapis/gax-php/issues/428)) ([0439efa](https://github.com/googleapis/gax-php/commit/0439efa926865be5fea25b699469b0c1f8c1c768))
-
 ## [1.17.0](https://github.com/googleapis/gax-php/compare/v1.16.4...v1.17.0) (2022-09-08)
 
 

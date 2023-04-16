@@ -180,7 +180,6 @@ class TollfreeVerificationList extends ListResource {
             'BusinessContactLastName' => $options['businessContactLastName'],
             'BusinessContactEmail' => $options['businessContactEmail'],
             'BusinessContactPhone' => $options['businessContactPhone'],
-            'ExternalReferenceId' => $options['externalReferenceId'],
         ]);
 
         $payload = $this->version->create('POST', $this->uri, [], $data);

@@ -2,10 +2,10 @@
 
 namespace Imanghafoori\LaravelMicroscope\Analyzers;
 
-use ImanGhafoori\ComposerJson\NamespaceCalculator;
 use Imanghafoori\Filesystem\FileManipulator;
 use Imanghafoori\Filesystem\Filesystem;
 use Imanghafoori\LaravelMicroscope\ForPsr4LoadedClasses;
+use Imanghafoori\LaravelMicroscope\Psr4\NamespaceCorrector;
 use Imanghafoori\SearchReplace\Searcher;
 use Imanghafoori\TokenAnalyzer\ParseUseStatement;
 
@@ -26,28 +26,22 @@ class Fixer
 
         $correct = self::guessCorrect($classBaseName);
 
-        if (count($correct) !== 1) {
+        if (\count($correct) !== 1) {
             return [false, $correct];
         }
         $fullClassPath = $correct[0];
 
-        $contextClassNamespace = ComposerJson::make()->getNamespacedClassFromPath($absPath);
+        $contextClassNamespace = NamespaceCorrector::getNamespacedClassFromPath($absPath);
 
-        if (NamespaceCalculator::haveSameNamespace($contextClassNamespace, $fullClassPath)) {
+        if (NamespaceCorrector::haveSameNamespace($contextClassNamespace, $fullClassPath)) {
             return [self::doReplacement($absPath, $inlinedClassRef, class_basename($fullClassPath), $lineNum), $correct];
         }
 
         $uses = ParseUseStatement::parseUseStatements(token_get_all(file_get_contents($absPath)))[1];
 
         // if there is some use statements at the top but the class is not imported.
-        if (count($uses) === 0 || isset($uses[$classBaseName])) {
-            if (count($uses) === 0 && $fullClassPath[0] !== '\\') {
-                $fullClassPath = '\\'.$fullClassPath;
-            }
-
-            if (isset($uses[$classBaseName]) && $uses[$classBaseName][0] === $fullClassPath) {
-                $fullClassPath = $classBaseName;
-            }
+        if (! count($uses) || isset($uses[$classBaseName])) {
+            isset($uses[$classBaseName]) && ($fullClassPath = $classBaseName);
 
             return [self::doReplacement($absPath, $inlinedClassRef, $fullClassPath, $lineNum), $correct];
         }
@@ -74,9 +68,9 @@ class Fixer
         }
 
         $tokens = token_get_all(file_get_contents($absPath));
-        $hostNamespacedClass = ComposerJson::make()->getNamespacedClassFromPath($absPath);
+        $hostNamespacedClass = NamespaceCorrector::getNamespacedClassFromPath($absPath);
         // We just remove the wrong import if it is not needed.
-        if (! $isAliased && NamespaceCalculator::haveSameNamespace($hostNamespacedClass, $correct[0])) {
+        if (! $isAliased && NamespaceCorrector::haveSameNamespace($hostNamespacedClass, $correct[0])) {
             return [self::replaceSave("use $import;", '', $tokens, $absPath), [' Deleted!']];
         }
 
@@ -97,17 +91,17 @@ class Fixer
         return $lines;
     }
 
-    private static function doReplacement($absPath, $wrongRef, $correctRef, $lineNum)
+    private static function doReplacement($absPath, $inlinedClassRef, $classBaseName, $lineNum)
     {
         if (version_compare(PHP_VERSION, '8.0.0') === 1) {
-            return FileManipulator::replaceFirst($absPath, $wrongRef, $correctRef, $lineNum);
+            return FileManipulator::replaceFirst($absPath, $inlinedClassRef, $classBaseName, $lineNum);
         }
 
         $tokens = token_get_all(file_get_contents($absPath));
         [$newVersion, $lines] = Searcher::searchReplace([
             'fix' => [
-                'search' => $wrongRef,
-                'replace' => $correctRef,
+                'search' => $inlinedClassRef,
+                'replace' => $classBaseName,
             ],
         ], $tokens);
         Filesystem::$fileSystem::file_put_contents($absPath, $newVersion);

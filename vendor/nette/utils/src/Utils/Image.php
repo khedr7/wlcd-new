@@ -393,8 +393,7 @@ class Image
 		$newWidth,
 		$newHeight,
 		int $flags = self::FIT
-	): array
-	{
+	): array {
 		if ($newWidth === null) {
 		} elseif (self::isPercent($newWidth)) {
 			$newWidth = (int) round($srcWidth / 100 * abs($newWidth));

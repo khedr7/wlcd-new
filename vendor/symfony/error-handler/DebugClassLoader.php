@@ -56,7 +56,7 @@ class DebugClassLoader
         'null' => 'null',
         'resource' => 'resource',
         'boolean' => 'bool',
-        'true' => 'true',
+        'true' => 'bool',
         'false' => 'false',
         'integer' => 'int',
         'array' => 'array',
@@ -74,7 +74,6 @@ class DebugClassLoader
         '$this' => 'static',
         'list' => 'array',
         'class-string' => 'string',
-        'never' => 'never',
     ];
 
     private const BUILTIN_RETURN_TYPES = [
@@ -92,9 +91,6 @@ class DebugClassLoader
         'parent' => true,
         'mixed' => true,
         'static' => true,
-        'null' => true,
-        'true' => true,
-        'never' => true,
     ];
 
     private const MAGIC_METHODS = [
@@ -766,12 +762,6 @@ class DebugClassLoader
             return;
         }
 
-        if ('null' === $types) {
-            self::$returnTypes[$class][$method] = ['null', 'null', $class, $filename];
-
-            return;
-        }
-
         if ($nullable = 0 === strpos($types, 'null|')) {
             $types = substr($types, 5);
         } elseif ($nullable = '|null' === substr($types, -5)) {
@@ -1090,20 +1080,7 @@ EOTXT;
         }
 
         $end = $method->isGenerator() ? $i : $method->getEndLine();
-        $inClosure = false;
-        $braces = 0;
         for (; $i < $end; ++$i) {
-            if (!$inClosure) {
-                $inClosure = str_contains($code[$i], 'function (');
-            }
-
-            if ($inClosure) {
-                $braces += substr_count($code[$i], '{') - substr_count($code[$i], '}');
-                $inClosure = $braces > 0;
-
-                continue;
-            }
-
             if ('void' === $returnType) {
                 $fixedCode[$i] = str_replace('    return null;', '    return;', $code[$i]);
             } elseif ('mixed' === $returnType || '?' === $returnType[0]) {

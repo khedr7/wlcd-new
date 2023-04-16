@@ -86,7 +86,7 @@ class Paystack
      */
     private function setRequestOptions()
     {
-        $authBearer = 'Bearer ' . $this->secretKey;
+        $authBearer = 'Bearer '. $this->secretKey;
 
         $this->client = new Client(
             [
@@ -101,7 +101,7 @@ class Paystack
     }
 
 
-    /**
+     /**
 
      * Initiate a payment request to Paystack
      * Included the option to pass the payload to this method for situations
@@ -109,9 +109,9 @@ class Paystack
      * @return Paystack
      */
 
-    public function makePaymentRequest($data = null)
+    public function makePaymentRequest( $data = null)
     {
-        if ($data == null) {
+        if ( $data == null ) {
 
             $quantity = intval(request()->quantity ?? 1);
 
@@ -205,16 +205,16 @@ class Paystack
      * Get the authorization url from the callback response
      * @return Paystack
      */
-    public function getAuthorizationUrl($data = null)
+    public function getAuthorizationUrl()
     {
-        $this->makePaymentRequest($data);
+        $this->makePaymentRequest();
 
         $this->url = $this->getResponse()['data']['authorization_url'];
 
         return $this;
     }
 
-    /**
+     /**
      * Get the authorization callback response
      * In situations where Laravel serves as an backend for a detached UI, the api cannot redirect
      * and might need to take different actions based on the success or not of the transaction
@@ -232,9 +232,9 @@ class Paystack
     /**
      * Hit Paystack Gateway to Verify that the transaction is valid
      */
-    private function verifyTransactionAtGateway($transaction_id = null)
+    private function verifyTransactionAtGateway()
     {
-        $transactionRef = $transaction_id ?? request()->query('trxref');
+        $transactionRef = request()->query('trxref');
 
         $relativeUrl = "/transaction/verify/{$transactionRef}";
 
@@ -245,9 +245,9 @@ class Paystack
      * True or false condition whether the transaction is verified
      * @return boolean
      */
-    public function isTransactionVerificationValid($transaction_id = null)
+    public function isTransactionVerificationValid()
     {
-        $this->verifyTransactionAtGateway($transaction_id);
+        $this->verifyTransactionAtGateway();
 
         $result = $this->getResponse()['message'];
 
@@ -375,6 +375,7 @@ class Paystack
         $this->setRequestOptions();
 
         return $this->setHttpResponse("/plan", 'POST', $data)->getResponse();
+
     }
 
     /**
@@ -435,7 +436,7 @@ class Paystack
     public function fetchCustomer($customer_id)
     {
         $this->setRequestOptions();
-        return $this->setHttpResponse('/customer/' . $customer_id, 'GET', [])->getResponse();
+        return $this->setHttpResponse('/customer/'. $customer_id, 'GET', [])->getResponse();
     }
 
     /**
@@ -455,7 +456,7 @@ class Paystack
         ];
 
         $this->setRequestOptions();
-        return $this->setHttpResponse('/customer/' . $customer_id, 'PUT', $data)->getResponse();
+        return $this->setHttpResponse('/customer/'. $customer_id, 'PUT', $data)->getResponse();
     }
 
     /**
@@ -565,7 +566,7 @@ class Paystack
     public function fetchSubscription($subscription_id)
     {
         $this->setRequestOptions();
-        return $this->setHttpResponse('/subscription/' . $subscription_id, 'GET', [])->getResponse();
+        return $this->setHttpResponse('/subscription/'.$subscription_id, 'GET', [])->getResponse();
     }
 
     /**
@@ -601,7 +602,7 @@ class Paystack
     public function fetchPage($page_id)
     {
         $this->setRequestOptions();
-        return $this->setHttpResponse('/page/' . $page_id, 'GET', [])->getResponse();
+        return $this->setHttpResponse('/page/'.$page_id, 'GET', [])->getResponse();
     }
 
     /**
@@ -618,17 +619,16 @@ class Paystack
         ];
 
         $this->setRequestOptions();
-        return $this->setHttpResponse('/page/' . $page_id, 'PUT', $data)->getResponse();
+        return $this->setHttpResponse('/page/'.$page_id, 'PUT', $data)->getResponse();
     }
 
-    /**
+     /**
      * Creates a subaccount to be used for split payments . Required    params are business_name , settlement_bank , account_number ,   percentage_charge
      *
      * @return array
      */
 
-    public function createSubAccount()
-    {
+    public function createSubAccount(){
         $data = [
             "business_name" => request()->business_name,
             "settlement_bank" => request()->settlement_bank,
@@ -643,30 +643,31 @@ class Paystack
 
         $this->setRequestOptions();
         return $this->setHttpResponse('/subaccount', 'POST', array_filter($data))->getResponse();
+
     }
 
-    /**
+     /**
      * Fetches details of a subaccount
      * @param subaccount code
      * @return array
      */
-    public function fetchSubAccount($subaccount_code)
-    {
+    public function fetchSubAccount($subaccount_code){
 
         $this->setRequestOptions();
-        return $this->setHttpResponse("/subaccount/{$subaccount_code}", "GET", [])->getResponse();
+        return $this->setHttpResponse("/subaccount/{$subaccount_code}","GET",[])->getResponse();
+
     }
 
-    /**
+     /**
      * Lists all the subaccounts associated with the account
      * @param $per_page - Specifies how many records to retrieve per page , $page - SPecifies exactly what page to retrieve
      * @return array
      */
-    public function listSubAccounts($per_page, $page)
-    {
+    public function listSubAccounts($per_page,$page){
 
         $this->setRequestOptions();
-        return $this->setHttpResponse("/subaccount/?perPage=" . (int) $per_page . "&page=" . (int) $page, "GET")->getResponse();
+        return $this->setHttpResponse("/subaccount/?perPage=".(int) $per_page."&page=".(int) $page,"GET")->getResponse();
+
     }
 
 
@@ -676,8 +677,7 @@ class Paystack
      * @return array
      */
 
-    public function updateSubAccount($subaccount_code)
-    {
+    public function updateSubAccount($subaccount_code){
         $data = [
             "business_name" => request()->business_name,
             "settlement_bank" => request()->settlement_bank,
@@ -693,5 +693,6 @@ class Paystack
 
         $this->setRequestOptions();
         return $this->setHttpResponse("/subaccount/{$subaccount_code}", "PUT", array_filter($data))->getResponse();
+
     }
 }

@@ -286,6 +286,9 @@ trait GapicClientTrait
      *     @type string $apiEndpoint
      *           The address of the API remote host, for example "example.googleapis.com. May also
      *           include the port, for example "example.googleapis.com:443"
+     *     @type string $serviceAddress
+     *           **Deprecated**. This option will be removed in the next major release. Please
+     *           utilize the `$apiEndpoint` option instead.
      *     @type bool $disableRetries
      *           Determines whether or not retries defined by the client configuration should be
      *           disabled. Defaults to `false`.
@@ -557,7 +560,7 @@ trait GapicClientTrait
                     "have a pageStreaming in descriptor configuration.");
             }
         }
-
+        
         // LRO are either Standard LRO response type or custom, which are handled by
         // startOperationCall, so no need to validate responseType for those callType.
         if ($callType != Call::LONGRUNNING_CALL) {
@@ -595,9 +598,9 @@ trait GapicClientTrait
         // in order to find the method in the descriptor config.
         $methodName = ucfirst($methodName);
         $methodDescriptors = $this->validateCallConfig($methodName);
-
+        
         $callType = $methodDescriptors['callType'];
-
+        
         switch ($callType) {
             case Call::PAGINATED_CALL:
                 return $this->getPagedListResponseAsync(
@@ -641,7 +644,7 @@ trait GapicClientTrait
     ) {
         $methodDescriptors =$this->validateCallConfig($methodName);
         $callType = $methodDescriptors['callType'];
-
+        
         // Prepare request-based headers, merge with user-provided headers,
         // which take precedence.
         $headerParams = $methodDescriptors['headerParams'] ?? [];
@@ -765,7 +768,6 @@ trait GapicClientTrait
             'transportOptions',
             'metadataCallback',
             'audience',
-            'metadataReturnType'
         ]);
 
         return $callStack;
@@ -828,8 +830,8 @@ trait GapicClientTrait
         $callStack = $this->createCallStack(
             $this->configureCallConstructionOptions($methodName, $optionalArgs)
         );
+
         $descriptor = $this->descriptors[$methodName]['longRunning'];
-        $metadataReturnType = null;
 
         // Call the methods supplied in "additionalArgumentMethods" on the request Message object
         // to build the "additionalOperationArguments" option for the operation response.
@@ -840,10 +842,6 @@ trait GapicClientTrait
             }
             $descriptor['additionalOperationArguments'] = $additionalArgs;
             unset($descriptor['additionalArgumentMethods']);
-        }
-
-        if (isset($descriptor['metadataReturnType'])) {
-            $metadataReturnType = $descriptor['metadataReturnType'];
         }
 
         $callStack = new OperationsMiddleware($callStack, $client, $descriptor);
@@ -858,7 +856,6 @@ trait GapicClientTrait
 
         $this->modifyUnaryCallable($callStack);
         return $callStack($call, $optionalArgs + array_filter([
-            'metadataReturnType' => $metadataReturnType,
             'audience' => self::getDefaultAudience()
         ]));
     }
@@ -950,18 +947,18 @@ trait GapicClientTrait
     private function buildRequestParamsHeader(array $headerParams, Message $request = null)
     {
         $headers = [];
-
+        
         // No request message means no request-based headers.
         if (!$request) {
             return $headers;
         }
-
+        
         foreach ($headerParams as $headerParam) {
             $msg = $request;
             $value = null;
             foreach ($headerParam['fieldAccessors'] as $accessor) {
                 $value = $msg->$accessor();
-
+                
                 // In case the field in question is nested in another message,
                 // skip the header param when the nested message field is unset.
                 $msg = $value;
@@ -971,7 +968,7 @@ trait GapicClientTrait
             }
 
             $keyName = $headerParam['keyName'];
-
+            
             // If there are value pattern matchers configured and the target
             // field was set, evaluate the matchers in the order that they were
             // annotated in with last one matching wins.

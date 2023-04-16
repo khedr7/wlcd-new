@@ -7,12 +7,15 @@ use Imanghafoori\LaravelMicroscope\BladeFiles;
 use Imanghafoori\LaravelMicroscope\Checks\CheckView;
 use Imanghafoori\LaravelMicroscope\Checks\CheckViewFilesExistence;
 use Imanghafoori\LaravelMicroscope\ErrorReporters\ErrorPrinter;
-use Imanghafoori\LaravelMicroscope\FileReaders\FilePath;
 use Imanghafoori\LaravelMicroscope\ForPsr4LoadedClasses;
 use Imanghafoori\LaravelMicroscope\SpyClasses\RoutePaths;
 
 class CheckViews extends Command
 {
+    public static $checkedCallsNum = 0;
+
+    public static $skippedCallsNum = 0;
+
     protected $signature = 'check:views {--detailed : Show files being checked} {--f|file=} {--d|folder=}';
 
     protected $description = 'Checks the validity of blade files';
@@ -26,13 +29,11 @@ class CheckViews extends Command
         $folder = ltrim($this->option('folder'), '=');
 
         $errorPrinter->printer = $this->output;
-        $this->checkRoutePaths(
-            FilePath::removeExtraPaths(RoutePaths::get(), $fileName, $folder)
-        );
+        $this->checkRoutePaths($fileName, $folder);
         ForPsr4LoadedClasses::check([CheckView::class], [], $fileName, $folder);
         $this->checkBladeFiles();
 
-        $this->getOutput()->writeln(' - '.CheckView::$checkedCallsNum.' view references were checked to exist. ('.CheckView::$skippedCallsNum.' skipped)');
+        $this->getOutput()->writeln(' - '.self::$checkedCallsNum.' view references were checked to exist. ('.self::$skippedCallsNum.' skipped)');
         event('microscope.finished.checks', [$this]);
 
         return $errorPrinter->hasErrors() ? 1 : 0;
@@ -45,9 +46,9 @@ class CheckViews extends Command
         CheckView::checkViewCalls($tokens, $absPath, $staticCalls);
     }
 
-    private function checkRoutePaths($paths)
+    private function checkRoutePaths($fileName, $folder)
     {
-        foreach ($paths as $filePath) {
+        foreach (RoutePaths::get($fileName, $folder) as $filePath) {
             $this->checkForViewMake($filePath, [
                 'View' => ['make', 0],
                 'Route' => ['view', 1],

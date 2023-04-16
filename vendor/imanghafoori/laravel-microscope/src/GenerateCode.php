@@ -3,8 +3,8 @@
 namespace Imanghafoori\LaravelMicroscope;
 
 use Illuminate\Support\Str;
-use ImanGhafoori\ComposerJson\NamespaceCalculator;
 use Imanghafoori\LaravelMicroscope\FileReaders\FilePath;
+use Imanghafoori\LaravelMicroscope\Psr4\NamespaceCorrector;
 use Imanghafoori\LaravelMicroscope\Stubs\ServiceProviderStub;
 use Imanghafoori\TokenAnalyzer\Refactor;
 use Imanghafoori\TokenAnalyzer\TokenManager;
@@ -38,7 +38,7 @@ class GenerateCode
             }
 
             $relativePath = FilePath::getRelativePath($absFilePath);
-            $correctNamespace = NamespaceCalculator::calculateCorrectNamespace($relativePath, $composerPath, $composerNamespace);
+            $correctNamespace = NamespaceCorrector::calculateCorrectNamespace($relativePath, $composerPath, $composerNamespace);
 
             $className = \str_replace('.php', '', $classFilePath->getFilename());
             $answer = self::ask($command, $correctNamespace.'\\'.$className);

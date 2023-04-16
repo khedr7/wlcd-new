@@ -13,8 +13,6 @@ use Twilio\Deserialize;
 use Twilio\Exceptions\TwilioException;
 use Twilio\InstanceResource;
 use Twilio\Options;
-use Twilio\Rest\Microvisor\V1\Device\DeviceConfigList;
-use Twilio\Rest\Microvisor\V1\Device\DeviceSecretList;
 use Twilio\Values;
 use Twilio\Version;
 
@@ -29,12 +27,8 @@ use Twilio\Version;
  * @property \DateTime $dateCreated
  * @property \DateTime $dateUpdated
  * @property string $url
- * @property array $links
  */
 class DeviceInstance extends InstanceResource {
-    protected $_deviceConfigs;
-    protected $_deviceSecrets;
-
     /**
      * Initialize the DeviceInstance
      *
@@ -55,7 +49,6 @@ class DeviceInstance extends InstanceResource {
             'dateCreated' => Deserialize::dateTime(Values::array_get($payload, 'date_created')),
             'dateUpdated' => Deserialize::dateTime(Values::array_get($payload, 'date_updated')),
             'url' => Values::array_get($payload, 'url'),
-            'links' => Values::array_get($payload, 'links'),
         ];
 
         $this->solution = ['sid' => $sid ?: $this->properties['sid'], ];
@@ -94,20 +87,6 @@ class DeviceInstance extends InstanceResource {
      */
     public function update(array $options = []): DeviceInstance {
         return $this->proxy()->update($options);
-    }
-
-    /**
-     * Access the deviceConfigs
-     */
-    protected function getDeviceConfigs(): DeviceConfigList {
-        return $this->proxy()->deviceConfigs;
-    }
-
-    /**
-     * Access the deviceSecrets
-     */
-    protected function getDeviceSecrets(): DeviceSecretList {
-        return $this->proxy()->deviceSecrets;
     }
 
     /**

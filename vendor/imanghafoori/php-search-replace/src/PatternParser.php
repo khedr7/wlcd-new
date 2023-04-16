@@ -2,6 +2,8 @@
 
 namespace Imanghafoori\SearchReplace;
 
+use Imanghafoori\TokenAnalyzer\Str;
+
 class PatternParser
 {
     private static function getParams($pToken, $id)

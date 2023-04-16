@@ -5,29 +5,30 @@ namespace Imanghafoori\LaravelMicroscope\SpyClasses;
 use Illuminate\Support\Str;
 use Imanghafoori\LaravelMicroscope\Analyzers\ComposerJson;
 use Imanghafoori\LaravelMicroscope\FileReaders\FilePath;
+use Imanghafoori\LaravelMicroscope\Psr4\NamespaceCorrector;
 use Imanghafoori\TokenAnalyzer\FunctionCall;
 use Throwable;
 
 class RoutePaths
 {
-    public static function get()
+    public static function get($includeFile = '', $includeFolder = '')
     {
         $routePaths = [];
 
         foreach (app('router')->routePaths as $path) {
             $routePaths[] = FilePath::normalize($path);
         }
-        $autoloads = ComposerJson::readAutoload();
+
         foreach (config('app.providers') as $providerClass) {
             // we exclude the core or package service providers here.
-            foreach ($autoloads as $autoload) {
+            foreach (ComposerJson::readAutoload() as $autoload) {
                 if (! Str::contains($providerClass, array_keys($autoload))) {
                     continue 2;
                 }
             }
 
             // get tokens by class name
-            $path = ComposerJson::make()->getRelativePathFromNamespace($providerClass);
+            $path = NamespaceCorrector::getRelativePathFromNamespace($providerClass);
 
             try {
                 $methodCalls = self::readLoadedRouteFiles($path);
@@ -45,7 +46,7 @@ class RoutePaths
             is_file($routeFilePath) && $routePaths[] = $routeFilePath;
         }
 
-        return $routePaths;
+        return self::removeExtraPaths($routePaths, $includeFile, $includeFolder);
     }
 
     private static function fullPath($calls, $providerClass, $path)
@@ -79,5 +80,17 @@ class RoutePaths
         }
 
         return $methodCalls;
+    }
+
+    protected static function removeExtraPaths($routePaths, $includeFile, $includeFolder)
+    {
+        $results = [];
+        foreach ($routePaths as $absFilePath) {
+            if (FilePath::contains($absFilePath, $includeFile, $includeFolder)) {
+                $results[] = $absFilePath;
+            }
+        }
+
+        return $results;
     }
 }

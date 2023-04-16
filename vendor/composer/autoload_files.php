@@ -57,6 +57,7 @@ return array(
     'c379e2a4ec3735f6c4915556c8c81813' => $vendorDir . '/rap2hpoutre/fast-excel/src/functions/fastexcel.php',
     '13906c19e3d8fcd1341b24ed4d51cf72' => $vendorDir . '/razorpay/razorpay/Deprecated.php',
     '6b34c85f7b1ad6faa15aa12109e030f2' => $vendorDir . '/realrashid/sweet-alert/src/functions.php',
+    'e45cfea11e5f327d4009ce1fae8fa9fc' => $vendorDir . '/shetabit/visitor/src/helpers.php',
     'bca8bc0a43e3abe0c7d97e8537cba0d9' => $vendorDir . '/shipu/php-aamarpay-payment/src/helpers.php',
     'a6d9d34f8d5ee671bb9e16e38c4999f4' => $vendorDir . '/smodav/mpesa/src/Mpesa/Support/helpers.php',
     '72b1e3f4a2af9b30b3f137b3ec2057fc' => $vendorDir . '/spatie/laravel-activitylog/src/helpers.php',

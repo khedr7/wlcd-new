@@ -44,20 +44,7 @@ class PhoneNumberContext extends InstanceContext {
     public function fetch(array $options = []): PhoneNumberInstance {
         $options = new Values($options);
 
-        $params = Values::of([
-            'Fields' => $options['fields'],
-            'CountryCode' => $options['countryCode'],
-            'FirstName' => $options['firstName'],
-            'LastName' => $options['lastName'],
-            'AddressLine1' => $options['addressLine1'],
-            'AddressLine2' => $options['addressLine2'],
-            'City' => $options['city'],
-            'State' => $options['state'],
-            'PostalCode' => $options['postalCode'],
-            'AddressCountryCode' => $options['addressCountryCode'],
-            'NationalId' => $options['nationalId'],
-            'DateOfBirth' => $options['dateOfBirth'],
-        ]);
+        $params = Values::of(['Fields' => $options['fields'], 'CountryCode' => $options['countryCode'], ]);
 
         $payload = $this->version->fetch('GET', $this->uri, $params);
 

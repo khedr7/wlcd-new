@@ -22,7 +22,6 @@ use Yoast\PHPUnitPolyfills\TestListeners\TestListenerDefaultImplementation;
 
 /**
  * Garbage collector for tests
- * @internal
  */
 class GcTestListener implements TestListener
 {

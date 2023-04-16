@@ -12,7 +12,7 @@ Built with :heart: for lazy laravel developers ;)
 </h4>
 
 <h3 align="center">
-Why repeat the old errors, if there are so many new errors to commit?
+Why repeat the old errors, if there are so many new errors to commit.
 </h3>
 <h3 align="center">
 (Bertrand Russel)
@@ -43,7 +43,7 @@ Give your eyes a rest, we will detect and fix them for you.
     - [Installation](#installation)
     - [Usage](#usage)
         - [Useful Commands](#useful-commands)
-        - [Fewer Use Commands](#less-use-commands)
+        - [Less Use Commands](#less-use-commands)
         - [Gloabl Helper Functions](#global-helper-functions)
     - [What The Commands Do?](#what-the-commands-do)
 
@@ -74,12 +74,7 @@ Give your eyes a rest, we will detect and fix them for you.
         1. [`php artisan check:views`](#views)
         1. [`php artisan check:events`](#events)
         1. [`php artisan check:gates`](#gates)
-        1. [`php artisan check:aliases`](#aliases)
-        1. [`php artisan check:dead_controllers`](#dead_controllers)
-        1. [`php artisan check:generic_docblocks`](#generic_docblocks)
-        1. [`php artisan enforce:helper_functions`](#helper_functions)
-        1. [`php artisan list:models`](#models)
-    
+
      </details>
 
     - [Credits](#credits)
@@ -93,7 +88,7 @@ Give your eyes a rest, we will detect and fix them for you.
 
 - It is created to be **smarter than phpstorm** and other IDEs in finding errors.
 - It is created to **understand laravel run-time** and magic.
-- It does **not show you stupid false errors**, all the reported cases are really errors.
+- It does **not show you stupid false errors**, all the errors are really errors.
 - Even If you have written a lot of tests for your app, **you may still need this**.
 - **It can refactor your code**, by applying `early returns` automatically.
 - It is written from scratch to yield the **maximum performance** possible.
@@ -120,7 +115,7 @@ php artisan vendor:publish --provider="Imanghafoori\LaravelMicroscope\LaravelMic
 ```
 
 <a name="usage"></a>
-## <g-emoji class="g-emoji" alias="gem" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f48e.png">💎</g-emoji> Usage:
+## <g-emoji class="g-emoji" alias="gem" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f48e.png">💎</g-emoji> Usage
 
 ### Useful Commands:
 
@@ -156,15 +151,10 @@ php artisan vendor:publish --provider="Imanghafoori\LaravelMicroscope\LaravelMic
 |15|`php artisan check:events`|
 |16|`php artisan check:gates`|
 |17|`php artisan check:dynamic_where`|
-|18|`php artisan check:aliases`|
-|19|`php artisan check:dead_controllers`|
-|20|`php artisan check:generic_docblocks`|
-|21|`php artisan enforce:helper_functions`|
-|22|`php artisan list:models`|
 
 <a name="global-helper-functions"></a>
 ## Global Helper Functions
->Also, You will have access to some global helper functions
+>Also You will have access to some global helper functions
 
 ```php 
 microscope_dd_listeners($event);
@@ -174,9 +164,9 @@ you can call `microscope_dd_listeners(MyEvent::class);` within either the `boot`
 It works like a normal `dd(...);` meaning that the program stops running at that point.
 
 <a name="what-the-commands-do"></a>
-## <g-emoji class="g-emoji" alias="book" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f4d6.png">📖</g-emoji> What do the Commands do?
+## <g-emoji class="g-emoji" alias="book" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f4d6.png">📖</g-emoji> What the Commands do?
 
-Let's start with the:
+Lets start with:
 
 <a name="search_replace"></a>
 ### `php artisan search_replace {--name=pattern_name} {--tag=some_tag} {--file=partial_file_name} {--folder=partial_folder_name}`
@@ -192,7 +182,7 @@ Then, you can define your patterns, within that file.
 
 **Examples:**
 
-Let's define a pattern to replace the `optional()` global helper with the `?->` php 8 null safe operator:
+Lets define a pattern to replace the `optional()` global helper with the `?->` php 8 null safe operator:
 
 ```php
 return [
@@ -210,9 +200,9 @@ return [
 ];
 ```
 - Here the key `optional_to_nullsafe` is the "unique name" of your pattern. (You can target your pattern by running ```php artisan search_replace --name=optional_to_nullsafe```)
-- The search pattern has a `"<in_between>"` placeholder which captures everything in between the pair of parenthesis.
+- The search pattern has `"<in_between>"` placeholder which captures everything in between the pair of parenthesis.
 - In the `replace` block we substitute what we have captured by the first placeholder with the `"<1>"`.
-  If we have more placeholders, we could have had `"<2>"` etc.
+  If we have more placeholders, we could have had `"<2>"` and etc.
 - In the tag block we can mention some tags as an array of strings or a string separated by commas
   and target them by `--tag` flag: ```php artisan search_replace --tag=php8```
 
@@ -250,12 +240,12 @@ Just like the default keywords.
 
 **Example:**
 
-:one:  Let's say you want to find only the "comments" which contain the word "todo:" in them.
+:one:  Lets say you want to find only the "comments" which contain the word "todo:" in them.
 ```php
  'todo_comments' => [
         'search' => '<comment>',
         'predicate' => function($matches) {    //   <====  here we check comment has "todo:"
-            $comment = $matches[0]; // first placeholder value
+            $comment = $matches[0]; // first placehoder value
             $content = $comment[1]; // get its content
             
             return Str::contains($content, 'todo:') ? true : false;
@@ -266,7 +256,7 @@ Just like the default keywords.
 
 _Note_ If you do not mention the `'replace'` key it only searches and reports them to you.
 
-:two: Ok, now let's say you want to remove the "todo:" word from your comments:
+:two: Ok, now lets say you want to remove the "todo:" word from your comments:
 
 ```php
  'remove_todo_comments' => [
@@ -274,7 +264,7 @@ _Note_ If you do not mention the `'replace'` key it only searches and reports th
     'replace' => '<1>',
 
     'predicate' => function($matches) {
-        $comment = $matches[0]; // first matched placeholder
+        $comment = $matches[0]; // first matched placehoder
         $content = $comment[1];
 
         return Str::contains($content, 'todo:') ? true : false;
@@ -293,11 +283,11 @@ Into: ``` // refactor code```
 
 <a name="mutator" ></a>
 :three: **Mutator:**
-In mutators, you are free to manipulate the `$matched` values as much as you need to before replacing them in the results.
+In mutators you are free to manipulate the `$matched` values as much as you need to before replacing them in the results.
 You can also mention a static method instead of a function, like this: `[MyClass::class, 'myStaticMethod']`
 
 
-:three: Let's say you want to put the optional comma for the Lets  elements in the arrays if they are missing.
+:three: Lets say you want to put the optional comma for the last elements in the arrays if they are missing.
 ```php
     'enforce_optional_comma' => [
         'search' => '<white_space>?]',
@@ -310,9 +300,9 @@ You can also mention a static method instead of a function, like this: `[MyClass
        ],
     ]
 ```
-In this case, our pattern is not very accurate and in some cases, it may result in syntax errors.
-Because of  that, we turn on php syntax validator to check the result, but that costs us a performance penalty!!!
-To exclude the usage of php, to validate the results we have mentioned the `avoid_result_in` so that if they happen in the result it skips.
+In this case our pattern is not very accurate and in some cases it may result in syntax errors.
+Because of that we turn on php syntax validator to check the end result, but that costs us a performance penalty!!!
+In order to exclude the usage of php, to validate the end results we have mentioned the `avoid_result_in` so that if they happen in the end result it skips.
 
 - **Note**: The `?` in the "<white_space>?" notes this is an `optional` placeholder.
 
@@ -346,7 +336,7 @@ This is more complex but works much faster. (since it does not need the php synt
 <a name="filters" ></a>
 :four: **Filters:**
 
-Currently, the microscope offers only two built-in filters: `is_sub_class_of` and `in_array`
+Currently the microscope offers only two built-in filters: `is_sub_class_of` and `in_array`
 
 Can you guess what the heck this pattern is doing?!
 ```php
@@ -379,7 +369,7 @@ User::query()->where(...)->get();
 \App\Models\User::query()->find(...);
 ```
 
-- The filters here ensure that the captured class reference is a laravel Model and the method name is one of the names mentioned in the list.
+- The filters here ensure that the captured class reference is a laravel Model and the mathod name is one of the names mentioned in the list.
 
 So it does not tamper with something like this:
 ```php
@@ -393,7 +383,7 @@ UserRepo::where(...);   /// UserRepo is not a model
 <a name="capturing-php-statements" ></a>
 :five: **Capturing php "statements":**
 
-Let's say we want to opt into php 7.4 arrow functions:
+Lets say we want to opt-into php 7.4 arrow functions:
 
 ```php
 'fn' => [
@@ -454,12 +444,12 @@ return [
 ```
 For `$c = $a + $b;` they act the same way, but for the second one `"<until>";` will not capture the whole closure and will stop as soon as it reaches `$a++;` and that is a problem.
 
-But if you define your pattern as: `'<var> = <statement>'` it would be smart enough to capture the correct semicolon at the end of closure definition and whole close would be captured.
+But if you define your pattern as: `'<var> = <statement>'` it would be smart enough to capture the correct semi-colon at the end of closure definition and whole close would be captured.
 
 <a name="capturing-global" ></a>
 :seven: **Capturing global function calls:**
 
-Let's say you want to eliminate all the `dd(...)` or `dump(...)` before pushing to production.
+Lets say you want to eliminate all the `dd(...)` or `dump(...)` before pushing to production.
 ```php
 return [
     'remove_dd' => [
@@ -473,11 +463,11 @@ This will NOT capture cases like below:
 ```php
 $this->  dd('hello');          // is technically a method call
 User::   dd('I am static');    // is technically a static method call
-new      dd('I am a class');  // here "dd" is the name of a class.
+new      dd('I am a classs');  // here "dd" is the name of a class.
    
 ```
 
-But will detect and remove real global `dd()` calls with whatever parameters they have received.
+But will detect and remove real global `dd()` calls with whatever parameters they have recieved.
 
 ```
 dd(                // <=== will be detected, even the pattern above is written all in one line.
@@ -494,7 +484,7 @@ dump(1);
 <a name="repeating-patterns" ></a>
 :eight: **Repeating patterns:**
 
-Let's say we want to refactor:
+Lets say we want to refactor:
 ```php
 User:where('name', 'John')->where('family', 'Dou')->where('age', 20)->get();
 ```
@@ -622,20 +612,20 @@ if ($var1 > 1):
     endif;
 endif;
 
-// Or if you avoid putting curly braces...
+// or if you avoid putting curly braces...
 if ($var1 > 1)
     if ($var2 > 2)
         echo 'Hey Man';
 
 ```
 
-**Although this type of refactoring is safe and is guaranteed to do the same thing as before, be careful to commit everything before trying this feature, in case of a weird bug or something.**
+**Although this type of refactoring is totally safe and is guaranteed to do the same thing as before, but be careful to commit everything before trying this feature, in case of a weird bug or something.**
 
 
 <a name="psr4"></a>
 ### `php artisan check:psr4`
 
-- It checks for all the psr4 autoload defined in the composer.json file and goes through all the classes to have the right namespace, according to PSR-4 standard.
+- It checks for all the psr4 autoloads defined in the composer.json file and goes through all the classes to have the right namespace, according to PSR-4 standard.
 - It automatically corrects namespaces (according to PSR-4 rules)
 - It also checks for references to the old namespace with the system and replaces them with the new one.
 
@@ -644,7 +634,7 @@ if ($var1 > 1)
 
 ### `php artisan check:generate`
 
-You make an empty file, and we fill it, based on naming conventions.
+You make an empty file, we fill it, based on naming conventions.
 
 If you create an empty `.php` file which ends with `ServiceProvider.php` after running this command:
 1 - It will be filled with a boilerplate and correct Psr-4 namespace.
@@ -657,7 +647,7 @@ If you create an empty `.php` file which ends with `ServiceProvider.php` after r
 
 
 - It checks all the imports (`use` statements) to be valid and reports invalid ones.
-- It autocorrects some references, no ambiguity is around the class name.
+- It auto-corrects some of the references, it no ambiguity is around the class name.
 - It can understand the laravel aliased classes so `use Request;` would be valid.
 
 
@@ -666,7 +656,7 @@ If you create an empty `.php` file which ends with `ServiceProvider.php` after r
 ### `php artisan check:bad_practices`
 
 
-- It detects bad practices like `env()` calls outside the config files.
+- It detects bad practices like `env()` calls outside of the config files.
 
 <a name="routes"></a>
 
@@ -689,7 +679,7 @@ If you create an empty `.php` file which ends with `ServiceProvider.php` after r
 
 ### `php artisan check:blade_queries`
 
-- Blade files should not contain DB queries. We should move them back into controllers and pass variables.
+- Blade files should not contain DB queries. we should move them back into controllers and pass variables.
 This command searches all the blade files for `Eloquent models` and `DB` query builder and shows them if any.
 
 <a name="extract_blades"></a>
@@ -698,7 +688,7 @@ This command searches all the blade files for `Eloquent models` and `DB` query b
 
 - If you want to extract a blade partial out and make it included like: `@include('myPartials.someFile')`
 
-You can use `{!! extractBlade('myPartials.someFile') !!}` in your blade files to indicate `start/end line` and the `path/name` of the partial you intend to be made.
+you can use `{!! extractBlade('myPartials.someFile') !!}` in your blade files to indicate `start/end line` and the `path/name` of the partial you intend to be made.
 
 ```html
  <html>
@@ -727,31 +717,30 @@ Also, it will create:
 - `resources/views/myPartials/head.blade.php`
 - `resources/views/myPartials/body.blade.php`
 
-And put the corresponding content in them.
+and put the corresponding content in them.
 
 - It is also compatible with namespaced views in modular laravel applications.
 So this syntax will work: `'MyMod::myPartials.body'`
 
 <a name="action_comments"></a>
-### `php artisan check:action_comments {--file=SomeFile.php}`
+### `php artisan check:action_comments`
 
 
 - This adds annotations in the controller actions so that you know which route is pointing to the current controller action.
-- You can use the `--file=` option to narrow down the scanned files.
 
 <a name="route"></a>
 ### `php artisan pp:route`
 
 
-- First, you have to put this in your route file: `microscope_pretty_print_route('my.route.name');` 
+- First you have to put this in your route file: `microscope_pretty_print_route('my.route.name');` 
 - You can also pass the Controller@method syntax to the function.
-- You can call it multiple times to pretty-print multiple routes.
+- You can call it multiple times in order to pretty-print multiple routes.
 
 <a name="views"></a>
 ### `php artisan check:views`
 
 
-- It scans your code and finds the `view()` and `View::make()` and reports if they refer to the wrong files.
+- It scans your code and find the `view()` and `View::make()` and reports if they refer to the wrong files.
 - It scans your blade files for `@include()` and `@extends()` and reports if they refer to the wrong files.
 
 
@@ -769,7 +758,7 @@ Those variables are also taken into consideration when detecting unused variable
 ### `php artisan check:events`
 
 
-For example, consider:
+For example consider:
 
 ```php
 Event::listen(MyEvent::class, '\App\Listeners\MyListener@myMethod');
@@ -829,43 +818,12 @@ Gate::define('someAbility', 'UserGate@someMethod');
 ### `php artisan enforce:query`
 
 
-- It calls the static `query` method on your eloquent query chains so that IDEs can understand eloquent.
+- It call the static `query` method on your eloquent query chains so that IDEs can understand eloquent.
 
 - For example, converts: `User::where(...` to `User::query()->where(...`
 
-<a name="dead_controllers"></a>
 
-### `php artisan check:dead_controllers`
-
-
-- We can find the controllers that don't have any routes.
-
-<a name="generic_docblocks"></a>
-
-### `php artisan check:generic_docblocks {--folder=app/Models} {--file=SomeFile.php}`
-
-
-- Removes Laravel's DocBlocks.
-- You can use `--folder=` or `--file=` option to narrow down the scanned folders.
-
-<a name="helper_functions"></a>
-
-### `php artisan enforce:helper_functions {--folder=app/Models} {--file=SomeFile.php}`               
-
-
-- Converting Laravel facade into helper functions.
-- You can use `--folder=` or `--file=` option to narrow down the scanned folders.
-
-<a name="models"></a>
-
-### `php artisan list:models {--folder=app/Models}`               
-
-
-- It searches the project and lists the model classes.
-- You can use `--folder=` option to narrow down the scanned folders.
-
-
-And more features will be added soon. ;)
+and more features will be added soon. ;)
 
 <a name="credits"></a>
 ## Credits
@@ -904,7 +862,7 @@ If you discover any security-related issues, please email `imanghafoori1@gmail.c
 ### Laravel Terminator
 
 
- :gem: A minimal yet powerful package to allow you to refactor your controllers.
+ :gem: A minimal yet powerful package to give you the opportunity to refactor your controllers.
 
 - https://github.com/imanghafoori1/laravel-terminator
 
@@ -921,7 +879,7 @@ If you discover any security-related issues, please email `imanghafoori1@gmail.c
 ```
 A man will never fail unless he stops trying.
 
-Albert Einstein
+Albert einstein
 ```
 
 [ico-laravel]: https://img.shields.io/badge/Laravel-%E2%89%A5%205.4-ff2d20?style=flat-square&logo=laravel

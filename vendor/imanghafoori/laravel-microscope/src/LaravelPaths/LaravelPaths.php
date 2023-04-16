@@ -16,9 +16,6 @@ class LaravelPaths
     public static function seedersDir()
     {
         $dir = app()->databasePath('seeds');
-        if (! is_dir($dir)) {
-            $dir = app()->databasePath('seeders');
-        }
 
         return is_dir($dir) ? $dir : null;
     }
@@ -44,7 +41,7 @@ class LaravelPaths
             }
         }
 
-        $migrationDirs[] = app()->databasePath('migrations');
+        $migrationDirs[] = app()->databasePath().DIRECTORY_SEPARATOR.'migrations';
 
         return $migrationDirs;
     }
@@ -101,7 +98,7 @@ class LaravelPaths
         return $hints;
     }
 
-    public static function collectFilesInNonPsr4Paths()
+    public static function collectNonPsr4Paths()
     {
         $paths = [
             RoutePaths::get(),

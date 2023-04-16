@@ -15,7 +15,7 @@ class FindClassReferencesTest extends BaseTestClass
         $this->assertEquals("Imanghafoori\LaravelMicroscope\FileReaders", $namespace);
         $h = 0;
         $this->assertEquals([
-            'class' => 'Imanghafoori\LaravelMicroscope\FileReaders\A',
+            'class' => '\A\ParentClass',
             'line' => 9,
         ], $classes[$h++]);
 
@@ -30,7 +30,7 @@ class FindClassReferencesTest extends BaseTestClass
         ], $classes[$h++]);
 
         $this->assertEquals([
-            'class' => 'Imanghafoori\LaravelMicroscope\FileReaders\B',
+            'class' => '\Inline\InterF3',
             'line' => 9,
         ], $classes[$h++]);
 
@@ -70,63 +70,139 @@ class FindClassReferencesTest extends BaseTestClass
         ], $classes[$h++]);
 
         $this->assertEquals([
+            'class' => "Symfony\Component\Finder\Symfony\Component\Finder\Finder",
+            'line' => 36,
+        ], $classes[$h++]);
+
+        $this->assertEquals([
+            'class' => "\Exception",
+            'line' => 37,
+        ], $classes[$h++]);
+
+        $this->assertEquals([
+            'class' => "\ErrorException",
+            'line' => 37,
+        ], $classes[$h++]);
+
+        $this->assertEquals([
             'class' => "Imanghafoori\LaravelMicroscope\FileReaders\MyAmIClass",
-            'line' => 35,
+            'line' => 41,
+        ], $classes[$h++]);
+
+        $this->assertEquals([
+            'class' => "\YetAnotherclass",
+            'line' => 42,
+        ], $classes[$h++]);
+
+        $this->assertEquals([
+            'class' => 'Illuminate\Contracts\HalfImported\TheRest',
+            'line' => 43,
         ], $classes[$h++]);
 
         $this->assertEquals([
             'class' => 'Imanghafoori\LaravelMicroscope\FileReaders\TypeHint1',
-            'line' => 43,
+            'line' => 51,
         ], $classes[$h++]);
 
         $this->assertEquals([
             'class' => 'Imanghafoori\LaravelMicroscope\FileReaders\ReturnyType2',
-            'line' => 43,
-        ], $classes[$h++]);
-
-        $this->assertEquals([
-            'class' => 'Imanghafoori\LaravelMicroscope\FileReaders\Newed',
             'line' => 51,
         ], $classes[$h++]);
 
         $this->assertEquals([
             'class' => 'Imanghafoori\LaravelMicroscope\FileReaders\Newed',
-            'line' => 51,
+            'line' => 59,
+        ], $classes[$h++]);
+
+        $this->assertEquals([
+            'class' => 'Imanghafoori\LaravelMicroscope\FileReaders\Newed',
+            'line' => 59,
+        ], $classes[$h++]);
+
+        $this->assertEquals([
+            'class' => 'Imanghafoori\LaravelMicroscope\FileReaders\A\Newed',
+            'line' => 60,
         ], $classes[$h++]);
 
         $this->assertEquals([
             'class' => 'Imanghafoori\LaravelMicroscope\FileReaders\InConstructor',
-            'line' => 58,
+            'line' => 67,
+        ], $classes[$h++]);
+
+        $this->assertEquals([
+            'class' => '\A\ReturnType',
+            'line' => 70,
         ], $classes[$h++]);
 
         $this->assertEquals([
             'class' => 'Imanghafoori\LaravelMicroscope\FileReaders\F',
-            'line' => 63,
+            'line' => 72,
+        ], $classes[$h++]);
+
+        $this->assertEquals([
+            'class' => 'Imanghafoori\LaravelMicroscope\FileReaders\a\a',
+            'line' => 73,
+        ], $classes[$h++]);
+
+        $this->assertEquals([
+            'class' => 'Imanghafoori\LaravelMicroscope\FileReaders\b\b',
+            'line' => 73,
         ], $classes[$h++]);
 
        $this->assertEquals([
             'class' => 'Imanghafoori\LaravelMicroscope\FileReaders\iteable',
-            'line' => 66,
+            'line' => 76,
         ], $classes[$h++]);
 
        $this->assertEquals([
             'class' => 'Imanghafoori\LaravelMicroscope\FileReaders\countable',
-            'line' => 66,
+            'line' => 76,
+        ], $classes[$h++]);
+
+
+       $this->assertEquals([
+            'class' => 'Imanghafoori\LaravelMicroscope\FileReaders\Y',
+            'line' => 76,
+        ], $classes[$h++]);
+
+       $this->assertEquals([
+            'class' => 'Imanghafoori\LaravelMicroscope\FileReaders\R',
+            'line' => 76,
         ], $classes[$h++]);
 
         $this->assertEquals([
             'class' => 'Imanghafoori\LaravelMicroscope\FileReaders\User',
-            'line' => 68,
+            'line' => 78,
         ], $classes[$h++]);
 
         $this->assertEquals([
             'class' => 'Imanghafoori\LaravelMicroscope\FileReaders\ParentOfAnonymous',
-            'line' => 77,
+            'line' => 87,
         ], $classes[$h++]);
 
         $this->assertEquals([
             'class' => 'Imanghafoori\LaravelMicroscope\FileReaders\interfaceOfAnonymous',
-            'line' => 78,
-        ], $classes[$h]);
+            'line' => 88,
+        ], $classes[$h++]);
+
+        $this->assertEquals([
+            'class' => 'Imanghafoori\LaravelMicroscope\FileReaders\ParentOfAnonymous',
+            'line' => 89,
+        ], $classes[$h++]);
+
+        $this->assertEquals([
+            'class' => 'Imanghafoori\LaravelMicroscope\FileReaders\interfaceOfAnonymous',
+            'line' => 89,
+        ], $classes[$h++]);
+
+        $this->assertEquals([
+            'class' => '\T',
+            'line' => 90,
+        ], $classes[$h++]);
+
+        $this->assertEquals([
+            'class' => '\interfaceOfAnonymous',
+            'line' => 92,
+        ], $classes[$h++]);
     }
 }

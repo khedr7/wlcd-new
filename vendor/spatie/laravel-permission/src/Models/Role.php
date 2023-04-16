@@ -13,13 +13,6 @@ use Spatie\Permission\PermissionRegistrar;
 use Spatie\Permission\Traits\HasPermissions;
 use Spatie\Permission\Traits\RefreshesPermissionCache;
 
-/**
- * @property int $id
- * @property string $name
- * @property string $guard_name
- * @property ?\Illuminate\Support\Carbon $created_at
- * @property ?\Illuminate\Support\Carbon $updated_at
- */
 class Role extends Model implements RoleContract
 {
     use HasPermissions;
@@ -79,7 +72,7 @@ class Role extends Model implements RoleContract
     public function users(): BelongsToMany
     {
         return $this->morphedByMany(
-            getModelForGuard($this->attributes['guard_name'] ?? config('auth.defaults.guard')),
+            getModelForGuard($this->attributes['guard_name']),
             'model',
             config('permission.table_names.model_has_roles'),
             PermissionRegistrar::$pivotRole,
@@ -90,8 +83,9 @@ class Role extends Model implements RoleContract
     /**
      * Find a role by its name and guard name.
      *
-     * @param  string  $name
-     * @param  string|null  $guardName
+     * @param string $name
+     * @param string|null $guardName
+     *
      * @return \Spatie\Permission\Contracts\Role|\Spatie\Permission\Models\Role
      *
      * @throws \Spatie\Permission\Exceptions\RoleDoesNotExist
@@ -112,8 +106,9 @@ class Role extends Model implements RoleContract
     /**
      * Find a role by its id (and optionally guardName).
      *
-     * @param  int  $id
-     * @param  string|null  $guardName
+     * @param int $id
+     * @param string|null $guardName
+     *
      * @return \Spatie\Permission\Contracts\Role|\Spatie\Permission\Models\Role
      */
     public static function findById(int $id, $guardName = null): RoleContract
@@ -132,8 +127,9 @@ class Role extends Model implements RoleContract
     /**
      * Find or create role by its name (and optionally guardName).
      *
-     * @param  string  $name
-     * @param  string|null  $guardName
+     * @param string $name
+     * @param string|null $guardName
+     *
      * @return \Spatie\Permission\Contracts\Role|\Spatie\Permission\Models\Role
      */
     public static function findOrCreate(string $name, $guardName = null): RoleContract
@@ -171,7 +167,8 @@ class Role extends Model implements RoleContract
     /**
      * Determine if the user may perform the given permission.
      *
-     * @param  string|Permission  $permission
+     * @param string|Permission $permission
+     *
      * @return bool
      *
      * @throws \Spatie\Permission\Exceptions\GuardDoesNotMatch

@@ -27,7 +27,7 @@ class ErrorPrinter
 
     public function printFixation($absPath, $wrongClass, $lineNumber, $correct)
     {
-        $header = $wrongClass.'  <=== Did not exist';
+        $header = $wrongClass.'  <===  Did not exist';
         $msg = 'Fixed to:   '.substr($correct[0], 0, 55);
 
         $this->simplePendError($msg, $absPath, $lineNumber, 'ns_replacement', $header);
@@ -65,7 +65,7 @@ class ErrorPrinter
         $this->doesNotExist("use $class;", $absPath, $lineNumber, 'wrongImport', 'Wrong import:');
     }
 
-    public function addPendingError($path, $lineNumber, $key, $header, $errorData)
+    private function addPendingError($path, $lineNumber, $key, $header, $errorData)
     {
         if (LaravelPaths::isIgnored($path)) {
             return;
@@ -79,14 +79,14 @@ class ErrorPrinter
 
     public function simplePendError($yellowText, $absPath, $lineNumber, $key, $header, $rest = '', $pre = '')
     {
-        $errorData = $pre.$this->color($yellowText).$rest;
+        $errorData = $pre.$this->yellow($yellowText).$rest;
 
         $this->addPendingError($absPath, $lineNumber, $key, $header, $errorData);
     }
 
     public function compactError($path, $lineNumber, $absent, $key, $header)
     {
-        $errorData = $this->color(\implode(', ', array_keys($absent))).' does not exist';
+        $errorData = $this->yellow(\implode(', ', array_keys($absent))).' does not exist';
 
         $this->addPendingError($path, $lineNumber, $key, $header, $errorData);
     }
@@ -94,7 +94,7 @@ class ErrorPrinter
     public function queryInBlade($absPath, $class, $lineNumber)
     {
         $key = 'queryInBlade';
-        $errorData = $this->color($class).'  <=== DB query in blade file';
+        $errorData = $this->yellow($class).'  <=== DB query in blade file';
         $header = 'Query in blade file: ';
 
         $this->addPendingError($absPath, $lineNumber, $key, $header, $errorData);
@@ -109,11 +109,11 @@ class ErrorPrinter
         $key = 'routeDefinitionConflict';
         $routeName = $route1->getName();
         if ($routeName) {
-            $routeName = $this->color($routeName);
+            $routeName = $this->yellow($routeName);
             $msg = 'Route name: '.$routeName;
         } else {
             $routeUri = $route1->uri();
-            $routeUri = $this->color($routeUri);
+            $routeUri = $this->yellow($routeUri);
             $msg = 'Route uri: '.$routeUri;
         }
 
@@ -122,7 +122,7 @@ class ErrorPrinter
 
         $routeName = $route2->getName();
         if ($routeName) {
-            $routeName = $this->color($routeName);
+            $routeName = $this->yellow($routeName);
             $msg .= 'route name: '.$routeName;
         } else {
             $msg .= 'an other route with same uri.';
@@ -133,7 +133,7 @@ class ErrorPrinter
         $methods = \implode(',', $route1->methods());
 
         $this->errorsList[$key][$methods] = (new PendingError($key))
-            ->header('Route with uri: '.$this->color($methods.': /'.$route1->uri()).' is overridden.')
+            ->header('Route with uri: '.$this->yellow($methods.': /'.$route1->uri()).' is overridden.')
             ->errorData($msg);
     }
 
@@ -152,9 +152,27 @@ class ErrorPrinter
         $this->doesNotExist($class, $absPath, $lineNumber, 'wrongMethodError', 'Method does not exist:');
     }
 
-    public function color($msg)
+    public function yellow($msg)
     {
         return "<fg=blue>$msg</>";
+    }
+
+    public function fixedNamespace($absPath, $correctNamespace, $incorrectNamespace, $lineNumber = 4)
+    {
+        $key = 'badNamespace';
+        $header = 'Incorrect namespace: '.$this->yellow("namespace $incorrectNamespace;");
+        $errorData = '  namespace fixed to:  '.$this->yellow("namespace $correctNamespace;");
+
+        $this->addPendingError($absPath, $lineNumber, $key, $header, $errorData);
+    }
+
+    public function wrongFileName($absPath, $class, $file)
+    {
+        $key = 'badFileName';
+        $header = 'The file name and the class name are different.';
+        $errorData = 'Class name: <fg=blue>"'.$class.'"</> - File name: <fg=blue>"'.$file.'"</>';
+
+        $this->addPendingError($absPath, 1, $key, $header, $errorData);
     }
 
     public function print($msg, $path = '   ')
@@ -167,39 +185,27 @@ class ErrorPrinter
         $number = ++$this->errorsList['total'];
         ($number < 10) && $number = " $number";
 
-        $number = '<fg=cyan>'.$number.' </>';
+        $number = '<fg=bright-cyan>'.$number.' </>';
         $path = "  $number";
 
-        $width = (new Terminal)->getWidth() - 6;
-        PendingError::$maxLength = max(PendingError::$maxLength, strlen($msg), $width);
-        PendingError::$maxLength = min(PendingError::$maxLength, $width);
-        $this->print('<fg=red>'.$msg.'</>', $path);
+        PendingError::$maxLength = max(PendingError::$maxLength, strlen($msg), (new Terminal)->getWidth() - 6);
+        PendingError::$maxLength = min(PendingError::$maxLength, (new Terminal)->getWidth() - 6);
+        $this->print('<fg=red>'.$msg.'</>', $path, PendingError::$maxLength - 1, strlen($msg));
     }
 
     public function end()
     {
-        $line = function ($color) {
-            $this->printer->writeln(' <fg='.$color.'>'.str_repeat('_', 3 + PendingError::$maxLength).'</> ');
-        };
-        try {
-            $line('gray');
-        } catch (\Exception $e) {
-            $line('blue'); // for older versions of laravel
-        }
+        $this->printer->writeln(' '.'<fg=gray>'.str_repeat('_', 3 + PendingError::$maxLength).'</>'.' ');
     }
 
-    public function printLink($path, $lineNumber = 4)
+    public function printLink($path, $lineNumber = 4, $len = null)
     {
+        $len === null && ($len = PendingError::$maxLength + 30);
+
         if ($path) {
-            $this->print(self::getLink(str_replace(base_path(), '', $path), $lineNumber), '');
+            $relativePath = FilePath::normalize(\trim(\str_replace(base_path(), '', $path), '\\/'));
+            $this->print('at <fg=green>'.$relativePath.'</>'.':<fg=green>'.$lineNumber.'</>', '', $len);
         }
-    }
-
-    public static function getLink($path, $lineNumber = 4)
-    {
-        $relativePath = FilePath::normalize(trim($path, '\\/'));
-
-        return 'at <fg=green>'.$relativePath.'</>'.':<fg=green>'.$lineNumber.'</>';
     }
 
     /**
@@ -267,5 +273,28 @@ class ErrorPrinter
         $command->line('<fg=blue>|  \(^_^)/    Regards, Iman Ghafoori    \(^_^)/   |</>');
         $command->line('<fg=blue>|-------------------------------------------------|</>');
         $command->line('https://github.com/imanghafoori1/microscope');
+    }
+
+    public static function warnIncorrectNamespace($currentNamespace, $relativePath, $class)
+    {
+        /**
+         * @var $p ErrorPrinter
+         */
+        $p = app(ErrorPrinter::class);
+        $msg = 'Incorrect namespace: '.$p->yellow("namespace $currentNamespace;");
+        PendingError::$maxLength = max(PendingError::$maxLength, strlen($msg));
+        $p->end();
+        $currentNamespace && $p->printHeader('Incorrect namespace: '.$p->yellow("namespace $currentNamespace;"));
+        ! $currentNamespace && $p->printHeader('Namespace Not Found: '.$class);
+        $p->printLink($relativePath, 3);
+    }
+
+    public static function ask($command, $correctNamespace)
+    {
+        if ($command->option('force')) {
+            return true;
+        }
+
+        return $command->getOutput()->confirm('Do you want to change it to: '.$correctNamespace, true);
     }
 }

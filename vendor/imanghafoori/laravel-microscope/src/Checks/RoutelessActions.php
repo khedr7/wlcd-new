@@ -3,8 +3,8 @@
 namespace Imanghafoori\LaravelMicroscope\Checks;
 
 use Illuminate\Routing\Controller;
-use Imanghafoori\ComposerJson\NamespaceCalculator;
 use Imanghafoori\LaravelMicroscope\ErrorReporters\ErrorPrinter;
+use Imanghafoori\LaravelMicroscope\Psr4\NamespaceCorrector;
 use Imanghafoori\TokenAnalyzer\ClassMethods;
 use Throwable;
 
@@ -41,7 +41,7 @@ class RoutelessActions
         $absFilePath = $classFilePath->getRealPath();
         $className = $classFilePath->getFilename();
         $relativePath = \str_replace(base_path(), '', $absFilePath);
-        $namespace = NamespaceCalculator::calculateCorrectNamespace($relativePath, $psr4Path, $psr4Namespace);
+        $namespace = NamespaceCorrector::calculateCorrectNamespace($relativePath, $psr4Path, $psr4Namespace);
 
         return $namespace.'\\'.$className;
     }

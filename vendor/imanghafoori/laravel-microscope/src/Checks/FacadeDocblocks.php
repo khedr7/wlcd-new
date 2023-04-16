@@ -6,7 +6,7 @@ use Exception;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Facade;
 use Imanghafoori\Filesystem\Filesystem;
-use Imanghafoori\LaravelMicroscope\Analyzers\ComposerJson;
+use Imanghafoori\LaravelMicroscope\Psr4\NamespaceCorrector;
 use Imanghafoori\RealtimeFacades\SmartRealTimeFacadesProvider;
 use Imanghafoori\SearchReplace\Searcher;
 use ReflectionClass;
@@ -19,7 +19,7 @@ class FacadeDocblocks
 
     public static function check($tokens, $absFilePath, SplFileInfo $classFilePath, $psr4Path, $psr4Namespace)
     {
-        $facade = ComposerJson::make()->getNamespacedClassFromPath($absFilePath);
+        $facade = NamespaceCorrector::getNamespacedClassFromPath($absFilePath);
 
         if (! self::isFacade($facade)) {
             return null;

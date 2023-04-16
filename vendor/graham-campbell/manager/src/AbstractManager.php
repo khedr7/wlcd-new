@@ -30,21 +30,21 @@ abstract class AbstractManager implements ManagerInterface
      *
      * @var \Illuminate\Contracts\Config\Repository
      */
-    protected Repository $config;
+    protected $config;
 
     /**
      * The active connection instances.
      *
      * @var array<string,object>
      */
-    protected array $connections = [];
+    protected $connections = [];
 
     /**
      * The custom connection resolvers.
      *
      * @var array<string,callable>
      */
-    protected array $extensions = [];
+    protected $extensions = [];
 
     /**
      * Create a new manager instance.
@@ -67,7 +67,7 @@ abstract class AbstractManager implements ManagerInterface
      *
      * @return object
      */
-    public function connection(string $name = null): object
+    public function connection(string $name = null)
     {
         $name = $name ?: $this->getDefaultConnection();
 
@@ -87,7 +87,7 @@ abstract class AbstractManager implements ManagerInterface
      *
      * @return object
      */
-    public function reconnect(string $name = null): object
+    public function reconnect(string $name = null)
     {
         $name = $name ?: $this->getDefaultConnection();
 
@@ -103,7 +103,7 @@ abstract class AbstractManager implements ManagerInterface
      *
      * @return void
      */
-    public function disconnect(string $name = null): void
+    public function disconnect(string $name = null)
     {
         $name = $name ?: $this->getDefaultConnection();
 
@@ -119,7 +119,7 @@ abstract class AbstractManager implements ManagerInterface
      *
      * @return object
      */
-    abstract protected function createConnection(array $config): object;
+    abstract protected function createConnection(array $config);
 
     /**
      * Make the connection instance.
@@ -130,7 +130,7 @@ abstract class AbstractManager implements ManagerInterface
      *
      * @return object
      */
-    protected function makeConnection(string $name): object
+    protected function makeConnection(string $name)
     {
         $config = $this->getConnectionConfig($name);
 
@@ -152,7 +152,7 @@ abstract class AbstractManager implements ManagerInterface
      *
      * @return string
      */
-    abstract protected function getConfigName(): string;
+    abstract protected function getConfigName();
 
     /**
      * Get the configuration for a connection.
@@ -163,7 +163,7 @@ abstract class AbstractManager implements ManagerInterface
      *
      * @return array
      */
-    public function getConnectionConfig(string $name = null): array
+    public function getConnectionConfig(string $name = null)
     {
         $name = $name ?: $this->getDefaultConnection();
 
@@ -181,7 +181,7 @@ abstract class AbstractManager implements ManagerInterface
      *
      * @return array
      */
-    protected function getNamedConfig(string $type, string $desc, string $name): array
+    protected function getNamedConfig(string $type, string $desc, string $name)
     {
         $data = $this->config->get($this->getConfigName().'.'.$type);
 
@@ -199,7 +199,7 @@ abstract class AbstractManager implements ManagerInterface
      *
      * @return string
      */
-    public function getDefaultConnection(): string
+    public function getDefaultConnection()
     {
         return $this->config->get($this->getConfigName().'.default');
     }
@@ -211,7 +211,7 @@ abstract class AbstractManager implements ManagerInterface
      *
      * @return void
      */
-    public function setDefaultConnection(string $name): void
+    public function setDefaultConnection(string $name)
     {
         $this->config->set($this->getConfigName().'.default', $name);
     }
@@ -224,7 +224,7 @@ abstract class AbstractManager implements ManagerInterface
      *
      * @return void
      */
-    public function extend(string $name, callable $resolver): void
+    public function extend(string $name, callable $resolver)
     {
         if ($resolver instanceof Closure) {
             $this->extensions[$name] = $resolver->bindTo($this, $this);
@@ -238,7 +238,7 @@ abstract class AbstractManager implements ManagerInterface
      *
      * @return array<string,object>
      */
-    public function getConnections(): array
+    public function getConnections()
     {
         return $this->connections;
     }
@@ -248,7 +248,7 @@ abstract class AbstractManager implements ManagerInterface
      *
      * @return \Illuminate\Contracts\Config\Repository
      */
-    public function getConfig(): Repository
+    public function getConfig()
     {
         return $this->config;
     }

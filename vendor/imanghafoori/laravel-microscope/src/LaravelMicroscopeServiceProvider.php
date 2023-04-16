@@ -12,13 +12,10 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
-use ImanGhafoori\ComposerJson\ComposerJson as Composer;
 use Imanghafoori\LaravelMicroscope\Checks\CheckClassReferences;
-use Imanghafoori\LaravelMicroscope\Checks\CheckView;
+use Imanghafoori\LaravelMicroscope\Commands\CheckViews;
 use Imanghafoori\LaravelMicroscope\ErrorReporters\ConsolePrinterInstaller;
 use Imanghafoori\LaravelMicroscope\ErrorReporters\ErrorPrinter;
-use Imanghafoori\LaravelMicroscope\FileReaders\FilePath;
-use Imanghafoori\LaravelMicroscope\ListModels\ListModelsArtisanCommand;
 use Imanghafoori\LaravelMicroscope\SpyClasses\SpyBladeCompiler;
 use Imanghafoori\LaravelMicroscope\SpyClasses\SpyDispatcher;
 use Imanghafoori\LaravelMicroscope\SpyClasses\SpyFactory;
@@ -34,7 +31,7 @@ class LaravelMicroscopeServiceProvider extends ServiceProvider
         Commands\CheckGates::class,
         Commands\CheckRoutes::class,
         Commands\CheckViews::class,
-        Psr4\CheckPsr4ArtisanCommand::class,
+        Commands\CheckPsr4::class,
         Commands\CheckImports::class,
         Commands\CheckAliases::class,
         Commands\CheckAll::class,
@@ -56,7 +53,6 @@ class LaravelMicroscopeServiceProvider extends ServiceProvider
         Commands\EnforceHelpers::class,
         SearchReplace\CheckRefactorsCommand::class,
         Commands\CheckDynamicWhereMethod::class,
-        ListModelsArtisanCommand::class,
     ];
 
     public function boot()
@@ -95,12 +91,6 @@ class LaravelMicroscopeServiceProvider extends ServiceProvider
         if (! $this->canRun()) {
             return;
         }
-
-        app()->singleton(Composer::class, function () {
-            return Composer::make(base_path(), config('microscope.ignored_namespaces', []));
-        });
-
-        FilePath::$basePath = base_path();
 
         [$major] = explode('.', app()->version());
 
@@ -202,15 +192,7 @@ class LaravelMicroscopeServiceProvider extends ServiceProvider
 
     private function canRun()
     {
-        if (! $this->app->runningInConsole()) {
-            return false;
-        }
-
-        if (windows_os()) {
-            return true;
-        }
-
-        return config('microscope.is_enabled', true) && app()['env'] !== 'production';
+        return $this->app->runningInConsole() && config('microscope.is_enabled', true) && app()['env'] !== 'production';
     }
 
     public function getActionName()
@@ -230,8 +212,7 @@ class LaravelMicroscopeServiceProvider extends ServiceProvider
     private function resetCountersOnFinish()
     {
         Event::listen('microscope.finished.checks', function () {
-            CheckView::$checkedCallsNum = 0;
-            CheckView::$skippedCallsNum = 0;
+            CheckViews::$checkedCallsNum = 0;
             CheckClassReferences::$refCount = 0;
             ForPsr4LoadedClasses::$checkedFilesNum = 0;
         });

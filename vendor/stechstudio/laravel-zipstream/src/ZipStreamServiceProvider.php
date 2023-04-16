@@ -2,13 +2,12 @@
 
 namespace STS\ZipStream;
 
-use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 use ZipStream\Option\Archive as ArchiveOptions;
 use ZipStream\Option\File as FileOptions;
 use ZipStream\Option\Method;
 
-class ZipStreamServiceProvider extends ServiceProvider implements DeferrableProvider
+class ZipStreamServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
@@ -41,7 +40,7 @@ class ZipStreamServiceProvider extends ServiceProvider implements DeferrableProv
             return $this->buildArchiveOptions($app['config']->get('zipstream.archive'));
         });
 
-        $this->app->singleton('zipstream.s3client', function($app) {
+        $this->app->bind('zipstream.s3client', function($app) {
             $config = $app['config']->get('zipstream.aws');
 
             if(!count(array_filter($config['credentials']))) {

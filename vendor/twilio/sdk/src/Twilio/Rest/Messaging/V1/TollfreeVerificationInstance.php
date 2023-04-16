@@ -12,7 +12,6 @@ namespace Twilio\Rest\Messaging\V1;
 use Twilio\Deserialize;
 use Twilio\Exceptions\TwilioException;
 use Twilio\InstanceResource;
-use Twilio\Options;
 use Twilio\Values;
 use Twilio\Version;
 
@@ -50,7 +49,6 @@ use Twilio\Version;
  * @property string $status
  * @property string $url
  * @property array $resourceLinks
- * @property string $externalReferenceId
  */
 class TollfreeVerificationInstance extends InstanceResource {
     /**
@@ -96,7 +94,6 @@ class TollfreeVerificationInstance extends InstanceResource {
             'status' => Values::array_get($payload, 'status'),
             'url' => Values::array_get($payload, 'url'),
             'resourceLinks' => Values::array_get($payload, 'resource_links'),
-            'externalReferenceId' => Values::array_get($payload, 'external_reference_id'),
         ];
 
         $this->solution = ['sid' => $sid ?: $this->properties['sid'], ];
@@ -125,17 +122,6 @@ class TollfreeVerificationInstance extends InstanceResource {
      */
     public function fetch(): TollfreeVerificationInstance {
         return $this->proxy()->fetch();
-    }
-
-    /**
-     * Update the TollfreeVerificationInstance
-     *
-     * @param array|Options $options Optional Arguments
-     * @return TollfreeVerificationInstance Updated TollfreeVerificationInstance
-     * @throws TwilioException When an HTTP error occurs.
-     */
-    public function update(array $options = []): TollfreeVerificationInstance {
-        return $this->proxy()->update($options);
     }
 
     /**

@@ -29,5 +29,5 @@ interface ConnectorInterface
      *
      * @return object
      */
-    public function connect(array $config): object;
+    public function connect(array $config);
 }

@@ -37,8 +37,6 @@ use PhpParser\PrettyPrinter\Standard as PrettyPrinter;
 
 /**
  * Class for running snippets using phpdocumentor/reflection:v4.
- *
- * @internal
  */
 class ReflectionHandlerV4
 {
