@@ -166,6 +166,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Tohidplus\Translation\TranslationServiceProvider::class,
+        Shetabit\Visitor\Provider\VisitorServiceProvider::class,
 
         
 
@@ -280,6 +281,8 @@ return [
         'Aamarpay'   =>  Shipu\Aamarpay\Facades\Aamarpay::class,
         'Google2FA' => PragmaRX\Google2FALaravel\Facade::class,
         'GeoIP' => \Torann\GeoIP\Facades\GeoIP::class,
+        'Visitor' => Shetabit\Visitor\Facade\Visitor::class,
+
     ],
 
 

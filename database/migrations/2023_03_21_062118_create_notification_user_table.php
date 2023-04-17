@@ -13,13 +13,16 @@ class CreateNotificationUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('notification_user', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->onDelete('cascade')->nullable();
-            $table->foreignId('notification_id')->onDelete('cascade')->nullable();
-            $table->boolean('status')->default(0)->nullable();
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('notification_user')) {
+
+            Schema::create('notification_user', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('user_id')->onDelete('cascade')->nullable();
+                $table->foreignId('notification_id')->onDelete('cascade')->nullable();
+                $table->boolean('status')->default(0)->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     /**

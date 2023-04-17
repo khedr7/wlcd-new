@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6708bc05d63c5299d500c2e1c0a6dfdc",
+    "content-hash": "a70b31b15d37b2e29de250d9bc6c1288",
     "packages": [
         {
             "name": "alaouy/youtube",
@@ -9177,6 +9177,77 @@
             "time": "2021-02-11T11:37:01+00:00"
         },
         {
+            "name": "shetabit/visitor",
+            "version": "v4.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/shetabit/visitor.git",
+                "reference": "56800438f6facb868e5ccaab0c252f10aec1d505"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/shetabit/visitor/zipball/56800438f6facb868e5ccaab0c252f10aec1d505",
+                "reference": "56800438f6facb868e5ccaab0c252f10aec1d505",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^5.1|6.*|7.*|8.*|9.*|10.*",
+                "jenssegers/agent": "^2.6",
+                "php": ">=7.2",
+                "ua-parser/uap-php": "^3.9"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^4.0",
+                "phpunit/phpunit": ">=7.5",
+                "squizlabs/php_codesniffer": "^3.4"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Shetabit\\Visitor\\Provider\\VisitorServiceProvider"
+                    ],
+                    "aliases": {
+                        "Visitor": "Shetabit\\Visitor\\Facade\\Visitor"
+                    }
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "Shetabit\\Visitor\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mahdi Khanzadi",
+                    "email": "khanzadimahdi@gmail.com",
+                    "homepage": "https://github.com/khanzadimahdi",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Laravel visitor",
+            "homepage": "https://github.com/shetabit/visitor",
+            "keywords": [
+                "parse laravel user agents",
+                "shetabit",
+                "trace laravel visitors",
+                "track laravel visitors",
+                "visitor"
+            ],
+            "support": {
+                "issues": "https://github.com/shetabit/visitor/issues",
+                "source": "https://github.com/shetabit/visitor/tree/v4.0.0"
+            },
+            "time": "2023-02-27T08:05:29+00:00"
+        },
+        {
             "name": "shipu/php-aamarpay-payment",
             "version": "v1.2.1",
             "source": {
@@ -13540,6 +13611,69 @@
                 }
             ],
             "time": "2021-09-26T08:38:25+00:00"
+        },
+        {
+            "name": "ua-parser/uap-php",
+            "version": "v3.9.14",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ua-parser/uap-php.git",
+                "reference": "b796c5ea5df588e65aeb4e2c6cce3811dec4fed6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ua-parser/uap-php/zipball/b796c5ea5df588e65aeb4e2c6cce3811dec4fed6",
+                "reference": "b796c5ea5df588e65aeb4e2c6cce3811dec4fed6",
+                "shasum": ""
+            },
+            "require": {
+                "composer/ca-bundle": "^1.1",
+                "php": "^7.2 || ^8.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^0.12.33",
+                "phpunit/phpunit": "^8 || ^9",
+                "symfony/console": "^3.4 || ^4.2 || ^4.3 || ^5.0",
+                "symfony/filesystem": "^3.4 || ^4.2 ||  ^4.3 || ^5.0",
+                "symfony/finder": "^3.4 || ^4.2 || ^4.3 || ^5.0",
+                "symfony/yaml": "^3.4 || ^4.2 || ^4.3 || ^5.0",
+                "vimeo/psalm": "^3.12"
+            },
+            "suggest": {
+                "symfony/console": "Required for CLI usage - ^3.4 || ^4.3 || ^5.0",
+                "symfony/filesystem": "Required for CLI usage - ^3.4 || ^4.3 || ^5.0",
+                "symfony/finder": "Required for CLI usage - ^3.4 || ^4.3 || ^5.0",
+                "symfony/yaml": "Required for CLI usage - ^3.4 || ^4.3 || ^5.0"
+            },
+            "bin": [
+                "bin/uaparser"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "UAParser\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dave Olsen",
+                    "email": "dmolsen@gmail.com"
+                },
+                {
+                    "name": "Lars Strojny",
+                    "email": "lars@strojny.net"
+                }
+            ],
+            "description": "A multi-language port of Browserscope's user agent parser.",
+            "support": {
+                "issues": "https://github.com/ua-parser/uap-php/issues",
+                "source": "https://github.com/ua-parser/uap-php/tree/v3.9.14"
+            },
+            "time": "2020-10-02T23:36:20+00:00"
         },
         {
             "name": "unicodeveloper/laravel-paystack",

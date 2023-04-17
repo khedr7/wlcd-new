@@ -368,7 +368,7 @@ return array (
   'ONESIGNALRESTAPIKEY' => 'ONESIGNAL REST API KEY',
   'OnesignalKeys' => 'Onesignal Keys',
   'Online' => 'Online',
-  'Order' => 'Orders',
+  'Order' => 'Order',
   'OrderID' => 'Order ID',
   'OrderId' => 'Order Id',
   'Orders' => 'Orders',
@@ -552,6 +552,8 @@ return array (
   'Status' => 'Status',
   'StripeKey' => 'Stripe Key',
   'StripeSecretKey' => 'Stripe Secret Key',
+  'Student' => 'Student',
+  'Students' => 'Students',
   'SubCategory' => 'Sub Categories',
   'SubHeading' => 'Sub Heading',
   'Subject' => 'Subject',
@@ -664,5 +666,7 @@ return array (
   'basic_skills' => 'Basic Skills',
   'professional_summary' => 'Professional Summary',
   'scientific_background' => 'Scientific Background',
+  'Most purchased courses' => 'Most purchased courses',
+  'Most viewed courses' => 'Most viewed courses',
 
 );

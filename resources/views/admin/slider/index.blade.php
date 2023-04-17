@@ -107,7 +107,7 @@
                                 <td>{{$cat->heading}}</td>
                                 <td>{{$cat->sub_heading}}</td> 
                                <td>
-                                <button type="button" class="btn btn-rounded {{ $cat->status == '1' ? 'checked' : '' ? 'btn-success-rgba' : 'btn-danger-rgba' }}" data-toggle="modal" data-target="#myModal">
+                                <button type="button" class="btn btn-rounded {{ ($cat->status == '1' ? 'checked' : '') ? 'btn-success-rgba' : 'btn-danger-rgba' }}" data-toggle="modal" data-target="#myModal">
                                   @if( $cat->status)
                                     {{ __('adminstaticword.Active') }}
                                     @else

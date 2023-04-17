@@ -481,7 +481,7 @@
 
                                         <div class="col-md-12" id="duration_video" style="display:none">
                                             <label for=""> {{ __('adminstaticword.Duration') }}:</label>
-                                            <input type="text" name="duration"
+                                            <input type="number" step="any" name="duration"
                                                 placeholder="Enter class duration in (mins) Eg:160"
                                                 class="form-control">
                                         </div>

@@ -12,12 +12,13 @@ use App\Affiliate;
 use SamuelNitsche\AuthLog\AuthLogable;
 use Spatie\Permission\Traits\HasRoles;
 use App\Notifications\EmailVerificationNotificationViaAPI;
+use Shetabit\Visitor\Traits\Visitor;
 
 
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use Notifiable, HasApiTokens, AuthLogable, HasRoles;
+    use Notifiable, HasApiTokens, AuthLogable, HasRoles, Visitor;
 
     protected $table = 'users';
 

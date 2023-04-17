@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\admin;
+use App\Allcountry;
 use Illuminate\Http\Request;
 use Auth;
 use App\Order;
@@ -25,9 +26,12 @@ use Illuminate\Support\Facades\Http;
 use Session;
 use App\Charts\OrderChart;
 use App\Charts\AdminRevenueChart;
+use App\Country;
 use DB;
 use Storage;
 use App\Coupon;
+use App\CourseClass;
+use App\CourseProgress;
 use App\FavCategory;
 use App\FavSubcategory;
 use App\Followers;
@@ -53,7 +57,16 @@ class AdminController extends Controller
 
         if (Auth::User()->role == "admin") {
 
-            $userss = User::count();
+            $userss = User::where('role', 'user')->count();
+            $adminss = User::where('role', 'admin')->count();
+
+            $baseURL = env('APP_URL');
+            $baseURL = substr($baseURL, 0, -1);
+
+            $daily_visits = DB::table('shetabit_visits')->where('url', $baseURL)->whereDate('created_at', carbon::today())->count();
+            $monthly_visits = DB::table('shetabit_visits')->where('url', $baseURL)->whereMonth('created_at', Carbon::now()->month)->count();
+            $online_count = visitor()->onlineVisitors(User::class)->count();
+
             $usergraph = array(
                 User::whereDate('created_at', '=', Carbon::now()->subdays(1))->count(),
                 User::whereDate('created_at', '=', Carbon::now()->subdays(2))->count(),
@@ -219,6 +232,62 @@ class AdminController extends Controller
             $topuser = User::where('role', '=', 'user')->orderBy('id', 'DESC')->take(5)->get();
             $topinstructor = User::where('role', '=', 'instructor')->orderBy('id', 'DESC')->take(5)->get();
             $topcourses = Course::orderBy('id', 'DESC')->take(5)->get();
+
+            $coursesToSort = Course::get(['id', 'title', 'short_detail', 'preview_image']);
+
+            //  Most purchased courses
+            foreach ($coursesToSort as $course) {
+                $course->order_count = $course->order->count();
+            }
+            $topOrderedCourses = $coursesToSort->sortByDesc(function ($course) {
+                return $course->order_count;
+            });
+            $topOrderedCourses = $topOrderedCourses->take(5);
+
+
+            //  Most viewed courses
+            foreach ($coursesToSort as $course) {
+                $course->progress_count = $course->progress->count();
+            }
+            $topviewedCourses = $coursesToSort->sortByDesc(function ($course) {
+                return $course->progress_count;
+            });
+            $topviewedCourses = $topviewedCourses->take(5);
+
+
+            //  top countris
+            $countries = Allcountry::get();
+            foreach ($countries as $contry) {
+                $contry->users_count = $contry->users->count();
+            }
+
+            $topCountries = $countries->filter(function ($model) {
+                return $model->users_count != 0;
+            });
+            $topCountriesCount = $topCountries->count();
+
+            $country_names = [];
+            $country_counts = [];
+            foreach ($topCountries as $value) {
+                array_push($country_names, $value->nicename);
+                array_push($country_counts, $value->users_count);
+            }
+
+
+            // Total minutes viewed
+            $progresses = CourseProgress::get();
+            $TotalMinutesViewed = 0;
+
+            foreach ($progresses as $progress) {
+                $chapters = $progress->mark_chapter_id;
+                foreach ($chapters as $chapter) {
+                    $classes = CourseClass::where('coursechapter_id', $chapter)->where('type', 'video')->get('duration');
+                    foreach ($classes as $class) {
+                        $TotalMinutesViewed = $TotalMinutesViewed + (float)$class->duration;
+                    }
+                }
+            }
+
             $toporder = Order::orderBy('id', 'DESC')->take(5)->get();
             $admin = User::where('role', '=', 'admin')->count();
             $admins = User::where('role', '=', 'admin')->count();
@@ -257,11 +326,17 @@ class AdminController extends Controller
 
             return view('admin.dashboard', compact(
                 'userss',
+                'adminss',
+                'daily_visits',
+                'monthly_visits',
+                'online_count',
                 'usergraph',
                 'categories',
                 'categorygraph',
                 'courses',
                 'coursegraph',
+                'country_names',
+                'country_counts',
                 'orders',
                 'ordergraph',
                 'refund',
@@ -289,6 +364,9 @@ class AdminController extends Controller
                 'topuser',
                 'topinstructor',
                 'topcourses',
+                'topOrderedCourses',
+                'topviewedCourses',
+                'TotalMinutesViewed',
                 'toporder',
                 'admincharts',
                 'datas',

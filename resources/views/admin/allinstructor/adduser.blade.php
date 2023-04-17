@@ -205,7 +205,7 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>{{ __('adminstaticword.practical_experience') }}:</span></label>
-										<select class="select2-multi-select form-control" name="practical_experience[]" multiple="multiple"
+										<select class="select2-multi-select form-control" id="practical_experience" name="practical_experience[]" multiple="multiple"
 											size="5" row="5" placeholder="">
 
 											<option></option>
@@ -217,7 +217,7 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>{{ __('adminstaticword.basic_skills') }}:</span></label>
-										<select class="select2-multi-select form-control" name="basic_skills[]" multiple="multiple" size="5"
+										<select class="select2-multi-select form-control" id="basic_skills" name="basic_skills[]" multiple="multiple" size="5"
 											row="5" placeholder="">
 											<option></option>
 										</select>
@@ -229,7 +229,7 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>{{ __('adminstaticword.professional_summary') }}:</span></label>
-										<select class="select2-multi-select form-control" name="professional_summary[]" multiple="multiple"
+										<select class="select2-multi-select form-control" id="professional_summary" name="professional_summary[]" multiple="multiple"
 											size="5" row="5" placeholder="">
 											<option></option>
 										</select>
@@ -239,7 +239,7 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>{{ __('adminstaticword.scientific_background') }}:</span></label>
-										<select class="select2-multi-select form-control" name="scientific_background[]" multiple="multiple"
+										<select class="select2-multi-select form-control" id="scientific_background" name="scientific_background[]" multiple="multiple"
 											size="5" row="5" placeholder="">
 											<option></option>
 										</select>
@@ -251,7 +251,7 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>{{ __('adminstaticword.Courses') }}:</span></label>
-										<select class="select2-multi-select form-control" name="courses[]" multiple="multiple" size="5"
+										<select class="select2-multi-select form-control" id="courses" name="courses[]" multiple="multiple" size="5"
 											row="5" placeholder="">
 											<option></option>
 										</select>
@@ -371,6 +371,42 @@
 					}
 				});
 			});
+
+
+			$(function() {
+				$("#professional_summary").select2({
+					// placeHolder: "Select One",
+					// allowClear: true,
+					tags: true,
+					tokenSeparators: [',']
+				});
+			})
+			$(function() {
+				$("#practical_experience").select2({
+					tags: true,
+					tokenSeparators: [',']
+				});
+			})
+			$(function() {
+				$("#basic_skills").select2({
+					tags: true,
+					tokenSeparators: [',']
+				});
+			})
+			$(function() {
+				$("#scientific_background").select2({
+					tags: true,
+					tokenSeparators: [',']
+				});
+			})
+			$(function() {
+				$("#courses").select2({
+					tags: true,
+					tokenSeparators: [',']
+				});
+			})
+
+
 		})(jQuery);
 	</script>
 

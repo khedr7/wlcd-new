@@ -55,6 +55,8 @@ class HomeController extends Controller
     public function index(Request $request)
     {
     
+        visitor()->visit();
+
         $category = Categories::where('status', '1')->orderBy('position','ASC')->with('subcategory')->get();
         $sliders = Slider::where('status', '1')->orderBy('position', 'ASC')->get();
         $facts = SliderFacts::get();
@@ -184,6 +186,7 @@ class HomeController extends Controller
                     }
                 
         })->filter();
+
         return view('home', compact('category', 'sliders', 'facts', 'categories', 'cors', 'bundles', 'meetings', 'bigblue', 'testi', 'trusted', 'recent_course_id', 'blogs', 'subscriptionBundles', 'batches', 'recent_course', 'total_count', 'advs', 'allgooglemeet','jitsimeeting', 'googleclassrooms', 'usercountry','instructors','factsetting','videosetting','discountcourse','bestselling'));
     }
     public function store(Request $request)

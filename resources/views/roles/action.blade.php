@@ -2,14 +2,16 @@
   <button class="btn btn-round btn-primary-rgba" type="button" id="CustomdropdownMenuButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="feather icon-more-vertical-"></i></button>
   <div class="dropdown-menu" aria-labelledby="CustomdropdownMenuButton3">
     
-    @if(!in_array($id,['1','2','3']))
+    {{-- @if(!in_array($id,['1','2','3'])) --}}
+    @if(!in_array($id,['1']))
       <a class="dropdown-item"   href="{{ route('roles.edit',$id) }}"><i class="feather icon-edit mr-2"></i>{{ __("Edit")}}</a>
     @else 
     <p class="dropdown-item" >
       <b class="text-danger">{{__("System reserved role")}}</b>
     </p>
   @endif
-  @if(!in_array($id,['1','2','3']))
+  {{-- @if(!in_array($id,['1','2','3'])) --}}
+  @if(!in_array($id,['1']))
       <a class="dropdown-item" @if(env('DEMO_LOCK')==0) data-toggle="modal" data-target="#delete{{ $id }}" @else
       disabled="disabled" title="This operation is disabled in Demo !" @endif><i class="feather icon-delete mr-2"></i>{{ __("Delete")}}</a>
     @endif

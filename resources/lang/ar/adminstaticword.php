@@ -543,6 +543,8 @@ return array(
   'Status' => 'حالة',
   'StripeKey' => 'مفتاح شريط',
   'StripeSecretKey' => 'شريط سري سري',
+  'Student' => 'طالب',
+  'Students' => 'طلاب',
   'SubCategory' => 'الفئات الفرعية',
   'SubHeading' => 'العنوان الفرعي',
   'Subject' => 'موضوعات',
@@ -650,4 +652,6 @@ return array(
   'basic_skills' => 'المهارات الاساسية',
   'professional_summary' => 'الموجز المهني',
   'scientific_background' => 'الخلفية العلمية',
+  'Most purchased courses' => 'الدورات الأكثر شراءً',
+  'Most viewed courses' => 'الدورات الأكثر مشاهدةً',
 );

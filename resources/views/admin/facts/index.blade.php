@@ -59,7 +59,7 @@
                               <td>{{$fact->description}}</td> 
                               <td>{{$fact->number}}</td>
                               <td>
-                                <button type="button" class="btn btn-rounded {{ $fact->status == '1' ? 'checked' : '' ? 'btn-success-rgba' : 'btn-danger-rgba' }}" data-toggle="modal" data-target="#myModal">
+                                <button type="button" class="btn btn-rounded {{ ($fact->status == '1' ? 'checked' : '') ? 'btn-success-rgba' : 'btn-danger-rgba' }}" data-toggle="modal" data-target="#myModal">
                                   @if( $fact->status)
                                     {{ __('adminstaticword.Active') }}
                                     @else

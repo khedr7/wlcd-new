@@ -60,10 +60,10 @@
 												<a class="{{ Nav::isResource('allinstructor') }}" href="{{ route('allinstructor.index') }}">{{ __('All Instructors') }}</a>
 											</li>
 										@endcan
-										{{-- <li>
+										<li>
                                             <a class="{{ Nav::isResource('roles') }}"
                                                 href="{{ route('roles.index') }}">{{ __('Roles And Permission') }}</a>
-                                        </li> --}}
+                                        </li>
 
 									</ul>
 								</li>

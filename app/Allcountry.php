@@ -11,4 +11,8 @@ class Allcountry extends Model
     public function states(){
     	return $this->hasMany('App\Allstate','country_id');
     }
+    
+    public function users(){
+    	return $this->hasMany('App\User','country_id');
+    }
 }

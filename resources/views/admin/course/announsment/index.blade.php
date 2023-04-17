@@ -67,7 +67,7 @@
                 <td>{{ str_limit($an->announsment, $limit = 70, $end = '....')}}</td>
                 <!-- ================================== -->
                 <td>
-                  <button type="button" class="btn btn-rounded {{ $an->status == '1' ? 'checked' : '' ? 'btn-success-rgba' : 'btn-danger-rgba' }}" data-toggle="modal" data-target="#myModal">
+                  <button type="button" class="btn btn-rounded {{ ($an->status == '1' ? 'checked' : '') ? 'btn-success-rgba' : 'btn-danger-rgba' }}" data-toggle="modal" data-target="#myModal">
                       @if( $an->status)
                         {{ __('adminstaticword.Active') }}
                         @else

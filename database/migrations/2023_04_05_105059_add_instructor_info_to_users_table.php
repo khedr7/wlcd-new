@@ -14,11 +14,11 @@ class AddInstructorInfoToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-			$table->longText('practical_experience')->nullable();
-			$table->longText('basic_skills')->nullable();
-			$table->longText('professional_summary')->nullable();
-			$table->longText('scientific_background')->nullable();
-			$table->longText('courses')->nullable();
+			$table->longText('practical_experience')->nullable()->change();
+			$table->longText('basic_skills')->nullable()->change();
+			$table->longText('professional_summary')->nullable()->change();
+			$table->longText('scientific_background')->nullable()->change();
+			$table->longText('courses')->nullable()->change();
         });
     }
 

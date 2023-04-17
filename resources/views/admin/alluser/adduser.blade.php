@@ -292,6 +292,42 @@
                     }
                 });
             });
+
+
+            $(function() {
+				$("#professional_summary").select2({
+					// placeHolder: "Select One",
+					// allowClear: true,
+					tags: true,
+					tokenSeparators: [',']
+				});
+			})
+			$(function() {
+				$("#practical_experience").select2({
+					tags: true,
+					tokenSeparators: [',']
+				});
+			})
+			$(function() {
+				$("#basic_skills").select2({
+					tags: true,
+					tokenSeparators: [',']
+				});
+			})
+			$(function() {
+				$("#scientific_background").select2({
+					tags: true,
+					tokenSeparators: [',']
+				});
+			})
+			$(function() {
+				$("#courses").select2({
+					tags: true,
+					tokenSeparators: [',']
+				});
+			})
+
+
         })(jQuery);
     </script>
 

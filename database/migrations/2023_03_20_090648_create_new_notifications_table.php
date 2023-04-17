@@ -13,11 +13,13 @@ class CreateNewNotificationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('new_notifications', function (Blueprint $table) {
-            $table->id();
-            $table->string("body")->nullable();
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('new_notifications')) {
+            Schema::create('new_notifications', function (Blueprint $table) {
+                $table->id();
+                $table->string("body")->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     /**

@@ -122,7 +122,8 @@ class RolesController extends Controller
     {   
         abort_if(!auth()->user()->can('role.edit'),403,__('User does not have the right permissions.'));
 
-        if(in_array($id,['1','2','3'])){
+        // if(in_array($id,['1','2','3'])){
+        if(in_array($id,['1'])){
             Session::flash('success', trans('System role can not be edit'));
             return redirect(route('roles.index'));
         }
@@ -159,7 +160,8 @@ class RolesController extends Controller
         
         abort_if(!auth()->user()->can('role.edit'),403,__('User does not have the right permissions.'));
         
-        if(in_array($id,['1','2','3'])){
+        // if(in_array($id,['1','2','3'])){
+        if(in_array($id,['1'])){
             Session::flash('success', trans('System role cannot be edit !'));
 
             return redirect(route('roles.index'));

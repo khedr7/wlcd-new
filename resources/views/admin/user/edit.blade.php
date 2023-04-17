@@ -86,7 +86,7 @@
 										</div>
 									</div>
 
-									<div @if ($user->role != 'admin' || $user->role != 'instructor') style="display: none;" @endif id="instructor-info">
+									<div @if ($user->role != 'admin' && $user->role != 'instructor') style="display: none;" @endif id="instructor-info">
 										<div class="form-group">
 											<label for="exampleInputSlug">{{ __('adminstaticword.practical_experience') }}</label>
 											<select class="select2-multi-select form-control" id="practical_experience" name="practical_experience[]" multiple="multiple">
@@ -243,7 +243,7 @@
 										@endif
 									</div>
 
-									<div style="display: none;" id="instructor-info2">
+									<div @if ($user->role != 'admin' && $user->role != 'instructor') style="display: none;" @endif id="instructor-info2">
 										<div class="form-group">
 											<label for="exampleInputSlug">{{ __('adminstaticword.basic_skills') }}</label>
 											<select class="select2-multi-select form-control" id="basic_skills" name="basic_skills[]" multiple="multiple">
