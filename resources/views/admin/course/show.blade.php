@@ -3,7 +3,7 @@
 @section('maincontent')
     @component('components.breadcumb', ['secondaryactive' => 'active'])
         @slot('heading')
-            {{ __('Course') }} : <span>[{{ $cor->title }}]</span>
+            {{ __('Course') }} : <span>[{{ $cor->getTranslation('title', Session::get('changed_language'), false) }}]</span>
         @endslot
 
         @slot('menu1')

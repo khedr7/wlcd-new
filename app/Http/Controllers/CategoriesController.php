@@ -43,7 +43,9 @@ class CategoriesController extends Controller
     public function store(Request $request)
     {
             $data = $this->validate($request,[
-            "title"=>"required|unique:categories,title",
+            // "title"    =>"required|unique:categories,title",
+            "title_en" =>"required",
+            "title_ar" =>"required",
             "title.required"=>"Please enter category title !",
             "title.unique" => "This Category name is already exist !",
             "slug"=>"required",
@@ -52,6 +54,10 @@ class CategoriesController extends Controller
         ]);
 
         $input = $request->all();
+        $input['title']['en'] = $input['title_en'];
+        $input['title']['ar'] = $input['title_ar'];
+
+
         // $slug = str_slug($input['title'],'-');
         // $input['slug'] = $slug;
         $input['position'] = (Categories::count()+1);
@@ -121,7 +127,8 @@ class CategoriesController extends Controller
     public function update(Request $request,$id)
     {
         $data = $this->validate($request,[
-            "title"=>"required|unique:categories,title",
+            "title_en"=>"required",
+            "title_ar"=>"required",
             "title.required"=>"Please enter category title !",
             "title.unique" => "This Category name is already exist !",
             "slug"=>"required",
@@ -160,6 +167,8 @@ class CategoriesController extends Controller
 
             $input['cat_image'] = $image;
         }
+        $input['title']['en'] = $input['title_en'];
+        $input['title']['ar'] = $input['title_ar'];
         if(isset($request->status))
         {
             $input['status'] = '1';

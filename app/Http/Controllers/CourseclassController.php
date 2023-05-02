@@ -73,8 +73,8 @@ class CourseclassController extends Controller
         $courseclass = new CourseClass;
         $courseclass->course_id = $request->course_id;
         $courseclass->coursechapter_id =  $request->course_chapters;
-        $courseclass->title = $request->title;
-        $courseclass->duration = $request->duration;
+        $courseclass->title = ['en' => $request->title_en, 'ar' => $request->title_ar];
+        $courseclass->detail = ['en' => $request->detail_en, 'ar' => $request->detail_ar];
         $courseclass->status = $request->status;
         $courseclass->featured = $request->featured;
         $courseclass->video = $request->video;
@@ -84,7 +84,7 @@ class CourseclassController extends Controller
         $courseclass->size = $request->size;
         $courseclass->url = $request->url;
         $courseclass->date_time = $request->date_time;
-        $courseclass->detail = $request->detail;
+        // dd($courseclass);
 
         $courseclass->user_id = Auth::user()->id;
 
@@ -282,7 +282,7 @@ class CourseclassController extends Controller
         }
 
 
-
+        $courseclass->save();
         // Notification when add course class 
 
         if ($request->course_id) {
@@ -377,13 +377,13 @@ class CourseclassController extends Controller
         $courseclass = CourseClass::findOrFail($id);
 
         $courseclass->coursechapter_id = $request->coursechapter_id;
-        $courseclass->title = $request->title;
+        $courseclass->title = ['en' => $request->title_en, 'ar' => $request->title_ar];
+        $courseclass->detail = ['en' => $request->detail_en, 'ar' => $request->detail_ar];
         $courseclass->duration = $request->duration;
         $courseclass->status = $request->status;
         $courseclass->featured = $request->featured;
         $courseclass->size = $request->size;
         $courseclass->date_time = $request->date_time;
-        $courseclass->detail = $request->detail;
 
         $coursefind  = CourseChapter::findOrFail($request->coursechapter);
         $maincourse = Course::findorfail($coursefind->course_id);

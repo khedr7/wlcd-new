@@ -84,10 +84,10 @@
                                     @endphp
                                     <td>
                                         @foreach ($chname as $cc)
-                                            {{ $cc->chapter_name }}
+                                            {{ $cc->getTranslation('chapter_name', Session::get('changed_language'), false) }}
                                         @endforeach
                                     </td>
-                                    <td>{{ $cat->title }}</td>
+                                    <td>{{ $cat->getTranslation('title', Session::get('changed_language'), false) }}</td>
                                     <td>
                                         <label class="switch">
                                             <input class="slider" type="checkbox" data-id="{{ $cat->id }}"
@@ -194,7 +194,7 @@
                                                     class="redstar">*</sup></label>
                                             <select name="course_chapters" class="form-control select2" required>
                                                 @foreach ($coursechapters as $c)
-                                                    <option value="{{ $c->id }}">{{ $c->chapter_name }}
+                                                    <option value="{{ $c->id }}">{{ $c->getTranslation('chapter_name', Session::get('changed_language'), false) }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -205,10 +205,20 @@
 
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <label for="exampleInputDetails">{{ __('adminstaticword.Title') }}:<sup
+                                            <label for="title_en">{{ __('adminstaticword.English Title') }}:<sup
                                                     class="redstar">*</sup></label>
-                                            <input type="text" class="form-control " name="title"
-                                                id="exampleInputTitle" placeholder="Enter Your Title" value=""
+                                            <input type="text" class="form-control " name="title_en"
+                                                id="title_en" placeholder="{{ __('adminstaticword.English Title') }}" value=""
+                                                required>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label for="title_ar">{{ __('adminstaticword.Arabic Title') }}:<sup
+                                                    class="redstar">*</sup></label>
+                                            <input type="text" class="form-control " name="title_ar"
+                                                id="title_ar" placeholder="{{ __('adminstaticword.Arabic Title') }}" value=""
                                                 required>
                                         </div>
                                     </div>
@@ -217,8 +227,17 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <label
-                                                for="exampleInputDetails">{{ __('adminstaticword.Detail') }}:</label>
-                                            <textarea id="details" name="detail" rows="3" class="form-control"></textarea>
+                                                for="detail_en">{{ __('adminstaticword.English Detail') }}:</label>
+                                            <textarea id="detail_en" name="detail_en" rows="3" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                    <br>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label
+                                                for="detail_ar">{{ __('adminstaticword.Arabic Detail') }}:</label>
+                                            <textarea id="detail_ar" name="detail_ar" rows="3" class="form-control"></textarea>
                                         </div>
                                     </div>
                                     <br>

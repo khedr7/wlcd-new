@@ -18,7 +18,7 @@ $rtl = array('ar','he','ur', 'arc', 'az', 'dv', 'ku', 'fa'); //make a list of rt
 	<link href="{{ url('admin_assets_rtl/assets/plugins/slick/slick-theme.css') }}" rel="stylesheet">
 	<link href="{{ url('admin_assets_rtl/assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
 	<!-- Fontawesome 4 css -->
-	<link rel="stylesheet" href="{{ url("admin_assets/assets/icons/font-awesome/css/font-awesome.min.css") }}">
+	<link rel="stylesheet" href="{{ url('admin_assets/assets/icons/font-awesome/css/font-awesome.min.css') }}">
 	<link href="{{ url('admin_assets_rtl/assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css') }}" rel="stylesheet" type="text/css">
 	<link href="{{ url('admin_assets_rtl/assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput-typeahead.css') }}" rel="stylesheet" type="text/css">
 	<link href="{{ url('admin_assets_rtl/assets/plugins/pnotify/css/pnotify.custom.min.css') }}" rel="stylesheet" type="text/css">
@@ -30,7 +30,7 @@ $rtl = array('ar','he','ur', 'arc', 'az', 'dv', 'ku', 'fa'); //make a list of rt
 	<link href="{{ url('admin_assets_rtl/assets/css/style.css') }}" rel="stylesheet" type="text/css">
 	<!-- jQuery ui css -->
 	<link href="{{ url('admin_assets_rtl/assets/plugins/jquery-ui/jquery-ui.min.css') }}" rel="stylesheet" type="text/css">
-	
+	<link rel="stylesheet" href="{{ url('admin_assets_rtl/assets//css/theme_sidebar.css') }}" type="text/css">
 	<link rel="stylesheet" href="{{ url('admin_assets_rtl/assets/css/theme.css') }}" type="text/css">
 
 @else
@@ -45,7 +45,7 @@ $rtl = array('ar','he','ur', 'arc', 'az', 'dv', 'ku', 'fa'); //make a list of rt
 	<link href="{{ url('admin_assets/assets/plugins/slick/slick-theme.css') }}" rel="stylesheet">
 	<link href="{{ url('admin_assets/assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
 	<!-- Fontawesome 4 css -->
-	<link rel="stylesheet" href="{{ url("admin_assets/assets/icons/font-awesome/css/font-awesome.min.css") }}">
+	<link rel="stylesheet" href="{{ url('admin_assets/assets/icons/font-awesome/css/font-awesome.min.css') }}">
 	<link href="{{ url('admin_assets/assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css') }}" rel="stylesheet" type="text/css">
 	<link href="{{ url('admin_assets/assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput-typeahead.css') }}" rel="stylesheet" type="text/css">
 	<link href="{{ url('admin_assets/assets/plugins/pnotify/css/pnotify.custom.min.css') }}" rel="stylesheet" type="text/css">
@@ -66,7 +66,7 @@ $rtl = array('ar','he','ur', 'arc', 'az', 'dv', 'ku', 'fa'); //make a list of rt
 	@endif
 	@endif
 <link href="{{ url('admin_assets/assets/plugins/datepicker/datepicker.min.css') }}" rel="stylesheet" type="text/css">
-<link type="text/css" rel="stylesheet" href="{{ url("admin_assets/css/bootstrap-iconpicker.min.css") }}"/>
+<link type="text/css" rel="stylesheet" href="{{ url('admin_assets/css/bootstrap-iconpicker.min.css') }}"/>
 <link rel="stylesheet" href="{{ asset('css/custom-style.css') }}"/>
 <link href="{{ url('admin_assets/assets/plugins/colorpicker/bootstrap-colorpicker.css') }}" rel="stylesheet" type="text/css">
 

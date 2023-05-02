@@ -37,7 +37,6 @@
 
 
 
-
 			<div class="col-md-8 text-right mb-2">
 
 				<a href="{{ url('course/create') }}" class="btn btn-primary-rgba mr-2"><i
@@ -212,10 +211,10 @@
 						<div class="overlay-bg"></div>
 					@endif
 					<div class="card-img-block">
-						<h4 class="mt-3 card-title" style="color:white;">{{ $cat->title }}</h4>
+						<h4 class="mt-3 card-title" style="color:white;">{{ $cat->getTranslation('title', Session::get('changed_language'), false) }}</h4>
 						<p class="card-sub-title" style="color:white;">
 							@if (isset($cat->user))
-								{{ $cat->user['fname'] }}
+								{{ $cat->user['fname'] }} {{ $cat->user['lname'] }}
 							@endif
 						</p>
 					</div>
@@ -235,9 +234,9 @@
 						<div style="list-style-type: none;" class="mt-4"><a href="#" style="color:black">{{ __('Type') }}
 								<span class="button-align">
 									@if ($cat->type == '1')
-										paid
+										{{ __('Paid') }}
 									@else
-										Free
+										{{ __('Free') }}
 									@endif
 								</span></a></div>
 						@if (Auth::user()->role == 'admin')

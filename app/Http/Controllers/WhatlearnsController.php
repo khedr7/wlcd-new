@@ -54,10 +54,13 @@ class WhatlearnsController extends Controller
     {
 
         $data = $this->validate($request,[
-            'detail' => 'required|max:300',
+            'detail_en' => 'required|max:300',
+            'detail_ar' => 'required|max:300',
         ]);
 
         $input = $request->all();
+        $input['detail']['en'] = $input['detail_en'];
+        $input['detail']['ar'] = $input['detail_ar'];
         $data = WhatLearn::create($input);
 
         if(isset($request->status))
@@ -114,11 +117,14 @@ class WhatlearnsController extends Controller
     public function update(Request $request,$id)
     {
         $data = $this->validate($request,[
-            'detail' => 'required|max:300',
+            'detail_en' => 'required|max:300',
+            'detail_ar' => 'required|max:300',
         ]);
 
         $data = WhatLearn::findorfail($id);
         $input = $request->all();
+        $input['detail']['en'] = $input['detail_en'];
+        $input['detail']['ar'] = $input['detail_ar'];
 
         if(isset($request->status))
         {

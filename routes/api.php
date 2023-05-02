@@ -64,7 +64,10 @@ Route::middleware(['ip_block'])->group(function () {
 	Route::get('course/paginate', 'Api\MainController@paginationcourse');
 
 	Route::get('featuredcourse', 'Api\MainController@featuredcourse');
+	Route::get('all-featuredcourse', 'Api\MainController@allfeaturedcourse');
 	Route::get('recent/course', 'Api\MainController@recentcourse');
+	Route::get('related-course', 'Api\MainController@relatedcourse');
+	Route::get('all-recent/course', 'Api\MainController@allRecentcourse');
 	Route::get('discount/course', 'Api\MainController@discountcourses');
 
 	Route::get('bundle/courses', 'Api\MainController@bundle');
@@ -152,6 +155,9 @@ Route::middleware(['ip_block'])->group(function () {
 
 		Route::post('course/progress', 'Api\MainController@courseprogress');
 		Route::post('course/progress/update', 'Api\MainController@courseprogressupdate');
+		
+		Route::get('course/lessons', 'Api\MainController@courseLessons');
+		
 
 		Route::post('course/report', 'Api\MainController@coursereport');
 

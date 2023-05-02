@@ -69,7 +69,7 @@ if(Schema::hasTable('color_options')){
         z-index: 100;
         margin: 0;
         border-radius: 0;
-        background-color: var(--background-blue-bg-color) !important;
+        background-color: #007b4e !important;
     }
 
     .bg-primary {

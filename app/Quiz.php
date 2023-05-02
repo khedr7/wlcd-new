@@ -9,7 +9,7 @@ class Quiz extends Model
 {
 	use HasTranslations;
     
-    public $translatable = ['question'];
+    public $translatable = ['question', 'a', 'b', 'c', 'd'];
 
     /**
      * Convert the model instance to an array.

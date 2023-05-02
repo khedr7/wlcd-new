@@ -51,14 +51,19 @@ class QuizTopicController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'title_en' => 'required|string',
+            'title_ar' => 'required|string',
+            'per_q_mark' => 'required',
+            
+        ]);
 
         $input = $request->all();
+        $input['title']['en'] = $request->title_en;
+        $input['title']['ar'] = $request->title_ar;
+        $input['description']['en'] = $request->description_en;
+        $input['description']['ar'] = $request->description_ar;
 
-        $request->validate([
-            'title' => 'required|string',
-            'per_q_mark' => 'required',
-
-        ]);
 
         if (isset($request->quiz_price)) {
             $request->validate([
@@ -135,7 +140,8 @@ class QuizTopicController extends Controller
     {
         $request->validate([
 
-            'title' => 'required|string',
+            'title_en' => 'required|string',
+            'title_ar' => 'required|string',
             'per_q_mark' => 'required',
 
         ]);
@@ -147,9 +153,9 @@ class QuizTopicController extends Controller
         }
 
         $topic = QuizTopic::findOrFail($id);
-
-        $topic->title = $request->title;
-        $topic->description = $request->description;
+        
+        $topic->title = ['en' => $request->title_en, 'ar' => $request->title_ar];
+        $topic->description = ['en' => $request->description_en, 'ar' => $request->description_ar];
         $topic->per_q_mark = $request->per_q_mark;
         $topic->timer = isset($request->timer) ? $request->timer : null;
         $topic->due_days = $request->due_days;

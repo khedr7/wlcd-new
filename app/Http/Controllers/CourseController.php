@@ -52,10 +52,13 @@ use App\Allcountry;
 use App\Mail\NewCourseMail;
 use Illuminate\Support\Facades\Mail;
 use Spatie\Permission\Models\Role;
+use App\Http\Traits\TranslationTrait;
 
 
 class CourseController extends Controller
 {
+  use TranslationTrait;
+
   public function __construct()
   {
 
@@ -129,6 +132,7 @@ class CourseController extends Controller
 
   public function create()
   {
+
     $userid = auth()->user()->id;
     $category = Categories::all();
 
@@ -155,7 +159,6 @@ class CourseController extends Controller
 
   public function store(Request $request)
   {
-
     if (config('app.demolock') == 1) {
       return back()->with('delete', 'Disabled in demo');
     }
@@ -185,8 +188,9 @@ class CourseController extends Controller
       ]);
     }
 
+    $newCourse = new Course;
+    $input = $this->getTranslatableRequest($newCourse->getTranslatableAttributes(), $request->all(), ['en', 'ar']);
 
-    $input = $request->all();
     $input['new_course_mail'] = 0;
 
     if (isset($request->status)) {
@@ -375,7 +379,9 @@ class CourseController extends Controller
       ]);
     }
     $mailable = 0;
-    $input = $request->all();
+
+    $newCourse = new Course;
+    $input = $this->getTranslatableRequest($newCourse->getTranslatableAttributes(), $request->all(), [$request->lang]);
 
     $input['new_course_mail'] = 0;
 
@@ -542,7 +548,6 @@ class CourseController extends Controller
         'price' => $input['price'],
         'offer_price' => $input['discount_price'],
       ]);
-
 
     $course->update($input);
 

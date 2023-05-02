@@ -9,7 +9,7 @@ class CourseClass extends Model
 {
     use HasTranslations;
     
-    public $translatable = ['title'];
+    public $translatable = ['title', 'detail'];
 
     /**
      * Convert the model instance to an array.

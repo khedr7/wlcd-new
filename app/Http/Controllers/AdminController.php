@@ -261,6 +261,10 @@ class AdminController extends Controller
                 $contry->users_count = $contry->users->count();
             }
 
+            $countries = $countries->sortByDesc(function ($country) {
+                return $country->users_count;
+            });
+
             $topCountries = $countries->filter(function ($model) {
                 return $model->users_count != 0;
             });

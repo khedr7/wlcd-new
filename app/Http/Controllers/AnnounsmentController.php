@@ -55,12 +55,15 @@ class AnnounsmentController extends Controller
     {
 
         $data = $this->validate($request, [
-            'announsment' => 'required',
+            'announsment_en' => 'required',
+            'announsment_ar' => 'required',
         ]);
 
         $input = $request->all();
+        $input['announsment']['en'] = $input['announsment_en'];
+        $input['announsment']['ar'] = $input['announsment_ar'];
         $data = Announcement::create($input);
-
+        
         if (isset($request->status)) {
             $data->status = '1';
         } else {
@@ -126,6 +129,8 @@ class AnnounsmentController extends Controller
     {
         $data = Announcement::findorfail($id);
         $input = $request->all();
+        $input['announsment']['en'] = $input['announsment_en'];
+        $input['announsment']['ar'] = $input['announsment_ar'];
 
         if (isset($request->status)) {
             $input['status'] = '1';

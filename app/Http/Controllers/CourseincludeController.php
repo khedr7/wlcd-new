@@ -52,10 +52,13 @@ class CourseincludeController extends Controller
     { 
 
         $data = $this->validate($request,[
-            'detail' => 'required|max:50',
+            'detail_en' => 'required|max:50',
+            'detail_ar' => 'required|max:50',
         ]);
 
         $input = $request->all();
+        $input['detail']['en'] = $input['detail_en'];
+        $input['detail']['ar'] = $input['detail_ar'];
         $data = CourseInclude::create($input);
 
         if(isset($request->status))
@@ -109,11 +112,14 @@ class CourseincludeController extends Controller
     {
 
         $data = $this->validate($request,[
-            'detail' => 'required|max:50',
+            'detail_en' => 'required|max:50',
+            'detail_ar' => 'required|max:50',
         ]);
 
         $data = CourseInclude::findorfail($id);
         $input = $request->all();
+        $input['detail']['en'] = $input['detail_en'];
+        $input['detail']['ar'] = $input['detail_ar'];
 
         if(isset($request->status))
         {
