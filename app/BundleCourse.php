@@ -9,7 +9,7 @@ class BundleCourse extends Model
 {
     use HasTranslations;
 
-    public $translatable = ['title', 'detail'];
+    public $translatable = ['title', 'detail', 'short_detail'];
 
     /**
      * Convert the model instance to an array.

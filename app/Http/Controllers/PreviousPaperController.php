@@ -7,9 +7,11 @@ use Illuminate\Http\Request;
 use Session;
 use DB;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Traits\TranslationTrait;
 
 class PreviousPaperController extends Controller
 {
+    use TranslationTrait;
 
     /**
      * Display a listing of the resource.
@@ -43,7 +45,8 @@ class PreviousPaperController extends Controller
             'title' => 'required',
         ]);
 
-        $input = $request->all();
+        $paper = new PreviousPaper;
+        $input = $this->getTranslatableRequest($paper->getTranslatableAttributes(), $request->all(), ['en', 'ar']);
 
         if ($file = $request->file('file')) {
 
@@ -113,7 +116,8 @@ class PreviousPaperController extends Controller
         ]);
 
         $data = PreviousPaper::findorfail($id);
-        $input = $request->all();
+        $input = $this->getTranslatableRequest($data->getTranslatableAttributes(), $request->all(), [$request->lang]);
+
 
         if (isset($request->status)) {
             $input['status'] = '1';
