@@ -50,4 +50,7 @@ Route::middleware(['ip_block'])->group(function () {
     Route::get('all-free/course', [CourseController::class, 'allFreeCourses']);
     Route::get('top-discounted/course', [CourseController::class, 'topDiscountedCourses']);
     Route::get('all-top-discounted/course', [CourseController::class, 'allTopDiscountedCourses']);
+    Route::get('bundle/course', [CourseController::class, 'bundleCourses']);
+    Route::get('all-bundle/course', [CourseController::class, 'allBundleCourses']);
+
 });

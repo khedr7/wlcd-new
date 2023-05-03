@@ -25,6 +25,7 @@ class Course extends Model
 
         return $attributes;
     }
+    
 
     protected $table = 'courses';
 
