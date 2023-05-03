@@ -32,7 +32,7 @@
 
                                 @foreach ($category as $caat)
                                     <option {{ $cor->category_id == $caat->id ? 'selected' : '' }}
-                                        value="{{ $caat->id }}">{{ $caat->title }}</option>
+                                        value="{{ $caat->id }}">{{ $caat->getTranslation('title', 'ar', false) }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -290,7 +290,6 @@
                     <div class="row">
                         <!-- country start -->
                         {{-- <div class="col-md-6">
-
                             <label>{{ __('Country') }}: <span></span></label>
                             <select class="select2-multi-select form-control" name="country[]" multiple="multiple">
                                 @foreach ($countries as $country)
@@ -298,10 +297,8 @@
                                         value="{{ $country->name }}">{{ $country->name }}</option>
                                 @endforeach
                             </select>
-
                             <small class="text-info"><i class="fa fa-question-circle"></i>
                                 ({{ __('Select those countries where you want to block courses') }} )</small>
-
                         </div> --}}
 
                         <div class="col-md-6">
@@ -330,7 +327,6 @@
                   </label>
                  
                   <br>     
-
                   <div style="{{ $cor->day == 1 ? '' : 'display:none' }}" id="jeet">
                     <label for="exampleInputSlug">{{ __('adminstaticword.Days') }}:<sup class="redstar">*</sup></label>
                     <input type="number" min="1"  class="form-control" name="day" id="exampleInputPassword1" placeholder="{{ __('adminstaticword.Enter') }} day" value="{{ $cor->day }}">
@@ -636,14 +632,12 @@
     <script>
         (function($) {
             "use strict";
-
             $(function() {
                 $('.js-example-basic-single').select2({
                     tags: true,
                     tokenSeparators: [',', ' ']
                 });
             });
-
             $(function() {
                 $("#start-date").datepicker({
                     language: 'en',
@@ -652,21 +646,17 @@
                     dateFormat: 'yyyy-mm-dd',
                 });
             });
-
             $(function() {
                 $('#cb1').change(function() {
                     $('#f').val(+$(this).prop('checked'))
                 })
             })
-
             $(function() {
                 $('#cb3').change(function() {
                     $('#test').val(+$(this).prop('checked'))
                 })
             })
-
             $(function() {
-
                 $('#murl').change(function() {
                     if ($('#murl').val() == 'yes') {
                         $('#doab').show();
@@ -674,11 +664,8 @@
                         $('#doab').hide();
                     }
                 });
-
             });
-
             $(function() {
-
                 $('#murll').change(function() {
                     if ($('#murll').val() == 'yes') {
                         $('#doabb').show();
@@ -686,36 +673,25 @@
                         $('#doab').hide();
                     }
                 });
-
             });
-
             $('#customSwitch2').change(function() {
                 if ($('#customSwitch2').is(':checked')) {
                     $('#doabox').show('fast');
-
                     $('#priceMain').prop('required', 'required');
-
                 } else {
                     $('#doabox').hide('fast');
-
                     $('#priceMain').removeAttr('required');
                 }
-
             });
-
             $('#customSwitch61').on('change', function() {
-
                 if ($('#customSwitch61').is(':checked')) {
                     $('#document1').show('fast');
                     $('#document2').hide('fast');
-
                 } else {
                     $('#document2').show('fast');
                     $('#document1').hide('fast');
                 }
-
             });
-
             $(function() {
                 var urlLike = '{{ url('admin/dropdown') }}';
                 $('#category_id').change(function() {
@@ -748,7 +724,6 @@
                     }
                 });
             });
-
             $(function() {
                 var urlLike = '{{ url('admin/gcat') }}';
                 $('#upload_id').change(function() {
@@ -781,7 +756,6 @@
                     }
                 });
             });
-
         })(jQuery);
     </script>
 

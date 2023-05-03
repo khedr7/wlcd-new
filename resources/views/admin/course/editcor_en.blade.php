@@ -19,7 +19,7 @@
                     {{ method_field('PUT') }}
 
                     <input type="hidden" name="lang" value="en" id="lang">
-
+ 
                     <div class="row">
                         <div class="col-md-4">
                             <label>{{ __('adminstaticword.Category') }}<span class="redstar">*</span></label>
@@ -32,7 +32,7 @@
 
                                 @foreach ($category as $caat)
                                     <option {{ $cor->category_id == $caat->id ? 'selected' : '' }}
-                                        value="{{ $caat->id }}">{{ $caat->title }}</option>
+                                        value="{{ $caat->id }}">{{ $caat->getTranslation('title', 'en', false) }}</option>
                                 @endforeach
                             </select>
                         </div>

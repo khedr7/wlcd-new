@@ -76,7 +76,7 @@
 
                 <td>
                   @if($cat->courses)
-                  {{$cat->courses->title}}
+                  {{$cat->courses->getTranslation('title', Session::get('changed_language'), false)}}
                   @endif
                 </td>
                  <!-- ================================== -->
@@ -118,7 +118,7 @@
                         </div>
                         <div class="modal-body">
                           <h4>{{ __('Are You Sure ?')}}</h4>
-                          <p>{{ __('Do you really want to delete')}} @if($cat->courses) <b>{{$cat->courses->title}}</b> @endif ? {{ __('This process cannot be undone.')}}</p>
+                          <p>{{ __('Do you really want to delete')}} @if($cat->courses) <b>{{$cat->courses->getTranslation('title', Session::get('changed_language'), false)}}</b> @endif ? {{ __('This process cannot be undone.')}}</p>
                         </div>
                         <div class="modal-footer">
                           <form method="post" action="{{url('relatedcourse/'.$cat->id)}}" class="pull-right">
@@ -169,7 +169,7 @@
                 <div class="col-md-12">
                   <label for="exampleInputSlug">{{ __('adminstaticword.Course') }}</label>
                   <select name="main_course_id" class="form-control select2">
-                    <option value="{{ $cor->id }}">{{ $cor->title }}</option>
+                    <option value="{{ $cor->id }}">{{ $cor->getTranslation('title', Session::get('changed_language'), false) }}</option>
                   </select>
                 </div>
               </div>
@@ -185,7 +185,7 @@
                   <select style="width: 100%" name="course_id" class="form-control select2">
                     @foreach($courses as $course)
                     @if($course->id !== $cor->id)
-                    <option value="{{ $course->id }}">{{ $course->title }}</option>
+                    <option value="{{ $course->id }}">{{ $course->getTranslation('title', Session::get('changed_language'), false) }}</option>
                     @endif
                     @endforeach
                   </select><br>

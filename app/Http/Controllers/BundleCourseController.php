@@ -16,9 +16,12 @@ use App\Setting;
 use Session;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
+use App\Http\Traits\TranslationTrait;
 
 class BundleCourseController extends Controller
 {
+    use TranslationTrait;
+
     public function __construct()
     {
 
@@ -69,7 +72,10 @@ class BundleCourseController extends Controller
 
             ]);
 
-            $input = $request->all();
+            $data = new BundleCourse;
+            $input = $this->getTranslatableRequest($data->getTranslatableAttributes(), $request->all(), ['en', 'ar']);
+
+
 
             $is_subscription_enabled = isset($request->is_subscription_enabled)  ? 1 : 0;
             if ($is_subscription_enabled == 1) {
@@ -230,8 +236,8 @@ class BundleCourseController extends Controller
         ]);
 
         $course = BundleCourse::findOrFail($id);
-        $input = $request->all();
-
+        $input = $this->getTranslatableRequest($course->getTranslatableAttributes(), $request->all(), [$request->lang]);
+        
         if (isset($request->type)) {
             $input['type'] = "1";
         } else {
@@ -263,14 +269,16 @@ class BundleCourseController extends Controller
             $input['preview_image'] = $image;
         }
 
-        $slug = str_slug($input['title'], '-');
-        $input['slug'] = $slug;
+        if($request->lang == 'en'){
+            $slug = str_slug($request->title, '-');
+            $input['slug'] = $slug;
+        }
 
         Cart::where('bundle_id', $id)
-            ->update([
-                'price' => $request->price,
-                'offer_price' => $request->discount_price,
-            ]);
+        ->update([
+            'price' => $request->price,
+            'offer_price' => $request->discount_price,
+        ]);
 
         // FSMS check  if price changed then only create new plan
         if ($request->is_subscription_enabled == 1 && $this->isPriceChanged($course, $input)) {

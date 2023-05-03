@@ -16,10 +16,13 @@ use Rap2hpoutre\FastExcel\FastExcel;
 use Session;
 use DB;
 use Spatie\Permission\Models\Role;
+use App\Http\Traits\TranslationTrait;
 
 
 class QuizController extends Controller
 {
+  use TranslationTrait;
+
   /**
    * Display a listing of the resource.
    *
@@ -63,7 +66,6 @@ class QuizController extends Controller
       ]);
     } else {
 
-
       $request->validate([
         'course_id' => 'required',
         'topic_id' => 'required',
@@ -78,8 +80,9 @@ class QuizController extends Controller
     }
 
 
+    $data = new Quiz;
+    $input = $this->getTranslatableRequest($data->getTranslatableAttributes(), $request->all(), ['en', 'ar']);
 
-    $input = $request->all();
 
     if (isset($request->type)) {
       $input['type'] = '1';
@@ -159,6 +162,8 @@ class QuizController extends Controller
     ]);
 
     $input = $request->all();
+    $input = $this->getTranslatableRequest($question->getTranslatableAttributes(), $request->all(), [$request->lang]);
+
 
     if ($file = $request->file('question_img')) {
 

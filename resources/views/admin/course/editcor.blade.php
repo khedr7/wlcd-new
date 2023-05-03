@@ -27,7 +27,6 @@
 								id="pills-arabic-tab" data-toggle="pill" href="#pills-arabic" role="tab" aria-controls="pills-arabic"
 								aria-selected="false">{{ __('Arabic') }}</a>
 						</li>
-
 					</ul>
 					<div class="tab-content" id="pills-tabContent">
 						<div
@@ -44,8 +43,6 @@
 							id="pills-arabic" role="tabpanel" aria-labelledby="pills-arabic-tab">
 							@include('admin.course.editcor_ar')
 						</div>
-
-
 					</div>
 				</div>
 			</div>
