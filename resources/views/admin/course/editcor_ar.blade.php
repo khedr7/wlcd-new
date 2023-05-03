@@ -32,7 +32,7 @@
 
                                 @foreach ($category as $caat)
                                     <option {{ $cor->category_id == $caat->id ? 'selected' : '' }}
-                                        value="{{ $caat->id }}">{{ $caat->title }}</option>
+                                        value="{{ $caat->id }}">{{ $caat->getTranslation('title', 'ar', false) }}</option>
                                 @endforeach
                             </select>
                         </div>

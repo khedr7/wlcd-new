@@ -155,265 +155,263 @@
 														<div class="panel panel-sum">
 															<div class="modal-body">
 
-                                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                                  <li class="nav-item">
-                                    <a
-                                      @if ($quiz->getTranslation('question', 'en', false) != null) class="nav-link active"
-                                      @else
-                                     class="nav-link" @endif
-                                      id="pills-english1-tab" data-toggle="pill" href="#pills-english1" role="tab"
-                                      aria-controls="pills-english1" aria-selected="true">{{ __('English') }}</a>
-                                  </li>
-                                  <li class="nav-item">
-                                    <a
-                                      @if ($quiz->getTranslation('question', 'en', false) != null) class="nav-link"
-                                    @else
-                                    class="nav-link active" @endif
-                                      id="pills-arabic1-tab" data-toggle="pill" href="#pills-arabic1" role="tab" aria-controls="pills-arabic1"
-                                      aria-selected="false">{{ __('Arabic') }}</a>
-                                  </li>
-                                </ul>
-                
-                                <div class="tab-content" id="pills-tabContent">
-                                  <div
-                                    @if ($quiz->getTranslation('question', 'en', false) != null) class="tab-pane fade show active"
-                                    @else
-                                    class="tab-pane fade show" @endif
-                                    id="pills-english1" role="tabpanel" aria-labelledby="pills-english1-tab">
-                
-                                    <form id="demo-form2" method="POST" action="{{route('questions.update', $quiz->id)}}"
-                                      data-parsley-validate class="form-horizontal form-label-left"
-                                      enctype="multipart/form-data">
-                                      {{ csrf_field() }}
-                                      {{ method_field('PUT') }}
-        
-                                      <input type="hidden" name="lang" value="en" id="lang">
+																<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+																	<li class="nav-item">
+																		<a
+																			@if ($quiz->getTranslation('question', 'en', false) != null) class="nav-link active"
+																				@else
+																				class="nav-link" @endif
+																			id="pills-english1-tab" data-toggle="pill" href="#pills-english1" role="tab"
+																			aria-controls="pills-english1" aria-selected="true">{{ __('English') }}</a>
+																	</li>
+																	<li class="nav-item">
+																		<a
+																			@if ($quiz->getTranslation('question', 'en', false) != null) class="nav-link"
+																				@else
+																				class="nav-link active" @endif
+																			id="pills-arabic1-tab" data-toggle="pill" href="#pills-arabic1" role="tab"
+																			aria-controls="pills-arabic1" aria-selected="false">{{ __('Arabic') }}</a>
+																	</li>
+																</ul>
 
-                                      <input type="hidden" name="course_id" value="{{ $topic->course_id }}" />
-        
-                                      <input type="hidden" name="topic_id" value="{{ $topic->id }}" />
-                                      <div class="row">
-                                        <div class="col-md-6">
-                                          <div class="col-md-12">
-                                            <label for="exampleInputTit1e">{{ __('adminstaticword.Question') }}</label>
-                                          <textarea name="question" rows="6" class="form-control"
-                                            placeholder="Enter Your Question">{{ $quiz->getTranslation('question', 'en', false) }}</textarea>
-                                            <br>
-                                          </div>
-                                          <div class="col-md-12">
-                                            <label for="exampleInputDetails">{{ __('adminstaticword.Answer') }}:<sup
-                                              class="redstar">*</sup></label>
-                                          <select style="width: 100%" name="answer"
-                                            class="form-control select2">
-                                            <option {{ $quiz->answer == 'A' ? 'selected' : ''}} value="A">
-                                              {{ __('adminstaticword.A') }}</option>
-                                            <option {{ $quiz->answer == 'B' ? 'selected' : ''}} value="B">
-                                              {{ __('adminstaticword.B') }}</option>
-                                            <option {{ $quiz->answer == 'C' ? 'selected' : ''}} value="C">
-                                              {{ __('adminstaticword.C') }}</option>
-                                            <option {{ $quiz->answer == 'D' ? 'selected' : ''}} value="D">
-                                              {{ __('adminstaticword.D') }}</option>
-                                          </select> 
-                                          </div>
-                                          <br>
-                                          <h4 class="extras-heading">{{ __('Video And Image For Question') }}</h4>
-                                        <div class="form-group{{ $errors->has('question_video_link') ? ' has-error' : '' }}">
-                                      
-                                      
-                                          <label for="exampleInputDetails">{{ __('Add Video To Question') }} :<sup class="redstar">*</sup></label>
-                                          <input type="text" name="question_video_link" class="form-control"
-                                            placeholder="https://myvideolink.com/embed/.." />
-                                          <small class="text-danger">{{ $errors->first('question_video_link') }}</small>
-                                          <small class="text-muted text-info"> <i class="text-dark feather icon-help-circle"></i> {{ __('YouTube And Vimeo Video Support (Only Embed Code Link)') }}</small>
-                                        </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                          <div class="col-md-12">
-        
-                                            <label for="exampleInputDetails">{{ __('adminstaticword.AOption') }} :<sup
-                                                class="redstar">*</sup></label>
-                                            <input type="text" name="a" value="{{ $quiz->getTranslation('a', 'en', false) }}" class="form-control"
-                                              placeholder="Enter Option A">
-                                          </div>
-          
-                                          <div class="col-md-12">
-                                            <label for="exampleInputDetails">{{ __('adminstaticword.BOption') }} :<sup
-                                                class="redstar">*</sup></label>
-                                            <input type="text" name="b" value="{{ $quiz->getTranslation('b', 'en', false) }}" class="form-control"
-                                              placeholder="Enter Option B" />
-                                          </div>
-          
-                                          <div class="col-md-12">
-          
-                                            <label for="exampleInputDetails">{{ __('adminstaticword.COption') }} :<sup
-                                                class="redstar">*</sup></label>
-                                            <input type="text" name="c" value="{{ $quiz->getTranslation('c', 'en', false) }}" class="form-control"
-                                              placeholder="Enter Option C" />
-                                          </div>
-          
-                                          <div class="col-md-12">
-          
-                                            <label for="exampleInputDetails">{{ __('adminstaticword.DOption') }} :<sup
-                                                class="redstar">*</sup></label>
-                                            <input type="text" name="d" value="{{ $quiz->getTranslation('d', 'en', false) }}" class="form-control"
-                                              placeholder="Enter Option D" />
-                                          </div>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                          <label class="text-dark" for="exampleInputSlug">{{ __('adminstaticword.Image') }}: </label>
-                                    
-                                          <div class="input-group mb-3">
-                                    
-                                            <div class="input-group-prepend">
-                                              <span class="input-group-text" id="inputGroupFileAddon01">{{ __('Upload') }}</span>
-                                            </div>
-                                    
-                                    
-                                            <div class="custom-file">
-                                    
-                                              <input type="file" name="question_img" class="custom-file-input" id="question_img"
-                                                aria-describedby="inputGroupFileAddon01">
-                                              <label class="custom-file-label" for="inputGroupFile01">{{ __('Choose file') }}</label>
-                                            </div>
-                                          </div>
-                                          
-                                        </div>
-                                      </div>
-                                      <div class="form-group">
-                                        <button type="reset" class="btn btn-danger-rgba"><i class="fa fa-ban"></i>
-                                          {{ __('Reset') }}</button>
-                                        <button type="submit" class="btn btn-primary-rgba"><i class="fa fa-check-circle"></i>
-                                          {{ __('Update') }}</button>
-                                      </div>
-                      
-                                      <div class="clear-both"></div>
-        
-                                   
-                                    </form>
-                
-                                  </div>
-                
-                                  <div
-                                    @if ($quiz->getTranslation('question', 'en', false) != null) class="tab-pane fade show"
-                                        @else
-                                        class="tab-pane fade show active" @endif
-                                    id="pills-arabic1" role="tabpanel" aria-labelledby="pills-arabic1-tab">
-                
-                                    <form id="demo-form2" method="POST" action="{{route('questions.update', $quiz->id)}}"
-                                      data-parsley-validate class="form-horizontal form-label-left"
-                                      enctype="multipart/form-data">
-                                      {{ csrf_field() }}
-                                      {{ method_field('PUT') }}
+																<div class="tab-content" id="pills-tabContent">
+																	<div
+																		@if ($quiz->getTranslation('question', 'en', false) != null) class="tab-pane fade show active"
+																			@else
+																			class="tab-pane fade show" @endif
+																		id="pills-english1" role="tabpanel" aria-labelledby="pills-english1-tab">
 
-                                      <input type="hidden" name="lang" value="ar" id="lang">
+																		<form id="demo-form2" method="POST" action="{{ route('questions.update', $quiz->id) }}"
+																			data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
+																			{{ csrf_field() }}
+																			{{ method_field('PUT') }}
 
-        
-                                      <input type="hidden" name="course_id" value="{{ $topic->course_id }}" />
-        
-                                      <input type="hidden" name="topic_id" value="{{ $topic->id }}" />
-                                      <div class="row">
-                                        <div class="col-md-6">
-                                          <div class="col-md-12">
-                                            <label for="exampleInputTit1e">{{ __('adminstaticword.Question') }}</label>
-                                          <textarea name="question" rows="6" class="form-control"
-                                            placeholder="Enter Your Question">{{ $quiz->getTranslation('question', 'ar', false) }}</textarea>
-                                            <br>
-                                          </div>
-                                          <div class="col-md-12">
-                                            <label for="exampleInputDetails">{{ __('adminstaticword.Answer') }}:<sup
-                                              class="redstar">*</sup></label>
-                                          <select style="width: 100%" name="answer"
-                                            class="form-control select2">
-                                            <option {{ $quiz->answer == 'A' ? 'selected' : ''}} value="A">
-                                              {{ __('adminstaticword.A') }}</option>
-                                            <option {{ $quiz->answer == 'B' ? 'selected' : ''}} value="B">
-                                              {{ __('adminstaticword.B') }}</option>
-                                            <option {{ $quiz->answer == 'C' ? 'selected' : ''}} value="C">
-                                              {{ __('adminstaticword.C') }}</option>
-                                            <option {{ $quiz->answer == 'D' ? 'selected' : ''}} value="D">
-                                              {{ __('adminstaticword.D') }}</option>
-                                          </select> 
-                                          </div>
-                                          <br>
-                                          <h4 class="extras-heading">{{ __('Video And Image For Question') }}</h4>
-                                        <div class="form-group{{ $errors->has('question_video_link') ? ' has-error' : '' }}">
-                                      
-                                      
-                                          <label for="exampleInputDetails">{{ __('Add Video To Question') }} :<sup class="redstar">*</sup></label>
-                                          <input type="text" name="question_video_link" class="form-control"
-                                            placeholder="https://myvideolink.com/embed/.." />
-                                          <small class="text-danger">{{ $errors->first('question_video_link') }}</small>
-                                          <small class="text-muted text-info"> <i class="text-dark feather icon-help-circle"></i> {{ __('YouTube And Vimeo Video Support (Only Embed Code Link)') }}</small>
-                                        </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                          <div class="col-md-12">
-        
-                                            <label for="exampleInputDetails">{{ __('adminstaticword.AOption') }} :<sup
-                                                class="redstar">*</sup></label>
-                                            <input type="text" name="a" value="{{ $quiz->getTranslation('a', 'ar', false) }}" class="form-control"
-                                              placeholder="Enter Option A">
-                                          </div>
-          
-                                          <div class="col-md-12">
-                                            <label for="exampleInputDetails">{{ __('adminstaticword.BOption') }} :<sup
-                                                class="redstar">*</sup></label>
-                                            <input type="text" name="b" value="{{ $quiz->getTranslation('b', 'ar', false) }}" class="form-control"
-                                              placeholder="Enter Option B" />
-                                          </div>
-          
-                                          <div class="col-md-12">
-          
-                                            <label for="exampleInputDetails">{{ __('adminstaticword.COption') }} :<sup
-                                                class="redstar">*</sup></label>
-                                            <input type="text" name="c" value="{{ $quiz->getTranslation('c', 'ar', false) }}" class="form-control"
-                                              placeholder="Enter Option C" />
-                                          </div>
-          
-                                          <div class="col-md-12">
-          
-                                            <label for="exampleInputDetails">{{ __('adminstaticword.DOption') }} :<sup
-                                                class="redstar">*</sup></label>
-                                            <input type="text" name="d" value="{{ $quiz->getTranslation('d', 'ar', false) }}" class="form-control"
-                                              placeholder="Enter Option D" />
-                                          </div>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                          <label class="text-dark" for="exampleInputSlug">{{ __('adminstaticword.Image') }}: </label>
-                                    
-                                          <div class="input-group mb-3">
-                                    
-                                            <div class="input-group-prepend">
-                                              <span class="input-group-text" id="inputGroupFileAddon01">{{ __('Upload') }}</span>
-                                            </div>
-                                    
-                                    
-                                            <div class="custom-file">
-                                    
-                                              <input type="file" name="question_img" class="custom-file-input" id="question_img"
-                                                aria-describedby="inputGroupFileAddon01">
-                                              <label class="custom-file-label" for="inputGroupFile01">{{ __('Choose file') }}</label>
-                                            </div>
-                                          </div>
-                                          
-                                        </div>
-                                      </div>
-                                      <div class="form-group">
-                                        <button type="reset" class="btn btn-danger-rgba"><i class="fa fa-ban"></i>
-                                          {{ __('Reset') }}</button>
-                                        <button type="submit" class="btn btn-primary-rgba"><i class="fa fa-check-circle"></i>
-                                          {{ __('Update') }}</button>
-                                      </div>
-                      
-                                      <div class="clear-both"></div>
-        
-                                   
-                                    </form>
-                
-                                  </div>
-                
-                                </div>
-                              </div>
+																			<input type="hidden" name="lang" value="en" id="lang">
+
+																			<input type="hidden" name="course_id" value="{{ $topic->course_id }}" />
+
+																			<input type="hidden" name="topic_id" value="{{ $topic->id }}" />
+																			<div class="row">
+																				<div class="col-md-6">
+																					<div class="col-md-12">
+																						<label for="exampleInputTit1e">{{ __('adminstaticword.Question') }}</label>
+																						<textarea name="question" rows="6" class="form-control" placeholder="Enter Your Question">{{ $quiz->getTranslation('question', 'en', false) }}</textarea>
+																						<br>
+																					</div>
+																					<div class="col-md-12">
+																						<label for="exampleInputDetails">{{ __('adminstaticword.Answer') }}:<sup
+																								class="redstar">*</sup></label>
+																						<select style="width: 100%" name="answer" class="form-control select2">
+																							<option {{ $quiz->answer == 'A' ? 'selected' : '' }} value="A">
+																								{{ __('adminstaticword.A') }}</option>
+																							<option {{ $quiz->answer == 'B' ? 'selected' : '' }} value="B">
+																								{{ __('adminstaticword.B') }}</option>
+																							<option {{ $quiz->answer == 'C' ? 'selected' : '' }} value="C">
+																								{{ __('adminstaticword.C') }}</option>
+																							<option {{ $quiz->answer == 'D' ? 'selected' : '' }} value="D">
+																								{{ __('adminstaticword.D') }}</option>
+																						</select>
+																					</div>
+																					<br>
+																					<h4 class="extras-heading">{{ __('Video And Image For Question') }}</h4>
+																					<div class="form-group{{ $errors->has('question_video_link') ? ' has-error' : '' }}">
+
+
+																						<label for="exampleInputDetails">{{ __('Add Video To Question') }} :<sup
+																								class="redstar">*</sup></label>
+																						<input type="text" name="question_video_link" class="form-control"
+																							placeholder="https://myvideolink.com/embed/.." />
+																						<small class="text-danger">{{ $errors->first('question_video_link') }}</small>
+																						<small class="text-muted text-info"> <i class="text-dark feather icon-help-circle"></i>
+																							{{ __('YouTube And Vimeo Video Support (Only Embed Code Link)') }}</small>
+																					</div>
+																				</div>
+																				<div class="col-md-6">
+																					<div class="col-md-12">
+
+																						<label for="exampleInputDetails">{{ __('adminstaticword.AOption') }} :<sup
+																								class="redstar">*</sup></label>
+																						<input type="text" name="a" value="{{ $quiz->getTranslation('a', 'en', false) }}"
+																							class="form-control" placeholder="Enter Option A">
+																					</div>
+
+																					<div class="col-md-12">
+																						<label for="exampleInputDetails">{{ __('adminstaticword.BOption') }} :<sup
+																								class="redstar">*</sup></label>
+																						<input type="text" name="b" value="{{ $quiz->getTranslation('b', 'en', false) }}"
+																							class="form-control" placeholder="Enter Option B" />
+																					</div>
+
+																					<div class="col-md-12">
+
+																						<label for="exampleInputDetails">{{ __('adminstaticword.COption') }} :<sup
+																								class="redstar">*</sup></label>
+																						<input type="text" name="c" value="{{ $quiz->getTranslation('c', 'en', false) }}"
+																							class="form-control" placeholder="Enter Option C" />
+																					</div>
+
+																					<div class="col-md-12">
+
+																						<label for="exampleInputDetails">{{ __('adminstaticword.DOption') }} :<sup
+																								class="redstar">*</sup></label>
+																						<input type="text" name="d" value="{{ $quiz->getTranslation('d', 'en', false) }}"
+																							class="form-control" placeholder="Enter Option D" />
+																					</div>
+																				</div>
+																				<div class="form-group col-md-12">
+																					<label class="text-dark" for="exampleInputSlug">{{ __('adminstaticword.Image') }}: </label>
+
+																					<div class="input-group mb-3">
+
+																						<div class="input-group-prepend">
+																							<span class="input-group-text" id="inputGroupFileAddon01">{{ __('Upload') }}</span>
+																						</div>
+
+
+																						<div class="custom-file">
+
+																							<input type="file" name="question_img" class="custom-file-input" id="question_img"
+																								aria-describedby="inputGroupFileAddon01">
+																							<label class="custom-file-label" for="inputGroupFile01">{{ __('Choose file') }}</label>
+																						</div>
+																					</div>
+
+																				</div>
+																			</div>
+																			<div class="form-group">
+																				<button type="reset" class="btn btn-danger-rgba"><i class="fa fa-ban"></i>
+																					{{ __('Reset') }}</button>
+																				<button type="submit" class="btn btn-primary-rgba"><i class="fa fa-check-circle"></i>
+																					{{ __('Update') }}</button>
+																			</div>
+
+																			<div class="clear-both"></div>
+
+
+																		</form>
+
+																	</div>
+
+																	<div
+																		@if ($quiz->getTranslation('question', 'en', false) != null) class="tab-pane fade show"
+																			@else
+																			class="tab-pane fade show active" @endif
+																		id="pills-arabic1" role="tabpanel" aria-labelledby="pills-arabic1-tab">
+
+																		<form id="demo-form2" method="POST" action="{{ route('questions.update', $quiz->id) }}"
+																			data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
+																			{{ csrf_field() }}
+																			{{ method_field('PUT') }}
+
+																			<input type="hidden" name="lang" value="ar" id="lang">
+
+
+																			<input type="hidden" name="course_id" value="{{ $topic->course_id }}" />
+
+																			<input type="hidden" name="topic_id" value="{{ $topic->id }}" />
+																			<div class="row">
+																				<div class="col-md-6">
+																					<div class="col-md-12">
+																						<label for="exampleInputTit1e">{{ __('adminstaticword.Question') }}</label>
+																						<textarea name="question" rows="6" class="form-control" placeholder="Enter Your Question">{{ $quiz->getTranslation('question', 'ar', false) }}</textarea>
+																						<br>
+																					</div>
+																					<div class="col-md-12">
+																						<label for="exampleInputDetails">{{ __('adminstaticword.Answer') }}:<sup
+																								class="redstar">*</sup></label>
+																						<select style="width: 100%" name="answer" class="form-control select2">
+																							<option {{ $quiz->answer == 'A' ? 'selected' : '' }} value="A">
+																								{{ __('adminstaticword.A') }}</option>
+																							<option {{ $quiz->answer == 'B' ? 'selected' : '' }} value="B">
+																								{{ __('adminstaticword.B') }}</option>
+																							<option {{ $quiz->answer == 'C' ? 'selected' : '' }} value="C">
+																								{{ __('adminstaticword.C') }}</option>
+																							<option {{ $quiz->answer == 'D' ? 'selected' : '' }} value="D">
+																								{{ __('adminstaticword.D') }}</option>
+																						</select>
+																					</div>
+																					<br>
+																					<h4 class="extras-heading">{{ __('Video And Image For Question') }}</h4>
+																					<div class="form-group{{ $errors->has('question_video_link') ? ' has-error' : '' }}">
+
+
+																						<label for="exampleInputDetails">{{ __('Add Video To Question') }} :<sup
+																								class="redstar">*</sup></label>
+																						<input type="text" name="question_video_link" class="form-control"
+																							placeholder="https://myvideolink.com/embed/.." />
+																						<small class="text-danger">{{ $errors->first('question_video_link') }}</small>
+																						<small class="text-muted text-info"> <i class="text-dark feather icon-help-circle"></i>
+																							{{ __('YouTube And Vimeo Video Support (Only Embed Code Link)') }}</small>
+																					</div>
+																				</div>
+																				<div class="col-md-6">
+																					<div class="col-md-12">
+
+																						<label for="exampleInputDetails">{{ __('adminstaticword.AOption') }} :<sup
+																								class="redstar">*</sup></label>
+																						<input type="text" name="a" value="{{ $quiz->getTranslation('a', 'ar', false) }}"
+																							class="form-control" placeholder="Enter Option A">
+																					</div>
+
+																					<div class="col-md-12">
+																						<label for="exampleInputDetails">{{ __('adminstaticword.BOption') }} :<sup
+																								class="redstar">*</sup></label>
+																						<input type="text" name="b" value="{{ $quiz->getTranslation('b', 'ar', false) }}"
+																							class="form-control" placeholder="Enter Option B" />
+																					</div>
+
+																					<div class="col-md-12">
+
+																						<label for="exampleInputDetails">{{ __('adminstaticword.COption') }} :<sup
+																								class="redstar">*</sup></label>
+																						<input type="text" name="c" value="{{ $quiz->getTranslation('c', 'ar', false) }}"
+																							class="form-control" placeholder="Enter Option C" />
+																					</div>
+
+																					<div class="col-md-12">
+
+																						<label for="exampleInputDetails">{{ __('adminstaticword.DOption') }} :<sup
+																								class="redstar">*</sup></label>
+																						<input type="text" name="d" value="{{ $quiz->getTranslation('d', 'ar', false) }}"
+																							class="form-control" placeholder="Enter Option D" />
+																					</div>
+																				</div>
+																				<div class="form-group col-md-12">
+																					<label class="text-dark" for="exampleInputSlug">{{ __('adminstaticword.Image') }}: </label>
+
+																					<div class="input-group mb-3">
+
+																						<div class="input-group-prepend">
+																							<span class="input-group-text" id="inputGroupFileAddon01">{{ __('Upload') }}</span>
+																						</div>
+
+
+																						<div class="custom-file">
+
+																							<input type="file" name="question_img" class="custom-file-input" id="question_img"
+																								aria-describedby="inputGroupFileAddon01">
+																							<label class="custom-file-label" for="inputGroupFile01">{{ __('Choose file') }}</label>
+																						</div>
+																					</div>
+
+																				</div>
+																			</div>
+																			<div class="form-group">
+																				<button type="reset" class="btn btn-danger-rgba"><i class="fa fa-ban"></i>
+																					{{ __('Reset') }}</button>
+																				<button type="submit" class="btn btn-primary-rgba"><i class="fa fa-check-circle"></i>
+																					{{ __('Update') }}</button>
+																			</div>
+
+																			<div class="clear-both"></div>
+
+
+																		</form>
+
+																	</div>
+
+																</div>
+															</div>
 														</div>
 													</div>
 												</div>
@@ -543,16 +541,16 @@
 									<li class="nav-item">
 										<a
 											@if (Session::get('changed_language') == 'en') class="nav-link active"
-                      @else
-                     class="nav-link" @endif
+												@else
+												class="nav-link" @endif
 											id="pills-english-tab" data-toggle="pill" href="#pills-english" role="tab"
 											aria-controls="pills-english" aria-selected="true">{{ __('English') }}</a>
 									</li>
 									<li class="nav-item">
 										<a
 											@if (Session::get('changed_language') == 'en') class="nav-link"
-                    @else
-                    class="nav-link active" @endif
+												@else
+												class="nav-link active" @endif
 											id="pills-arabic-tab" data-toggle="pill" href="#pills-arabic" role="tab" aria-controls="pills-arabic"
 											aria-selected="false">{{ __('Arabic') }}</a>
 									</li>
@@ -561,8 +559,8 @@
 								<div class="tab-content" id="pills-tabContent">
 									<div
 										@if (Session::get('changed_language') == 'en') class="tab-pane fade show active"
-                    @else
-                    class="tab-pane fade show" @endif
+											@else
+											class="tab-pane fade show" @endif
 										id="pills-english" role="tabpanel" aria-labelledby="pills-english-tab">
 
 										<form id="demo-form2" method="post" action="{{ route('questions.store') }}" data-parsley-validate
