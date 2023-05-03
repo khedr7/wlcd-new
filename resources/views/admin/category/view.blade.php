@@ -104,7 +104,7 @@
                                                         class="img-responsive img-circle">
                                                 @endif
                                             </td>
-                                            <td>{{ $cat->title }}</td>
+                                            <td>{{ $cat->getTranslation('title', Session::get('changed_language'), false) }}</td>
                                             <td>
                                                 <div class="index-image">
                                                     <i class="fa {{ $cat->icon }}"></i>
@@ -177,11 +177,20 @@
                                                                             <div class="col-md-12">
                                                                                 <div class="form-group">
                                                                                     <label
-                                                                                        for="exampleInputTit1e">{{ __('adminstaticword.Category') }}:<sup
+                                                                                        for="exampleInputTit1e">{{ __('adminstaticword.English Title') }}:<sup
                                                                                             class="redstar">*</sup></label>
                                                                                     <input type="text" class="form-control"
-                                                                                        name="title" id="exampleInputTitle"
-                                                                                        value="{{ $cat->title }}">
+                                                                                        name="title_en" id="exampleInputTitle"
+                                                                                        value="{{ $cat->getTranslation('title', 'en', false) }}">
+                                                                                </div>
+
+                                                                                <div class="form-group">
+                                                                                    <label
+                                                                                        for="exampleInputTit1e">{{ __('adminstaticword.Arabic Title') }}:<sup
+                                                                                            class="redstar">*</sup></label>
+                                                                                    <input type="text" class="form-control"
+                                                                                        name="title_ar" id="exampleInputTitle"
+                                                                                        value="{{ $cat->getTranslation('title','ar', false) }}">
                                                                                 </div>
 
                                                                                 <div class="form-group">
@@ -361,10 +370,19 @@
 
                         <div class="row">
                             <div class="col-md-12">
-                                <label for="c_name">{{ __('adminstaticword.Name') }}:<sup
+                                <label for="c_name">{{ __('adminstaticword.English Title') }}:<sup
                                         class="redstar">*</sup></label>
-                                <input placeholder=" Please Enter Category name" type="text" class="form-control"
-                                    name="title" required="">
+                                <input placeholder="{{ __('adminstaticword.English Title') }}" type="text" class="form-control"
+                                    name="title_en" required="">
+                            </div>
+                        </div>
+                        <br>
+                         <div class="row">
+                            <div class="col-md-12">
+                                <label for="c_name">{{ __('adminstaticword.Arabic Title') }}:<sup
+                                        class="redstar">*</sup></label>
+                                <input placeholder=" {{ __('adminstaticword.Arabic Title') }}" type="text" class="form-control"
+                                    name="title_ar" required="">
                             </div>
                         </div>
                         <br>

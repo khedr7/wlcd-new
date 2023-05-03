@@ -9,7 +9,7 @@ class Testimonial extends Model
 {
 	use HasTranslations;
     
-    public $translatable = ['details'];
+    public $translatable = ['client_name', 'details', 'designation'];
 
     /**
      * Convert the model instance to an array.

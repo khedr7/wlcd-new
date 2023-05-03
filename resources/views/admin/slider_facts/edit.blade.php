@@ -65,14 +65,23 @@
             </div>
             <div class="form-group col-md-4">
               <label for="heading">{{ __('adminstaticword.Heading') }}:<sup class="redstar text-danger">*</sup></label>
-              <input value="{{ $show->heading }}" autofocus required name="heading" type="text" class="form-control" placeholder="Enter Facts Heading"/>
+              <input value="{{ $show->getTranslation('heading','en', false)  }}" autofocus required name="heading_en" type="text" class="form-control" placeholder="Enter Facts Heading"/>
             </div>
-
+            {{-- ------- --}}
+            <div class="form-group col-md-4">
+              <label for="heading">{{ __('adminstaticword.Heading') }}:<sup class="redstar text-danger">*</sup></label>
+              <input value="{{ $show->getTranslation('heading','ar', false)  }}" autofocus required name="heading_ar" type="text" class="form-control" placeholder="Enter Facts Heading"/>
+            </div>
+            {{-- ------- --}}
+ 
             <div class="form-group col-md-4">
               <label for="sub_heading">{{ __('adminstaticword.SubHeading') }}:<sup class="redstar text-danger">*</sup></label>
-              <input value="{{ $show->sub_heading }}" autofocus required name="sub_heading" type="text" class="form-control" placeholder="Enter Facts Sub Heading"/>
+              <input value="{{ $show->getTranslation('sub_heading','en', false)  }}" autofocus required name="sub_heading_en" type="text" class="form-control" placeholder="Enter Facts Sub Heading"/>
             </div>
-           
+            <div class="form-group col-md-4">
+              <label for="sub_heading">{{ __('adminstaticword.SubHeading') }}:<sup class="redstar text-danger">*</sup></label>
+              <input value="{{ $show->getTranslation('sub_heading','ar', false)  }}" autofocus required name="sub_heading_ar" type="text" class="form-control" placeholder="Enter Facts Sub Heading"/>
+            </div>
           </div>
         
           <div class="form-group">

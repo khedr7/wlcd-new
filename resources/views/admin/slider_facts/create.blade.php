@@ -59,12 +59,23 @@
             </div>
             <div class="form-group col-md-4">
               <label for="heading">{{ __('adminstaticword.Heading') }}:<sup class="redstar text-danger">*</sup></label>
-              <input class="form-control" type="text" name="heading" placeholder="Please Enter Your Heading">
+              <input class="form-control" type="text" name="heading_en" placeholder="Please Enter Your Heading">
             </div>
+            {{-- ------ --}}
+            <div class="form-group col-md-4">
+              <label for="heading">{{ __('adminstaticword.Heading') }}:<sup class="redstar text-danger">*</sup></label>
+              <input class="form-control" type="text" name="heading_ar" placeholder="Please Enter Your Heading">
+            </div>
+            {{-- ------ --}}
 
             <div class="form-group col-md-4">
               <label for="sub_heading">{{ __('adminstaticword.SubHeading') }}:<sup class="redstar text-danger">*</sup></label>
-              <input type="text" class="form-control" name="sub_heading" id="sub_heading" placeholder="Please Enter Your Sub Heading">
+              <input type="text" class="form-control" name="sub_heading_en" id="sub_heading" placeholder="Please Enter Your Sub Heading">
+            </div>
+            {{-- ------ --}}
+             <div class="form-group col-md-4">
+              <label for="sub_heading">{{ __('adminstaticword.SubHeading') }}:<sup class="redstar text-danger">*</sup></label>
+              <input type="text" class="form-control" name="sub_heading_ar" id="sub_heading" placeholder="Please Enter Your Sub Heading">
             </div>
            
           </div>

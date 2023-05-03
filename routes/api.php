@@ -64,7 +64,9 @@ Route::middleware(['ip_block'])->group(function () {
 	Route::get('course/paginate', 'Api\MainController@paginationcourse');
 
 	Route::get('featuredcourse', 'Api\MainController@featuredcourse');
+	Route::get('all-featuredcourse', 'Api\MainController@allfeaturedcourse');
 	Route::get('recent/course', 'Api\MainController@recentcourse');
+	Route::get('all-recent/course', 'Api\MainController@allrecentcourse');
 	Route::get('discount/course', 'Api\MainController@discountcourses');
 
 	Route::get('bundle/courses', 'Api\MainController@bundle');

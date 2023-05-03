@@ -26,7 +26,7 @@
                             @endif
                         </div>
                         <div class="view-user-img">
-                            <a href="" title=""><img src="http://eclass.test/images/user_img/159116548431.jpg"
+                            <a href="" title=""><img src="{{ asset('images/user_img/' . $bundle->user->user_img) }}"
                                     class="img-fluid user-img-one" alt=""></a>
                         </div>
                         <div class="view-dtl">

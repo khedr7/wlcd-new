@@ -62,8 +62,15 @@
 
             <div class="row">
               <div class="col-md-12">
-                <label for="exampleInputDetails">{{ __('adminstaticword.Title') }}:<sup class="redstar">*</sup></label>
-                <input type="text" class="form-control " name="title" id="exampleInputTitle"  value="{{$cate->title}}" required>                  
+                <label for="title_en">{{ __('adminstaticword.English Title') }}:<sup class="redstar">*</sup></label>
+                <input type="text" class="form-control " name="title_en" id="title_en"  value="{{$cate->getTranslation('title', 'en', false)}}" required>                  
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-md-12">
+                <label for="title_ar">{{ __('adminstaticword.Arabic Title') }}:<sup class="redstar">*</sup></label>
+                <input type="text" class="form-control " name="title_ar" id="title_ar"  value="{{$cate->getTranslation('title', 'ar', false)}}" required>                  
               </div>
             </div>
             <br>
@@ -75,7 +82,7 @@
 
                 <select name="coursechapter_id" id="chapters" class="form-control select2">
                   @foreach($coursechapt as $chapters)
-                  <option value="{{ $chapters->id }}" {{ $cate->coursechapter_id==$chapters->id ? 'selected' : '' }}>{{ $chapters->chapter_name }}</option>
+                  <option value="{{ $chapters->id }}" {{ $cate->coursechapter_id==$chapters->id ? 'selected' : '' }}>{{ $chapters->getTranslation('chapter_name', Session::get('changed_language'), false) }}</option>
                   @endforeach
                 </select>
               </div>
@@ -84,8 +91,15 @@
 
             <div class="row">
               <div class="col-md-12">
-                <label for="exampleInputDetails">{{ __('adminstaticword.Detail') }}:</label>
-                <textarea id="details" name="detail" rows="5"  class="form-control" placeholder="Enter Your Details">{{ $cate->detail }}</textarea>
+                <label for="detail_en">{{ __('adminstaticword.English Detail') }}:</label>
+                <textarea id="detail_en" name="detail_en" rows="5"  class="form-control" placeholder="{{ __('adminstaticword.English Detail') }}">{{ $cate->getTranslation('detail', 'en', false) }}</textarea>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-md-12">
+                <label for="detail_ar">{{ __('adminstaticword.Arabic Detail') }}:</label>
+                <textarea id="detail_ar" name="detail_ar" rows="5"  class="form-control" placeholder="{{ __('adminstaticword.Arabic Detail') }}">{{ $cate->getTranslation('detail', 'ar', false) }}</textarea>
               </div>
             </div>
             <br>

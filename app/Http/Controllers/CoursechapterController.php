@@ -50,10 +50,13 @@ class CoursechapterController extends Controller
     {
 
         $data = $this->validate($request, [
-            'chapter_name' => 'required',
+            'chapter_name_en' => 'required',
+            'chapter_name_ar' => 'required',
         ]);
 
         $input = $request->all();
+        $input['chapter_name']['en'] = $input['chapter_name_en'];
+        $input['chapter_name']['ar'] = $input['chapter_name_ar'];
 
 
         if (isset($request->status)) {
@@ -84,16 +87,11 @@ class CoursechapterController extends Controller
             $input['drip_date'] = null;
         }
 
-
-
         $input['position'] = (CourseChapter::count() + 1);
 
         $input['user_id'] = Auth::user()->id;
 
-
         $data = CourseChapter::create($input);
-
-
 
         $data->save();
 
@@ -138,11 +136,14 @@ class CoursechapterController extends Controller
         // return $request;
 
         $data = $this->validate($request, [
-            'chapter_name' => 'required',
+            'chapter_name_en' => 'required',
+            'chapter_name_ar' => 'required',
         ]);
 
         $data = CourseChapter::findorfail($id);
         $input = $request->all();
+        $input['chapter_name']['en'] = $input['chapter_name_en'];
+        $input['chapter_name']['ar'] = $input['chapter_name_ar'];
 
 
         if ($request->drip_type == "date") {

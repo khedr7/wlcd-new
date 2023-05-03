@@ -8,10 +8,13 @@ use DB;
 use Image;
 use Carbon\Carbon;
 use Spatie\Permission\Models\Role;
+use App\Http\Traits\TranslationTrait;
 
 
 class TestimonialController extends Controller
 {
+    use TranslationTrait;
+
     public function __construct()
     {
 
@@ -39,7 +42,7 @@ class TestimonialController extends Controller
      */
     public function create()
     {
-        return view('admin.testimonial.testi_form');
+        return view('admin.testimonial.create');
     }
 
     /**
@@ -56,8 +59,9 @@ class TestimonialController extends Controller
             'image' => 'required',
         ]);
 
+        $test = new Testimonial;
+        $input = $this->getTranslatableRequest($test->getTranslatableAttributes(), $request->all(), ['en', 'ar']);
 
-        $input = $request->all();
         if ($file = $request->file('image')) {
             $optimizeImage = Image::make($file);
             $optimizePath = public_path() . '/images/testimonial/';
@@ -67,16 +71,11 @@ class TestimonialController extends Controller
 
             $input['image'] = $image;
         }
-
-        $input['created_at']  = \Carbon\Carbon::now()->toDateTimeString();
-        $input['updated_at']  = \Carbon\Carbon::now()->toDateTimeString();
-
-
         $input['status'] = isset($request->status)  ? 1 : 0;
+        $input['created_at'] = \Carbon\Carbon::now()->toDateTimeString();
+        $input['updated_at'] = \Carbon\Carbon::now()->toDateTimeString();
 
-        $data = Testimonial::create($input);
-
-        $data->save();
+        $testimonial = Testimonial::create($input);
 
         return redirect('testimonial');
     }
@@ -103,7 +102,7 @@ class TestimonialController extends Controller
     public function edit($id)
     {
         $test = Testimonial::find($id);
-        return view('admin.testimonial.testi_edit', compact('test'));
+        return view('admin.testimonial.edit', compact('test'));
     }
 
     /**
@@ -119,7 +118,8 @@ class TestimonialController extends Controller
 
         $testimonial = Testimonial::findorfail($id);
 
-        $input = $request->all();
+        $input = $this->getTranslatableRequest($testimonial->getTranslatableAttributes(), $request->all(), [$request->lang]);
+
 
         if ($file = $request->file('image')) {
 
