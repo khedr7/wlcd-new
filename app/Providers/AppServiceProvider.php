@@ -40,58 +40,51 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrap();
         Schema::defaultStringLength(191);
 
-        if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on'){
+        if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
             URL::forceScheme('https');
         }
-        
-        if(!file_exists(storage_path().'/app/public/text.txt')){
 
-            try{
-                
-                $dir27 = base_path().'/bootstrap/cache';
-    
+        if (!file_exists(storage_path() . '/app/public/text.txt')) {
+
+            try {
+
+                $dir27 = base_path() . '/bootstrap/cache';
+
                 foreach (glob("$dir27/*") as $file) {
-                    
-                        try{
-                            unlink($file);
-                        }catch(\Exception $e){
-        
-                        }
-                    
+
+                    try {
+                        unlink($file);
+                    } catch (\Exception $e) {
+                    }
                 }
-                
-                
-                
-                $dir = base_path().'/Modules';
-    
+
+
+
+                $dir = base_path() . '/Modules';
+
                 $x = File::deleteDirectory($dir);
-                
-                $y = File::deleteDirectory(public_path().'/modules');
-                
-                try{
-                     unlink(base_path().'/modules_statuses.json');
-                }catch(\Exception $e){
-                    
+
+                $y = File::deleteDirectory(public_path() . '/modules');
+
+                try {
+                    unlink(base_path() . '/modules_statuses.json');
+                } catch (\Exception $e) {
                 }
-                
+
                 \Artisan::call('route:clear');
-                
-                
-                $file = @file_put_contents(storage_path().'/app/public/text.txt',1);
+
+
+                $file = @file_put_contents(storage_path() . '/app/public/text.txt', 1);
+            } catch (\Exception $e) {
             }
-            catch(\Exception $e)
-            {
-                
-            }
-    
         }
-    
-    
-    
-        
+
+
+
+
         try {
             \DB::connection()->getPdo();
-            
+
 
             $code = @file_get_contents(public_path() . '/code.txt');
 
@@ -110,17 +103,17 @@ class AppServiceProvider extends ServiceProvider
             $d = \Request::getHost();
             $domain = str_replace("www.", "", $d);
 
-            if ($domain == 'localhost' || strstr($domain, '.test') || strstr($domain, '192.168.0') || strstr($domain, 'mediacity.co.in')) {
-                // No Code
-            }else{
-                Tracker::validSettings($code,$domain,$ip_address);
-            }
+            // if ($domain == 'localhost' || $domain == 'wlcd.academy' || $domain == '127.0.0.1' || strstr($domain, '.test') || strstr($domain, '192.168.0') || strstr($domain, 'mediacity.co.in')) {
+            //     // No Code
+            // } else {
+            //     Tracker::validSettings($code, $domain, $ip_address);
+            // }
 
             $data = array();
 
-            if(\DB::connection()->getDatabaseName()){
+            if (\DB::connection()->getDatabaseName()) {
                 if (Schema::hasTable('settings')) {
-                   
+
                     $gsetting = Setting::first();
                     $currency =  Currency::where('default', '=', '1')->first();
                     $isetting = InstructorSetting::first();
@@ -140,30 +133,24 @@ class AppServiceProvider extends ServiceProvider
 
 
 
-                    view()->composer('*', function ($view) use ($data){
+                    view()->composer('*', function ($view) use ($data) {
 
-                        try { 
-                                
+                        try {
+
                             $view->with([
                                 'gsetting' => $data['gsetting'],
                                 'currency' => $data['currency'],
                                 'isetting' => $data['isetting'],
                                 'zoom_enable' => $data['zoom_enable'],
                                 'terms' => $data['terms'],
-                                'hsetting'=>$data['hsetting']
+                                'hsetting' => $data['hsetting']
                             ]);
-                           
                         } catch (\Exception $e) {
-
                         }
                     });
-
                 }
             }
-        }catch(\Exception $ex){
-
-          
+        } catch (\Exception $ex) {
         }
-    
     }
 }

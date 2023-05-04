@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use App\Policies\ModelPolicy;
+use App\Model;
 use Laravel\Passport\Passport;
 use Laravel\Passport\Console\ClientCommand;
 use Laravel\Passport\Console\InstallCommand;
@@ -28,6 +30,9 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
+        
+        Gate::policy(Model::class, ModelPolicy::class);
+
         Passport::routes();
         Passport::tokensExpireIn(now()->addDays(10));
         Passport::refreshTokensExpireIn(now()->addDays(30));

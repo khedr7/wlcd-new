@@ -41,19 +41,7 @@ class CourseController extends Controller
 
         $course = Course::where('status', 1)
             ->orderBy('id', 'DESC')
-            ->take(4)
-            ->with([
-                'include' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'course_id', 'icon', 'detail');
-                },
-            ])
-            ->with([
-                'whatlearns' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'course_id', 'detail');
-                },
-            ])
+            ->take(8)
             ->with([
                 'chapter' => function ($query) {
                     $query->where('status', 1);
@@ -159,18 +147,6 @@ class CourseController extends Controller
         $course = Course::where('status', 1)
             ->orderBy('id', 'DESC')
             ->with([
-                'include' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'course_id', 'icon', 'detail');
-                },
-            ])
-            ->with([
-                'whatlearns' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'course_id', 'detail');
-                },
-            ])
-            ->with([
                 'chapter' => function ($query) {
                     $query->where('status', 1);
                 },
@@ -274,19 +250,7 @@ class CourseController extends Controller
         $course = Course::where('status', 1)
             ->where('featured', 1)
             ->orderBy('id', 'DESC')
-            ->take(4)
-            ->with([
-                'include' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'course_id', 'icon', 'detail');
-                },
-            ])
-            ->with([
-                'whatlearns' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'course_id', 'detail');
-                },
-            ])
+            ->take(8)
             ->with([
                 'chapter' => function ($query) {
                     $query->where('status', 1);
@@ -393,18 +357,6 @@ class CourseController extends Controller
             ->where('featured', 1)
             ->orderBy('id', 'DESC')
             ->with([
-                'include' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'course_id', 'icon', 'detail');
-                },
-            ])
-            ->with([
-                'whatlearns' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'course_id', 'detail');
-                },
-            ])
-            ->with([
                 'chapter' => function ($query) {
                     $query->where('status', 1);
                 },
@@ -509,18 +461,6 @@ class CourseController extends Controller
         $course = Course::where('status', 1)
             ->where('type', 1)
             ->with([
-                'include' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'course_id', 'icon', 'detail');
-                },
-            ])
-            ->with([
-                'whatlearns' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'course_id', 'detail');
-                },
-            ])
-            ->with([
                 'chapter' => function ($query) {
                     $query->where('status', 1);
                 },
@@ -543,7 +483,7 @@ class CourseController extends Controller
                 },
             ])
             ->orderBy('order_count', 'desc')
-            ->take(4)
+            ->take(8)
             ->get();
 
         foreach ($course as $result) {
@@ -628,18 +568,6 @@ class CourseController extends Controller
 
         $course = Course::where('status', 1)
             ->where('type', 1)
-            ->with([
-                'include' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'course_id', 'icon', 'detail');
-                },
-            ])
-            ->with([
-                'whatlearns' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'course_id', 'detail');
-                },
-            ])
             ->with([
                 'chapter' => function ($query) {
                     $query->where('status', 1);
@@ -752,19 +680,7 @@ class CourseController extends Controller
         }
         $course = Course::where('status', 1)->whereIn('id', $mycourses_id)
             ->orderBy('id', 'DESC')
-            ->take(4)
-            ->with([
-                'include' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'course_id', 'icon', 'detail');
-                },
-            ])
-            ->with([
-                'whatlearns' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'course_id', 'detail');
-                },
-            ])
+            ->take(8)
             ->with([
                 'chapter' => function ($query) {
                     $query->where('status', 1);
@@ -875,18 +791,6 @@ class CourseController extends Controller
         $course = Course::where('status', 1)->whereIn('id', $mycourses_id)
             ->orderBy('id', 'DESC')
             ->with([
-                'include' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'course_id', 'icon', 'detail');
-                },
-            ])
-            ->with([
-                'whatlearns' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'course_id', 'detail');
-                },
-            ])
-            ->with([
                 'chapter' => function ($query) {
                     $query->where('status', 1);
                 },
@@ -990,19 +894,7 @@ class CourseController extends Controller
 
         $course = Course::where('status', 1)->where('type', '!=', 1)
             ->orderBy('id', 'DESC')
-            ->take(4)
-            ->with([
-                'include' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'course_id', 'icon', 'detail');
-                },
-            ])
-            ->with([
-                'whatlearns' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'course_id', 'detail');
-                },
-            ])
+            ->take(8)
             ->with([
                 'chapter' => function ($query) {
                     $query->where('status', 1);
@@ -1107,18 +999,6 @@ class CourseController extends Controller
 
         $course = Course::where('status', 1)->where('type', '!=', 1)
             ->orderBy('id', 'DESC')
-            ->with([
-                'include' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'course_id', 'icon', 'detail');
-                },
-            ])
-            ->with([
-                'whatlearns' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'course_id', 'detail');
-                },
-            ])
             ->with([
                 'chapter' => function ($query) {
                     $query->where('status', 1);
@@ -1225,18 +1105,6 @@ class CourseController extends Controller
             ->where('type', '1')
             ->where('discount_price', '!=', null)
             ->with([
-                'include' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'course_id', 'icon', 'detail');
-                },
-            ])
-            ->with([
-                'whatlearns' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'course_id', 'detail');
-                },
-            ])
-            ->with([
                 'chapter' => function ($query) {
                     $query->where('status', 1);
                 },
@@ -1318,7 +1186,7 @@ class CourseController extends Controller
         }
 
         $course->makehidden('chapter');
-        $course = $course->sortByDesc('discount_percentage')->take(4);
+        $course = $course->sortByDesc('discount_percentage')->take(8);
         $course = $course->values()->all();
         return response()->json(['topDiscountedcourses' => $course], 200);
     }
@@ -1347,18 +1215,6 @@ class CourseController extends Controller
         $course = Course::where('status', 1)
             ->where('type', '1')
             ->where('discount_price', '!=', null)
-            ->with([
-                'include' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'course_id', 'icon', 'detail');
-                },
-            ])
-            ->with([
-                'whatlearns' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'course_id', 'detail');
-                },
-            ])
             ->with([
                 'chapter' => function ($query) {
                     $query->where('status', 1);
@@ -1465,7 +1321,7 @@ class CourseController extends Controller
 
         App::setlocale($request->lang);
 
-        $bundles = BundleCourse::where('status', 1)->take(4)->get();
+        $bundles = BundleCourse::where('status', 1)->take(8)->get();
 
         $result = [];
 
