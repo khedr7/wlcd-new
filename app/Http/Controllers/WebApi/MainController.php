@@ -49,7 +49,7 @@ class MainController extends Controller
                 },
             ])
             ->orderBy('courses_count', 'desc')
-            ->take(4)
+            ->take(8)
             ->get();
 
 
