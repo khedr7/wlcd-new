@@ -424,7 +424,7 @@ Route::middleware(['ip_block'])->group(function () {
 
 	Route::get('footer/widget', 'Api\OtherApiController@widget');
 	Route::get('manual/payment', 'Api\OtherApiController@manual');
-	Route::get('/check-for-update', 'OtaUpdateController@checkforupate');
+	// Route::get('/check-for-update', 'OtaUpdateController@checkforupate');
 	Route::post('live/attandance', 'Api\OtherApiController@attandance');
 	Route::get('/currencies', 'Api\OtherApiController@currencies');
 	Route::post('/currency/rates', 'Api\OtherApiController@currency_rates');
