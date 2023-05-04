@@ -12,10 +12,13 @@ use App\ChildCategory;
 use App\Course;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
+use App\Http\Traits\TranslationTrait;
+
 
 
 class SubcategoryController extends Controller
 {
+    use TranslationTrait;
     public function __construct()
     {
         return $this->middleware('auth');
@@ -42,7 +45,7 @@ class SubcategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {   
         abort_if(!auth()->user()->can('subcategories.create'),403,'User does not have the right permissions.');
         $category = Categories::all();
@@ -58,16 +61,20 @@ class SubcategoryController extends Controller
     public function store(Request $request)
     {
         abort_if(!auth()->user()->can('subcategories.create'),403,'User does not have the right permissions.');
-        $data = $this->validate($request,[
-            "title" => "required",
-                 ],[
-            "title.required" => "Please enter subcategory title !",
-            "slug" => "required",
-            "icon" => "required",
-            "category_id" => "required"
+        $data = $this->validate($request,
+        [
+            // "title_en" => "required",
+            // "title_ar" => "required",
+         ],
+         [
+            // "title.required" => "Please enter subcategory title !",
+            "slug"           => "required",
+            "icon"           => "required",
+            "category_id"    => "required"
         ]);
-
-        $input = $request->all();
+ 
+        $Subcategory = new SubCategory;
+        $input = $this->getTranslatableRequest($Subcategory->getTranslatableAttributes(), $request->all(), ['en', 'ar']);
         // $slug = str_slug($input['title'],'-');
         // $input['slug'] = $slug;
         $input['status'] = isset($request->status)  ? 1 : 0;
@@ -117,15 +124,19 @@ class SubcategoryController extends Controller
     {
         abort_if(!auth()->user()->can('subcategories.edit'),403,'User does not have the right permissions.');
         $data = $this->validate($request,[
-            "title" => "required|unique:categories,title",
-            "title.required" => "Please enter category title !",
-            "title.unique" => "This Category name is already exist !",
-            "slug" => "required",
-            "icon" => "required",
+            // "title" => "required|unique:categories,title",
+            // "title.required" => "Please enter category title !",
+            // "title.unique" => "This Category name is already exist !",
+            "slug"        => "required",
+            "icon"        => "required",
             "category_id" => "required"
         ]);
 
         $data = SubCategory::findorfail($id);
+
+        $input = $this->getTranslatableRequest($data->getTranslatableAttributes(), $request->all(), [$request->lang]);
+
+
         $input = $request->all();
         
         // $slug = str_slug($input['title'],'-');
