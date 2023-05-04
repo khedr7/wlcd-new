@@ -39,36 +39,34 @@ class CourseController extends Controller
 
         App::setlocale($request->lang);
 
-        $course = Course::where('status', 1)
-            ->orderBy('id', 'DESC')
-            ->take(8)
+        $course = Course::select([
+            'id', 'user_id', 'category_id', 'subcategory_id', 'childcategory_id', 'language_id', 'title',
+            'price', 'discount_price', 'featured', 'slug', 'status', 'preview_image', 'type', 'level_tags'
+        ])
+            ->where('status', 1)
             ->with([
+                'language' => function ($query) {
+                    $query->where('status', 1)->select('id', 'name');
+                },
+                'user' => function ($query) {
+                    $query->where('status', 1)->select('id', 'fname', 'lname', 'user_img');
+                },
+            ])
+            ->withCount([
                 'chapter' => function ($query) {
                     $query->where('status', 1);
                 },
-            ])
-            ->with([
-                'language' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'name');
+                'order' => function ($query) {
+                    $query->where('status', 1);
                 },
             ])
-            ->with([
-                'user' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'fname', 'lname', 'user_img');
-                },
-            ])
+            ->orderByDesc('id')
+            ->take(8)
             ->get();
 
         foreach ($course as $result) {
 
-
-            $student_enrolled = Order::where('course_id', $result->course_id)->count();
-            $result->student_enrolled = isset($student_enrolled) ? $student_enrolled : null;
-            $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
-
-            $enrolled_status = Order::where('course_id', $result->course_id)->where('user_id', Auth::guard('api')->id())->first();
+            $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
             if (isset($enrolled_status)) {
                 $result->enrolled_status = true;
             } else {
@@ -120,7 +118,6 @@ class CourseController extends Controller
             $result->total_rating = $total_rating;
         }
 
-        $course->makehidden('chapter');
         return response()->json(['recentcourses' => $course], 200);
     }
 
@@ -144,34 +141,34 @@ class CourseController extends Controller
 
         App::setlocale($request->lang);
 
-        $course = Course::where('status', 1)
-            ->orderBy('id', 'DESC')
+        $course = Course::select([
+            'id', 'user_id', 'category_id', 'subcategory_id', 'childcategory_id', 'language_id', 'title',
+            'price', 'discount_price', 'featured', 'slug', 'status', 'preview_image', 'type', 'level_tags'
+        ])
+            ->where('status', 1)
             ->with([
+                'language' => function ($query) {
+                    $query->where('status', 1)->select('id', 'name');
+                },
+                'user' => function ($query) {
+                    $query->where('status', 1)->select('id', 'fname', 'lname', 'user_img');
+                },
+            ])
+            ->withCount([
                 'chapter' => function ($query) {
                     $query->where('status', 1);
                 },
-            ])
-            ->with([
-                'language' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'name');
+                'order' => function ($query) {
+                    $query->where('status', 1);
                 },
             ])
-            ->with([
-                'user' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'fname', 'lname', 'user_img');
-                },
-            ])
+            ->orderByDesc('id')
             ->paginate(8);
 
+
+
         foreach ($course as $result) {
-
-            $student_enrolled = Order::where('course_id', $result->course_id)->count();
-            $result->student_enrolled = isset($student_enrolled) ? $student_enrolled : null;
-            $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
-
-            $enrolled_status = Order::where('course_id', $result->course_id)->where('user_id', Auth::guard('api')->id())->first();
+            $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
             if (isset($enrolled_status)) {
                 $result->enrolled_status = true;
             } else {
@@ -222,8 +219,6 @@ class CourseController extends Controller
             $result->total_rating_percent = round($course_total_rating, 2);
             $result->total_rating = $total_rating;
         }
-
-        $course->makehidden('chapter');
         return response()->json(['recentcourses' => $course], 200);
     }
 
@@ -247,36 +242,35 @@ class CourseController extends Controller
 
         App::setlocale($request->lang);
 
-        $course = Course::where('status', 1)
+        $course = Course::select([
+            'id', 'user_id', 'category_id', 'subcategory_id', 'childcategory_id', 'language_id', 'title',
+            'price', 'discount_price', 'featured', 'slug', 'status', 'preview_image', 'type', 'level_tags'
+        ])
+            ->where('status', 1)
             ->where('featured', 1)
-            ->orderBy('id', 'DESC')
-            ->take(8)
             ->with([
+                'language' => function ($query) {
+                    $query->where('status', 1)->select('id', 'name');
+                },
+                'user' => function ($query) {
+                    $query->where('status', 1)->select('id', 'fname', 'lname', 'user_img');
+                },
+            ])
+            ->withCount([
                 'chapter' => function ($query) {
                     $query->where('status', 1);
                 },
-            ])
-            ->with([
-                'language' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'name');
+                'order' => function ($query) {
+                    $query->where('status', 1);
                 },
             ])
-            ->with([
-                'user' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'fname', 'lname', 'user_img');
-                },
-            ])
+            ->orderByDesc('id')
+            ->take(8)
             ->get();
 
         foreach ($course as $result) {
 
-            $student_enrolled = Order::where('course_id', $result->course_id)->count();
-            $result->student_enrolled = isset($student_enrolled) ? $student_enrolled : null;
-            $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
-
-            $enrolled_status = Order::where('course_id', $result->course_id)->where('user_id', Auth::guard('api')->id())->first();
+            $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
             if (isset($enrolled_status)) {
                 $result->enrolled_status = true;
             } else {
@@ -328,7 +322,6 @@ class CourseController extends Controller
             $result->total_rating = $total_rating;
         }
 
-        $course->makehidden('chapter');
         return response()->json(['featuredcourses' => $course], 200);
     }
 
@@ -353,35 +346,35 @@ class CourseController extends Controller
 
         App::setlocale($request->lang);
 
-        $course = Course::where('status', 1)
+
+        $course = Course::select([
+            'id', 'user_id', 'category_id', 'subcategory_id', 'childcategory_id', 'language_id', 'title',
+            'price', 'discount_price', 'featured', 'slug', 'status', 'preview_image', 'type', 'level_tags'
+        ])
+            ->where('status', 1)
             ->where('featured', 1)
-            ->orderBy('id', 'DESC')
             ->with([
+                'language' => function ($query) {
+                    $query->where('status', 1)->select('id', 'name');
+                },
+                'user' => function ($query) {
+                    $query->where('status', 1)->select('id', 'fname', 'lname', 'user_img');
+                },
+            ])
+            ->withCount([
                 'chapter' => function ($query) {
                     $query->where('status', 1);
                 },
-            ])
-            ->with([
-                'language' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'name');
+                'order' => function ($query) {
+                    $query->where('status', 1);
                 },
             ])
-            ->with([
-                'user' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'fname', 'lname', 'user_img');
-                },
-            ])
-            ->paginate(8);
+            ->orderByDesc('id')
+            ->paginate();
 
         foreach ($course as $result) {
 
-            $student_enrolled = Order::where('course_id', $result->course_id)->count();
-            $result->student_enrolled = isset($student_enrolled) ? $student_enrolled : null;
-            $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
-
-            $enrolled_status = Order::where('course_id', $result->course_id)->where('user_id', Auth::guard('api')->id())->first();
+            $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
             if (isset($enrolled_status)) {
                 $result->enrolled_status = true;
             } else {
@@ -433,7 +426,6 @@ class CourseController extends Controller
             $result->total_rating = $total_rating;
         }
 
-        $course->makehidden('chapter');
         return response()->json(['featuredcourses' => $course], 200);
     }
 
@@ -455,29 +447,26 @@ class CourseController extends Controller
             return response()->json(['Invalid Secret Key !']);
         }
 
-
         App::setlocale($request->lang);
 
-        $course = Course::where('status', 1)
+        $course = Course::select([
+            'id', 'user_id', 'category_id', 'subcategory_id', 'childcategory_id', 'language_id', 'title',
+            'price', 'discount_price', 'featured', 'slug', 'status', 'preview_image', 'type', 'level_tags'
+        ])
+            ->where('status', 1)
             ->where('type', 1)
             ->with([
+                'language' => function ($query) {
+                    $query->where('status', 1)->select('id', 'name');
+                },
+                'user' => function ($query) {
+                    $query->where('status', 1)->select('id', 'fname', 'lname', 'user_img');
+                },
+            ])
+            ->withCount([
                 'chapter' => function ($query) {
                     $query->where('status', 1);
                 },
-            ])
-            ->with([
-                'language' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'name');
-                },
-            ])
-            ->with([
-                'user' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'fname', 'lname', 'user_img');
-                },
-            ])
-            ->withcount([
                 'order' => function ($query) {
                     $query->where('status', 1);
                 },
@@ -487,9 +476,8 @@ class CourseController extends Controller
             ->get();
 
         foreach ($course as $result) {
-            $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
 
-            $enrolled_status = Order::where('course_id', $result->course_id)->where('user_id', Auth::guard('api')->id())->first();
+            $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
             if (isset($enrolled_status)) {
                 $result->enrolled_status = true;
             } else {
@@ -541,7 +529,6 @@ class CourseController extends Controller
             $result->total_rating = $total_rating;
         }
 
-        $course->makehidden('chapter', 'order');
         return response()->json(['bestselling' => $course], 200);
     }
 
@@ -566,26 +553,24 @@ class CourseController extends Controller
 
         App::setlocale($request->lang);
 
-        $course = Course::where('status', 1)
+        $course = Course::select([
+            'id', 'user_id', 'category_id', 'subcategory_id', 'childcategory_id', 'language_id', 'title',
+            'price', 'discount_price', 'featured', 'slug', 'status', 'preview_image', 'type', 'level_tags'
+        ])
+            ->where('status', 1)
             ->where('type', 1)
             ->with([
+                'language' => function ($query) {
+                    $query->where('status', 1)->select('id', 'name');
+                },
+                'user' => function ($query) {
+                    $query->where('status', 1)->select('id', 'fname', 'lname', 'user_img');
+                },
+            ])
+            ->withCount([
                 'chapter' => function ($query) {
                     $query->where('status', 1);
                 },
-            ])
-            ->with([
-                'language' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'name');
-                },
-            ])
-            ->with([
-                'user' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'fname', 'lname', 'user_img');
-                },
-            ])
-            ->withcount([
                 'order' => function ($query) {
                     $query->where('status', 1);
                 },
@@ -594,9 +579,8 @@ class CourseController extends Controller
             ->paginate(8);
 
         foreach ($course as $result) {
-            $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
 
-            $enrolled_status = Order::where('course_id', $result->course_id)->where('user_id', Auth::guard('api')->id())->first();
+            $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
             if (isset($enrolled_status)) {
                 $result->enrolled_status = true;
             } else {
@@ -648,7 +632,6 @@ class CourseController extends Controller
             $result->total_rating = $total_rating;
         }
 
-        $course->makehidden('chapter', 'order');
         return response()->json(['allbestselling' => $course], 200);
     }
 
@@ -678,35 +661,37 @@ class CourseController extends Controller
         foreach ($my_orders as $myorder) {
             array_push($mycourses_id, $myorder->course_id);
         }
-        $course = Course::where('status', 1)->whereIn('id', $mycourses_id)
-            ->orderBy('id', 'DESC')
-            ->take(8)
+
+        $course = Course::select([
+            'id', 'user_id', 'category_id', 'subcategory_id', 'childcategory_id', 'language_id', 'title',
+            'price', 'discount_price', 'featured', 'slug', 'status', 'preview_image', 'type', 'level_tags'
+        ])
+            ->whereIn('id', $mycourses_id)
+            ->where('status', 1)
             ->with([
+                'language' => function ($query) {
+                    $query->where('status', 1)->select('id', 'name');
+                },
+                'user' => function ($query) {
+                    $query->where('status', 1)->select('id', 'fname', 'lname', 'user_img');
+                },
+            ])
+            ->withCount([
                 'chapter' => function ($query) {
                     $query->where('status', 1);
                 },
-            ])
-            ->with([
-                'language' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'name');
+                'order' => function ($query) {
+                    $query->where('status', 1);
                 },
             ])
-            ->with([
-                'user' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'fname', 'lname', 'user_img');
-                },
-            ])
+            ->orderByDesc('id')
+            ->take(8)
             ->get();
 
         foreach ($course as $result) {
 
-            $student_enrolled = Order::where('course_id', $result->course_id)->count();
-            $result->student_enrolled = isset($student_enrolled) ? $student_enrolled : null;
-            $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
-
-            $enrolled_status = Order::where('course_id', $result->course_id)->where('user_id', Auth::guard('api')->id())->first();
+            $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
+            // dd($enrolled_status);
             if (isset($enrolled_status)) {
                 $result->enrolled_status = true;
             } else {
@@ -758,7 +743,6 @@ class CourseController extends Controller
             $result->total_rating = $total_rating;
         }
 
-        $course->makehidden('chapter');
         return response()->json(['mycourses' => $course], 200);
     }
 
@@ -788,34 +772,35 @@ class CourseController extends Controller
             array_push($mycourses_id, $myorder->course_id);
         }
 
-        $course = Course::where('status', 1)->whereIn('id', $mycourses_id)
-            ->orderBy('id', 'DESC')
+
+        $course = Course::select([
+            'id', 'user_id', 'category_id', 'subcategory_id', 'childcategory_id', 'language_id', 'title',
+            'price', 'discount_price', 'featured', 'slug', 'status', 'preview_image', 'type', 'level_tags'
+        ])
+            ->whereIn('id', $mycourses_id)
+            ->where('status', 1)
             ->with([
+                'language' => function ($query) {
+                    $query->where('status', 1)->select('id', 'name');
+                },
+                'user' => function ($query) {
+                    $query->where('status', 1)->select('id', 'fname', 'lname', 'user_img');
+                },
+            ])
+            ->withCount([
                 'chapter' => function ($query) {
                     $query->where('status', 1);
                 },
-            ])
-            ->with([
-                'language' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'name');
+                'order' => function ($query) {
+                    $query->where('status', 1);
                 },
             ])
-            ->with([
-                'user' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'fname', 'lname', 'user_img');
-                },
-            ])
+            ->orderByDesc('id')
             ->paginate(8);
 
         foreach ($course as $result) {
 
-            $student_enrolled = Order::where('course_id', $result->course_id)->count();
-            $result->student_enrolled = isset($student_enrolled) ? $student_enrolled : null;
-            $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
-
-            $enrolled_status = Order::where('course_id', $result->course_id)->where('user_id', Auth::guard('api')->id())->first();
+            $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
             if (isset($enrolled_status)) {
                 $result->enrolled_status = true;
             } else {
@@ -867,7 +852,6 @@ class CourseController extends Controller
             $result->total_rating = $total_rating;
         }
 
-        $course->makehidden('chapter');
         return response()->json(['myallcourses' => $course], 200);
     }
 
@@ -892,35 +876,36 @@ class CourseController extends Controller
 
         App::setlocale($request->lang);
 
-        $course = Course::where('status', 1)->where('type', '!=', 1)
-            ->orderBy('id', 'DESC')
-            ->take(8)
+        $course = Course::select([
+            'id', 'user_id', 'category_id', 'subcategory_id', 'childcategory_id', 'language_id', 'title',
+            'price', 'discount_price', 'featured', 'slug', 'status', 'preview_image', 'type', 'level_tags'
+        ])
+            ->where('status', 1)
+            ->where('type', '!=', 1)
             ->with([
+                'language' => function ($query) {
+                    $query->where('status', 1)->select('id', 'name');
+                },
+                'user' => function ($query) {
+                    $query->where('status', 1)->select('id', 'fname', 'lname', 'user_img');
+                },
+            ])
+            ->withCount([
                 'chapter' => function ($query) {
                     $query->where('status', 1);
                 },
-            ])
-            ->with([
-                'language' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'name');
+                'order' => function ($query) {
+                    $query->where('status', 1);
                 },
             ])
-            ->with([
-                'user' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'fname', 'lname', 'user_img');
-                },
-            ])
+            ->orderByDesc('id')
+            ->take(8)
             ->get();
+
 
         foreach ($course as $result) {
 
-            $student_enrolled = Order::where('course_id', $result->course_id)->count();
-            $result->student_enrolled = isset($student_enrolled) ? $student_enrolled : null;
-            $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
-
-            $enrolled_status = Order::where('course_id', $result->course_id)->where('user_id', Auth::guard('api')->id())->first();
+            $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
             if (isset($enrolled_status)) {
                 $result->enrolled_status = true;
             } else {
@@ -972,7 +957,6 @@ class CourseController extends Controller
             $result->total_rating = $total_rating;
         }
 
-        $course->makehidden('chapter');
         return response()->json(['freecourses' => $course], 200);
     }
 
@@ -997,34 +981,35 @@ class CourseController extends Controller
 
         App::setlocale($request->lang);
 
-        $course = Course::where('status', 1)->where('type', '!=', 1)
-            ->orderBy('id', 'DESC')
+
+        $course = Course::select([
+            'id', 'user_id', 'category_id', 'subcategory_id', 'childcategory_id', 'language_id', 'title',
+            'price', 'discount_price', 'featured', 'slug', 'status', 'preview_image', 'type', 'level_tags'
+        ])
+            ->where('status', 1)
+            ->where('type', '!=', 1)
             ->with([
+                'language' => function ($query) {
+                    $query->where('status', 1)->select('id', 'name');
+                },
+                'user' => function ($query) {
+                    $query->where('status', 1)->select('id', 'fname', 'lname', 'user_img');
+                },
+            ])
+            ->withCount([
                 'chapter' => function ($query) {
                     $query->where('status', 1);
                 },
-            ])
-            ->with([
-                'language' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'name');
+                'order' => function ($query) {
+                    $query->where('status', 1);
                 },
             ])
-            ->with([
-                'user' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'fname', 'lname', 'user_img');
-                },
-            ])
+            ->orderByDesc('id')
             ->paginate(8);
 
         foreach ($course as $result) {
 
-            $student_enrolled = Order::where('course_id', $result->course_id)->count();
-            $result->student_enrolled = isset($student_enrolled) ? $student_enrolled : null;
-            $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
-
-            $enrolled_status = Order::where('course_id', $result->course_id)->where('user_id', Auth::guard('api')->id())->first();
+            $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
             if (isset($enrolled_status)) {
                 $result->enrolled_status = true;
             } else {
@@ -1076,7 +1061,6 @@ class CourseController extends Controller
             $result->total_rating = $total_rating;
         }
 
-        $course->makehidden('chapter');
         return response()->json(['allfreecourses' => $course], 200);
     }
 
@@ -1101,39 +1085,38 @@ class CourseController extends Controller
 
         App::setlocale($request->lang);
 
-        $course = Course::where('status', 1)
+        $course = Course::select([
+            'id', 'user_id', 'category_id', 'subcategory_id', 'childcategory_id', 'language_id', 'title',
+            'price', 'discount_price', 'featured', 'slug', 'status', 'preview_image', 'type', 'level_tags'
+        ])
+            ->where('status', 1)
             ->where('type', '1')
             ->where('discount_price', '!=', null)
             ->with([
+                'language' => function ($query) {
+                    $query->where('status', 1)->select('id', 'name');
+                },
+                'user' => function ($query) {
+                    $query->where('status', 1)->select('id', 'fname', 'lname', 'user_img');
+                },
+            ])
+            ->withCount([
                 'chapter' => function ($query) {
                     $query->where('status', 1);
                 },
-            ])
-            ->with([
-                'language' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'name');
-                },
-            ])
-            ->with([
-                'user' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'fname', 'lname', 'user_img');
+                'order' => function ($query) {
+                    $query->where('status', 1);
                 },
             ])
             ->get();
 
         foreach ($course as $result) {
 
-            $student_enrolled = Order::where('course_id', $result->course_id)->count();
-            $result->student_enrolled = isset($student_enrolled) ? $student_enrolled : null;
-            $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
-
             if ($result->price != 0) {
                 $result->discount_percentage = (($result->price - $result->discount_price) / $result->price) * 100;
             }
 
-            $enrolled_status = Order::where('course_id', $result->course_id)->where('user_id', Auth::guard('api')->id())->first();
+            $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
             if (isset($enrolled_status)) {
                 $result->enrolled_status = true;
             } else {
@@ -1185,7 +1168,6 @@ class CourseController extends Controller
             $result->total_rating = $total_rating;
         }
 
-        $course->makehidden('chapter');
         $course = $course->sortByDesc('discount_percentage')->take(8);
         $course = $course->values()->all();
         return response()->json(['topDiscountedcourses' => $course], 200);
@@ -1212,39 +1194,38 @@ class CourseController extends Controller
 
         App::setlocale($request->lang);
 
-        $course = Course::where('status', 1)
+        $course = Course::select([
+            'id', 'user_id', 'category_id', 'subcategory_id', 'childcategory_id', 'language_id', 'title',
+            'price', 'discount_price', 'featured', 'slug', 'status', 'preview_image', 'type', 'level_tags'
+        ])
+            ->where('status', 1)
             ->where('type', '1')
             ->where('discount_price', '!=', null)
             ->with([
+                'language' => function ($query) {
+                    $query->where('status', 1)->select('id', 'name');
+                },
+                'user' => function ($query) {
+                    $query->where('status', 1)->select('id', 'fname', 'lname', 'user_img');
+                },
+            ])
+            ->withCount([
                 'chapter' => function ($query) {
                     $query->where('status', 1);
                 },
-            ])
-            ->with([
-                'language' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'name');
-                },
-            ])
-            ->with([
-                'user' => function ($query) {
-                    $query->where('status', 1)
-                        ->select('id', 'fname', 'lname', 'user_img');
+                'order' => function ($query) {
+                    $query->where('status', 1);
                 },
             ])
             ->paginate(8);
 
         foreach ($course as $result) {
 
-            $student_enrolled = Order::where('course_id', $result->course_id)->count();
-            $result->student_enrolled = isset($student_enrolled) ? $student_enrolled : null;
-            $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
-
             if ($result->price != 0) {
                 $result->discount_percentage = (($result->price - $result->discount_price) / $result->price) * 100;
             }
 
-            $enrolled_status = Order::where('course_id', $result->course_id)->where('user_id', Auth::guard('api')->id())->first();
+            $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
             if (isset($enrolled_status)) {
                 $result->enrolled_status = true;
             } else {
@@ -1296,7 +1277,6 @@ class CourseController extends Controller
             $result->total_rating = $total_rating;
         }
 
-        $course->makehidden('chapter');
         $course = $course->setCollection($course->sortByDesc('discount_percentage')->values());
         return response()->json(['topDiscountedcourses' => $course], 200);
     }
