@@ -44,10 +44,10 @@ class CategoriesController extends Controller
     {
             $data = $this->validate($request,[
             // "title"    =>"required|unique:categories,title",
-            "title_en" =>"required",
-            "title_ar" =>"required",
-            "title.required"=>"Please enter category title !",
-            "title.unique" => "This Category name is already exist !",
+            "title_en"       =>"required",
+            "title_ar"       =>"required",
+            "title.required" =>"Please enter category title !",
+            "title.unique"   => "This Category name is already exist !",
             "slug"=>"required",
             "icon"=>"required"
 
@@ -127,12 +127,12 @@ class CategoriesController extends Controller
     public function update(Request $request,$id)
     {
         $data = $this->validate($request,[
-            "title_en"=>"required",
-            "title_ar"=>"required",
-            "title.required"=>"Please enter category title !",
-            "title.unique" => "This Category name is already exist !",
-            "slug"=>"required",
-            "icon"=>"required"
+            "title_en"       =>"required",
+            "title_ar"       =>"required",
+            "title.required" =>"Please enter category title !",
+            "title.unique"   => "This Category name is already exist !",
+            "slug"           =>"required",
+            "icon"           =>"required"
         ]);
 
         $data = Categories::findorfail($id);

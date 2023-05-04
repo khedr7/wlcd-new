@@ -87,8 +87,8 @@
                                 <td><input type="checkbox" form="bulk_delete_form" class="filled-in material-checkbox-input" name="checked[]" value="{{$fact->id}}" id="checkbox{{$fact->id}}">
                                     <label for="checkbox{{$fact->id}}" class="material-checkbox"></label><?php echo $i;?></td>
                                 <td><i class="fa {{$fact->icon}}"></i></td>
-                                <td>{{$fact->heading}}</td>
-                                <td>{{$fact->sub_heading}}</td>
+                                <td>{{$fact->getTranslation('heading', Session::get('changed_language'), false) }}</td>
+                                <td>{{$fact->getTranslation('sub_heading', Session::get('changed_language'), false) }}</td>
                                 <td>
                                  <div class="dropdown">
                                      <button class="btn btn-round btn-primary-rgba" type="button" id="CustomdropdownMenuButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="feather icon-more-vertical-"></i></button>

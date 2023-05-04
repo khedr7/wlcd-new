@@ -193,7 +193,6 @@
 		</div>
 
 		@forelse($course as $cat)
-
 			<div class="col-lg-4 mb-4">
 				<input type='checkbox' form='bulk_delete_form'
 					class='form-card-input check filled-in material-checkbox-input position-absolute width-25 height-25 l-30 t-13'

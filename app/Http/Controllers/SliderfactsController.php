@@ -34,13 +34,22 @@ class SliderfactsController extends Controller
 	{
 		
 		$data = $this->validate($request, [
-            'icon' => 'required',
-            'heading' => 'required',
-            'sub_heading' => 'required',
+            'icon'           => 'required',
+            'heading_ar'     => 'required',
+			'heading_en'     => 'required',
+			'sub_heading_ar' => 'required',
+			'sub_heading_en' => 'required',
 
         ]);
 
         $input = $request->all();
+
+		$input['heading']['en'] = $input['heading_en'];
+        $input['heading']['ar'] = $input['heading_ar'];
+
+		$input['sub_heading']['en'] = $input['sub_heading_en'];
+        $input['sub_heading']['ar'] = $input['sub_heading_en'];
+
         $data = SliderFacts::create($input);
         $data->save();
 
@@ -62,13 +71,21 @@ class SliderfactsController extends Controller
     public function update(Request $request, $id)
     {
     	$this -> validate($request,[
-            'icon' => 'required',
-            'heading' => 'required',
-            'sub_heading' => 'required',
+            'icon'           => 'required',
+            'heading_ar'     => 'required',
+			'heading_en'     => 'required',
+            'sub_heading_ar' => 'required',
+			'sub_heading_en' => 'required',
         ]);
 
         $data = SliderFacts::findorfail($id);
         $input = $request->all();
+		$input['heading']['en'] = $input['heading_en'];
+        $input['heading']['ar'] = $input['heading_ar'];
+
+		$input['sub_heading']['en'] = $input['sub_heading_en'];
+        $input['sub_heading']['ar'] = $input['sub_heading_en'];
+
         $data->update($input);
       
         Session::flash('success', trans('flash.UpdatedSuccessfully'));

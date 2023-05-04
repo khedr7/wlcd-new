@@ -19,7 +19,7 @@
                     {{ method_field('PUT') }}
 
                     <input type="hidden" name="lang" value="en" id="lang">
-
+ 
                     <div class="row">
                         <div class="col-md-4">
                             <label>{{ __('adminstaticword.Category') }}<span class="redstar">*</span></label>
