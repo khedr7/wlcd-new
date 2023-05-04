@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WebApi\Auth\LoginController;
 use App\Http\Controllers\WebApi\Auth\RegisterController;
 use App\Http\Controllers\WebApi\CourseController;
+use App\Http\Controllers\WebApi\MainController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,11 +36,10 @@ Route::middleware(['ip_block'])->group(function () {
         Route::get('my-allcourses', [CourseController::class, 'myAllCourses']);
 
 
-        // Route::get('testimonials', 'Api\MainController@homeTestimonials');
-        // Route::get('all-recent/course', 'Api\MainController@allrecentcourse');
-        Route::get('sliders', 'Api\MainController@homeSliders');
-
+        //    Route::get('testimonials', 'Api\MainController@homeTestimonials');
+        //    Route::get('all-recent/course', 'Api\MainController@allrecentcourse');
     });
+
     // Get Courses.
     Route::get('recent/course', [CourseController::class, 'recentCourses']);
     Route::get('all-recent/course', [CourseController::class, 'allRecentCourses']);
@@ -53,5 +53,10 @@ Route::middleware(['ip_block'])->group(function () {
     Route::get('all-top-discounted/course', [CourseController::class, 'allTopDiscountedCourses']);
     Route::get('bundle/course', [CourseController::class, 'bundleCourses']);
     Route::get('all-bundle/course', [CourseController::class, 'allBundleCourses']);
+    
+    
+    //Get instructors
+    Route::get('instructors/home', [MainController::class, 'homeInstructors']);
+
 
 });

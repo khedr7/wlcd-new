@@ -797,7 +797,7 @@ class MainController extends Controller
             $result->student_enrolled = isset($student_enrolled) ? $student_enrolled : null;
             $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
             
-            $enrolled_status = Order::where('course_id', $result->course_id)->where('user_id', Auth::guard('api')->id())->first();
+            $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
             if (isset($enrolled_status)) {
                 $result->enrolled_status = true;
             } else {
@@ -947,7 +947,7 @@ class MainController extends Controller
             $result->student_enrolled = isset($student_enrolled) ? $student_enrolled : null;
             $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
 
-            $enrolled_status = Order::where('course_id', $result->course_id)->where('user_id', Auth::guard('api')->id())->first();
+            $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
             if (isset($enrolled_status)) {
                 $result->enrolled_status = true;
             } else {
@@ -1099,7 +1099,7 @@ class MainController extends Controller
             $result->student_enrolled = isset($student_enrolled) ? $student_enrolled : null;
             $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
 
-            $enrolled_status = Order::where('course_id', $result->course_id)->where('user_id', Auth::guard('api')->id())->first();
+            $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
             if (isset($enrolled_status)) {
                 $result->enrolled_status = true;
             } else {
@@ -1250,7 +1250,7 @@ class MainController extends Controller
             $result->student_enrolled = isset($student_enrolled) ? $student_enrolled : null;
             $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
 
-            $enrolled_status = Order::where('course_id', $result->course_id)->where('user_id', Auth::guard('api')->id())->first();
+            $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
             if (isset($enrolled_status)) {
                 $result->enrolled_status = true;
             } else {
