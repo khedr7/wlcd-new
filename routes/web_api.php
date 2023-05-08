@@ -38,6 +38,11 @@ Route::middleware(['ip_block'])->group(function () {
     //general api
     Route::get('sliders',      [MainController::class, 'homeSliders']);
     Route::get('testimonials', [MainController::class, 'homeTestimonials']);
+    Route::get('videoSetting', [MainController::class, 'videoSetting']);
+    Route::post('contactus', [MainController::class, 'contactus']);
+    Route::get('contactus/reasons', [MainController::class, 'contactReasons']);
+    Route::get('contact/details', [MainController::class, 'contactDetails']);
+
 
     //category
     Route::get('categories',     [MainController::class, 'homeCategories']);
@@ -61,6 +66,8 @@ Route::middleware(['ip_block'])->group(function () {
     
     //Get instructors
     Route::get('instructors/home', [MainController::class, 'homeInstructors']);
+    Route::get('instructors/all', [MainController::class, 'allInstructors']);
+    Route::get('instructor/get', [MainController::class, 'instructor']);
 
 
 });

@@ -15,6 +15,10 @@ use App\Categories;
 use App\SubCategory;
 use App\Testimonial;
 use App\CategorySlider;
+use App\Contact;
+use App\Contactreason;
+use App\Setting;
+use App\Videosetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -23,6 +27,8 @@ use Illuminate\Support\Facades\Validator;
 
 class MainController extends Controller
 {
+    //------------INSTRUCTORS----------------
+
     public function homeInstructors(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -61,6 +67,84 @@ class MainController extends Controller
 
         return response()->json(['instructors' => $instructors], 200);
     }
+
+    public function allInstructors(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['Secret Key is required']);
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        App::setlocale($request->lang);
+
+        $instructors = User::select('id', 'fname', 'lname', 'mobile', 'email', 'user_img', 'role', 'detail')
+            ->where('status', 1)
+            ->whereIn('role', ['instructor', 'admin'])
+            ->withCount([
+                'courses' => function ($query) {
+                    $query->where('status', 1);
+                },
+                'courseOrders' => function ($query) {
+                    $query->where('status', 1);
+                },
+            ])
+            ->orderBy('courses_count', 'desc')
+            ->paginate(8);
+
+
+        return response()->json(['instructors' => $instructors], 200);
+    }
+
+    public function instructor(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['Secret Key is required']);
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        App::setlocale($request->lang);
+
+        $instructor = User::select('id', 'fname', 'lname', 'dob', 'mobile', 'email', 'address', 'user_img', 'role',
+                                'detail', 'address', 'city_id', 'state_id', 'country_id', 'gender', 'created_at',
+                                'practical_experience', 'basic_skills', 'professional_summary', 'scientific_background', 'courses')
+            ->where('status', 1)
+            ->where('id', $request->id)
+            ->withCount([
+                'courses' => function ($query) {
+                    $query->where('status', 1);
+                },
+                'courseOrders' => function ($query) {
+                    $query->where('status', 1);
+                },
+            ])
+            ->first();
+
+
+        return response()->json(['instructor' => $instructor], 200);
+    }
+    
     //------------SLIDER----------------
 
     function homeSliders(Request $request)
@@ -280,6 +364,120 @@ class MainController extends Controller
         }
 
         return response()->json(['testimonial' => $testimonial_result], 200);
+    }
+
+    //------------iNTRO VIDEO-----------------
+
+    function videoSetting(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['Secret Key is required'], 402);
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !'], 400);
+        }
+
+        $video = Videosetting::first();
+
+        return response()->json(['video' => $video], 200);
+    }
+
+    //------------CONTACT US-----------------
+    
+    public function contactus(Request $request)
+    {
+        $this->validate($request, [
+            'fname'   => 'required',
+            'email'   => 'required',
+            'mobile'  => 'required',
+            'message' => 'required',
+            'reason_id' => 'exists:contactreasons,id',
+        ]);
+
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['Secret Key is required']);
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        $created_contact = Contact::create([
+            'fname' => $request->fname,
+            'email' => $request->email,
+            'mobile' => $request->mobile,
+            'message' => $request->message,
+            'reason_id' => $request->reason_id,
+            'created_at' => \Carbon\Carbon::now()->toDateTimeString(),
+            'updated_at' => \Carbon\Carbon::now()->toDateTimeString(),
+        ]);
+
+        return response()->json(['contact' => $created_contact], 200);
+    }
+
+    public function contactReasons(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($errors->first('secret')) {
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail'], 400);
+            }
+        }
+
+        $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        $data =  Contactreason::where('status', '1')->get(['id', 'reason']);
+
+        return response()->json([
+            'reasons' => $data,
+        ], 200);
+    }
+
+    public function contactDetails(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($errors->first('secret')) {
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail'], 400);
+            }
+        }
+
+        $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        $setting = Setting::first(['default_address', 'wel_email', 'default_phone']);
+
+        return response()->json([
+            'data' => $setting,
+        ], 200);
     }
 
 }
