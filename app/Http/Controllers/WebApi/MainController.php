@@ -144,6 +144,56 @@ class MainController extends Controller
 
         return response()->json(['instructor' => $instructor], 200);
     }
+
+    public function courseInstructor(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+            'course_id' => 'required|exists:courses,id',
+
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($errors->first('secret')) {
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail']);
+            }
+            if ($errors->first('course_id')) {
+                return response()->json(['message' => $errors->first('course_id'), 'status' => 'fail']);
+            }
+           
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        App::setlocale($request->lang);
+
+        $course = Course::where('id', $request->course_id)->first(['id', 'user_id']);
+
+        $instructor = User::select('id', 'fname', 'lname', 'dob', 'mobile', 'email', 'address', 'user_img', 'role',
+                                'detail', 'address', 'city_id', 'state_id', 'country_id', 'gender', 'created_at',
+                                'practical_experience', 'basic_skills', 'professional_summary', 'scientific_background', 'courses')
+            ->where('status', 1)
+            ->where('id', $course->user_id)
+            ->withCount([
+                'courses' => function ($query) {
+                    $query->where('status', 1);
+                },
+                'courseOrders' => function ($query) {
+                    $query->where('status', 1);
+                },
+            ])
+            ->first();
+
+
+        return response()->json(['instructor' => $instructor], 200);
+    }
     
     //------------SLIDER----------------
 
