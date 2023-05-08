@@ -4,10 +4,14 @@ namespace App\Http\Controllers\WebApi;
 
 use App\BundleCourse;
 use App\Course;
+use App\CourseChapter;
+use App\CourseProgress;
+use App\Googlemeet;
 use App\Helpers\Is_wishlist;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\SendNotification;
 use App\Order;
+use App\PrivateCourse;
 use App\ReviewRating;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -1423,5 +1427,397 @@ class CourseController extends Controller
         }
 
         return response()->json(['bundle' => $result], 200);
+    }
+
+    public function courseDetails(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['Secret Key is required']);
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        App::setlocale($request->lang);
+
+        if (Auth::guard('api')->check()) {
+            $user = Auth::guard('api')->user();
+
+            $private_courses = PrivateCourse::where('status', 1)
+                ->where('course_id', '=', $request->course_id)
+                ->first();
+
+            if (isset($private_courses)) {
+                $user_id = [];
+                array_push($user_id, $private_courses->user_id);
+                $user_id = array_values(array_filter($user_id));
+                $user_id = array_flatten($user_id);
+
+                $user_id;
+
+                if (in_array($user->id, $user_id)) {
+                    return response()->json(['Unauthorized Action'], 401);
+                }
+            }
+        }
+
+        $result = Course::where('id', '=', $request->course_id)
+            ->where('status', 1)
+            ->with('category')
+            ->with([
+                'include' => function ($query) {
+                    $query->where('status', 1)->select('id', 'course_id', 'icon', 'detail', 'status');
+                },
+                'whatlearns' => function ($query) {
+                    $query->where('status', 1)->select('id', 'course_id', 'detail', 'status');
+                },
+                'language' => function ($query) {
+                    $query->where('status', 1)->select('id', 'name');
+                },
+
+                'policy',
+            ])
+            ->withCount([
+                'chapter' => function ($query) {
+                    $query->where('status', 1);
+                },
+                'order' => function ($query) {
+                    $query->where('status', 1);
+                },
+            ])
+            ->first();
+
+        if (!$result) {
+            return response()->json('404 | Course not found !');
+        }
+
+        $reviews = ReviewRating::where('course_id', $request->course_id)
+            ->where('status', '1')
+            ->get();
+        $count = ReviewRating::where('course_id', $request->course_id)->count();
+        $learn = 0;
+        $price = 0;
+        $value = 0;
+        $sub_total = 0;
+        $sub_total = 0;
+        $course_total_rating = 0;
+        $total_rating = 0;
+
+        if ($count > 0) {
+            foreach ($reviews as $review) {
+                $learn = $review->learn * 5;
+                $price = $review->price * 5;
+                $value = $review->value * 5;
+                $sub_total = $sub_total + $learn + $price + $value;
+            }
+
+            $count = $count * 3 * 5;
+            $rat = $sub_total / $count;
+            $ratings_var0 = ($rat * 100) / 5;
+
+            $course_total_rating = $ratings_var0;
+        }
+
+        $count = $count * 3 * 5;
+
+        if ($count != 0) {
+            $rat = $sub_total / $count;
+
+            $ratings_var = ($rat * 100) / 5;
+
+            $overallrating = $ratings_var0 / 2 / 10;
+
+            $total_rating = round($overallrating, 1);
+        }
+
+        //learn
+        $learn = 0;
+        $total = 0;
+        $total_learn = 0;
+
+        if ($count > 0) {
+            $count = ReviewRating::where('course_id', $request->course_id)->count();
+
+            foreach ($reviews as $review) {
+                $learn = $review->learn * 5;
+                $total = $total + $learn;
+            }
+
+            $count = $count * 1 * 5;
+            $rat = $total / $count;
+            $ratings_var1 = ($rat * 100) / 5;
+
+            $total_learn = $ratings_var1;
+        }
+
+        //price
+        $price = 0;
+        $total = 0;
+        $total_price = 0;
+
+        if ($count > 0) {
+            $count = ReviewRating::where('course_id', $request->course_id)->count();
+
+            foreach ($reviews as $review) {
+                $price = $review->price * 5;
+                $total = $total + $price;
+            }
+
+            $count = $count * 1 * 5;
+            $rat = $total / $count;
+            $ratings_var2 = ($rat * 100) / 5;
+
+            $total_price = $ratings_var2;
+        }
+
+        //value
+        $value = 0;
+        $total = 0;
+        $total_value = 0;
+
+        if ($count > 0) {
+            $count = ReviewRating::where('course_id', $request->course_id)->count();
+
+            foreach ($reviews as $review) {
+                $value = $review->value * 5;
+                $total = $total + $value;
+            }
+
+            $count = $count * 1 * 5;
+            $rat = $total / $count;
+            $ratings_var3 = ($rat * 100) / 5;
+
+            $total_value = $ratings_var3;
+        }
+
+        $result->makeHidden(['review', 'instructor_revenue', 'new_course_mail', 'reject_txt', 'involvement_request']);
+
+        $enrollment_status = Order::where('course_id', $request->course_id)->where('user_id', Auth::guard('api')->id())->first();
+
+        return response()->json([
+            'course' => $result,
+            'learn' => $total_learn,
+            'price' => $total_price,
+            'value' => $total_value,
+            'total_rating_percent' => $course_total_rating,
+            'total_rating' => $total_rating,
+            'enrollment_status' => isset($enrollment_status) ? 1 : 0,
+        ]);
+    }
+
+    public function courseChpaters(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+            'course_id' => 'required|exists:courses,id',
+
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($errors->first('secret')) {
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail']);
+            }
+            if ($errors->first('course_id')) {
+                return response()->json(['message' => $errors->first('course_id'), 'status' => 'fail']);
+            }
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        App::setlocale($request->lang);
+
+        $chapters = CourseChapter::where('status', 1)
+            ->where('course_id', $request->course_id)
+            ->with([
+                'courseclass' => function ($query) {
+                    $query->where('status', 1);
+                },
+            ])
+            ->withCount([
+                'courseclass' => function ($query) {
+                    $query->where('status', 1);
+                },
+            ])
+            ->get();
+
+        return response()->json(['chapters' => $chapters], 200);
+    }
+
+    public function courseProgress(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+            'course_id' => 'required|exists:courses,id',
+
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($errors->first('secret')) {
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail']);
+            }
+            if ($errors->first('course_id')) {
+                return response()->json(['message' => $errors->first('course_id'), 'status' => 'fail']);
+            }
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        $auth = Auth::guard('api')->user();
+
+        $order = Order::where('user_id', '=', $auth->id)->where('course_id', '=', $request->course_id)->where('status', '=', 1)->first();
+        if (!isset($order)) {
+            return response()->json(['message' => 'Buy the course first'], 403);
+        }
+
+        $progress = CourseProgress::where('course_id', $request->course_id)
+            ->where('user_id', $auth->id)
+            ->first();
+
+        return response()->json(['progress' => $progress], 200);
+    }
+
+    public function courseprogressupdate(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+            'checked' => 'required',
+            'course_id' => 'required|exists:courses,id',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($errors->first('secret')) {
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail']);
+            }
+            if ($errors->first('course_id')) {
+                return response()->json(['message' => $errors->first('course_id'), 'status' => 'fail']);
+            }
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        $auth = Auth::guard('api')->user();
+
+        $order = Order::where('user_id', '=', $auth->id)->where('course_id', '=', $request->course_id)->where('status', '=', 1)->first();
+        if (!isset($order)) {
+            return response()->json(['message' => 'Buy the course first'], 403);
+        }
+
+        $course_return = $request->checked;
+        $course = Course::where('id', $request->course_id)->first();
+
+        $progress = CourseProgress::where('course_id', $course->id)
+            ->where('user_id', $auth->id)
+            ->first();
+
+        if (isset($progress)) {
+            $chapter = CourseChapter::where('status', 1)
+                ->where('course_id', $course->id)
+                ->get();
+
+            $chapter_id = [];
+
+            foreach ($chapter as $c) {
+                array_push($chapter_id, "$c->id");
+            }
+
+            $updated_progress = CourseProgress::where('course_id', $course->id)
+                ->where('user_id', '=', $auth->id)
+                ->update([
+                    'mark_chapter_id' => $course_return,
+                    'all_chapter_id' => $chapter_id,
+                    'updated_at' => \Carbon\Carbon::now()->toDateTimeString(),
+                ]);
+
+            return response()->json(['created_progress' => $updated_progress], 200);
+        } else {
+            $chapter = CourseChapter::where('status', 1)
+                ->where('course_id', $course->id)
+                ->get();
+
+            $chapter_id = [];
+
+            foreach ($chapter as $c) {
+                array_push($chapter_id, "$c->id");
+            }
+
+            $created_progress = CourseProgress::create([
+                'course_id' => $course->id,
+                'user_id' => $auth->id,
+                'mark_chapter_id' => json_decode($course_return, true),
+                'all_chapter_id' => $chapter_id,
+                'created_at' => \Carbon\Carbon::now()->toDateTimeString(),
+                'updated_at' => \Carbon\Carbon::now()->toDateTimeString(),
+            ]);
+
+            return response()->json(['created_progress' => $created_progress], 200);
+        }
+    }
+
+    public function courseGoogleMeetings(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+            'course_id' => 'required|exists:courses,id',
+
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($errors->first('secret')) {
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail']);
+            }
+            if ($errors->first('course_id')) {
+                return response()->json(['message' => $errors->first('course_id'), 'status' => 'fail']);
+            }
+        }
+
+        $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        $auth = Auth::guard('api')->user();
+
+        $order = Order::where('user_id', '=', $auth->id)->where('course_id', '=', $request->course_id)->where('status', '=', 1)->first();
+        if (!isset($order)) {
+            return response()->json(['message' => 'Buy the course first'], 403);
+        }
+
+        $google_meet = Googlemeet::where('course_id', '=', $request->course_id)->get();
+
+
+        return response()->json(array('google_meet' => $google_meet), 200);
     }
 }
