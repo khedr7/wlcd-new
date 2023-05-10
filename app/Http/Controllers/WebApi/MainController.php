@@ -19,6 +19,8 @@ use App\Contact;
 use App\Contactreason;
 use App\Setting;
 use App\Videosetting;
+use App\Announcement;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;

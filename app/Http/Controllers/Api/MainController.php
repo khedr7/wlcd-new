@@ -844,7 +844,6 @@ class MainController extends Controller
         $course->makeHidden('chapter');
         return response()->json(['course' => $course], 200);
     }
-
     public function allRecentcourse(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -869,19 +868,15 @@ class MainController extends Controller
                 'include' => function ($query) {
                     $query->where('status', 1);
                 },
-            ])
-            ->with([
                 'whatlearns' => function ($query) {
                     $query->where('status', 1);
-                },
-            ])
-            ->with([
-                'language' => function ($query) {
+                },'language' => function ($query) {
                     $query->where('status', 1);
                 },
+                'user'
             ])
-            ->with('user')
-            ->paginate(5);
+            ->paginate(6);
+
 
         foreach ($course as $result) {
 
@@ -903,40 +898,33 @@ class MainController extends Controller
                     $ratings_var11 = ($rat1 * 100) / 5;
 
                     $review_like = ReviewHelpful::where('review_id', $review->id)
-                        ->where('course_id', $request->course_id)
+                        ->where('course_id', $result->id)
                         ->where('review_like', 1)
                         ->count();
 
                     $review_dislike = ReviewHelpful::where('review_id', $review->id)
-                        ->where('course_id', $request->course_id)
+                        ->where('course_id', $result->id)
                         ->where('review_dislike', 1)
                         ->count();
 
-                    $reviewszz[] = [
-                        'id' => $review->id,
-                        'user_id' => $review->user_id,
-                        'fname' => $review->user->fname,
-                        'lname' => $review->user->lname,
-                        'userimage' => $review->user->user_img,
-                        'imagepath' => url('images/user_img/'),
-                        'learn' => $review->learn,
-                        'price' => $review->price,
-                        'value' => $review->value,
-                        'reviews' => $review->review,
-                        'created_by' => $review->created_at,
-                        'updated_by' => $review->updated_at,
-                        'total_rating' => $ratings_var11,
-                        'like_count' => $review_like,
-                        'dislike_count' => $review_dislike,
-                    ];
+                    $review->review_like = $review_like;
+                    $review->review_dislike = $review_dislike;
                 }
             }
 
             $student_enrolled = Order::where('course_id', $result->course_id)->count();
             $result->student_enrolled = isset($student_enrolled) ? $student_enrolled : null;
             $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
-
+            
             $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
+            $progress = CourseProgress::where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
+            if(isset($progress)){
+                $result->mark_chapter_id = $progress->mark_chapter_id;
+                $result->all_chapter_id  = $progress->all_chapter_id;
+            } else{                
+                $result->mark_chapter_id = null;
+                $result->all_chapter_id  = null;
+            }
             if (isset($enrolled_status)) {
                 $result->enrolled_status = true;
             } else {
@@ -991,7 +979,7 @@ class MainController extends Controller
             $result->total_rating_percent = round($course_total_rating, 2);
             $result->total_rating = $total_rating;
         }
-
+        $course->makeHidden('chapter');
         return response()->json(['course' => $course], 200);
     }
 
@@ -1013,7 +1001,7 @@ class MainController extends Controller
             return response()->json(['Invalid Secret Key !']);
         }
 
-        $featured = Course::where('status', 1)
+        $course = Course::where('status', 1)
             ->where('featured', 1)
             ->orderBy('id', 'DESC')
             ->take(5)
@@ -1021,21 +1009,17 @@ class MainController extends Controller
                 'include' => function ($query) {
                     $query->where('status', 1);
                 },
-            ])
-            ->with([
                 'whatlearns' => function ($query) {
                     $query->where('status', 1);
-                },
-            ])
-            ->with([
-                'language' => function ($query) {
+                },'language' => function ($query) {
                     $query->where('status', 1);
                 },
+                'user'
             ])
-            ->with('user')
             ->get();
 
-        foreach ($featured as $result) {
+
+        foreach ($course as $result) {
 
             if (isset($result->review)) {
                 $ratings_var11 = 0;
@@ -1055,40 +1039,33 @@ class MainController extends Controller
                     $ratings_var11 = ($rat1 * 100) / 5;
 
                     $review_like = ReviewHelpful::where('review_id', $review->id)
-                        ->where('course_id', $request->course_id)
+                        ->where('course_id', $result->id)
                         ->where('review_like', 1)
                         ->count();
 
                     $review_dislike = ReviewHelpful::where('review_id', $review->id)
-                        ->where('course_id', $request->course_id)
+                        ->where('course_id', $result->id)
                         ->where('review_dislike', 1)
                         ->count();
 
-                    $reviewszz[] = [
-                        'id' => $review->id,
-                        'user_id' => $review->user_id,
-                        'fname' => $review->user->fname,
-                        'lname' => $review->user->lname,
-                        'userimage' => $review->user->user_img,
-                        'imagepath' => url('images/user_img/'),
-                        'learn' => $review->learn,
-                        'price' => $review->price,
-                        'value' => $review->value,
-                        'reviews' => $review->review,
-                        'created_by' => $review->created_at,
-                        'updated_by' => $review->updated_at,
-                        'total_rating' => $ratings_var11,
-                        'like_count' => $review_like,
-                        'dislike_count' => $review_dislike,
-                    ];
+                    $review->review_like = $review_like;
+                    $review->review_dislike = $review_dislike;
                 }
             }
 
             $student_enrolled = Order::where('course_id', $result->course_id)->count();
             $result->student_enrolled = isset($student_enrolled) ? $student_enrolled : null;
             $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
-
+            
             $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
+            $progress = CourseProgress::where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
+            if(isset($progress)){
+                $result->mark_chapter_id = $progress->mark_chapter_id;
+                $result->all_chapter_id  = $progress->all_chapter_id;
+            } else{                
+                $result->mark_chapter_id = null;
+                $result->all_chapter_id  = null;
+            }
             if (isset($enrolled_status)) {
                 $result->enrolled_status = true;
             } else {
@@ -1143,8 +1120,8 @@ class MainController extends Controller
             $result->total_rating_percent = round($course_total_rating, 2);
             $result->total_rating = $total_rating;
         }
-
-        return response()->json(['featured' => $featured], 200);
+        $course->makeHidden('chapter');
+        return response()->json(['featured' => $course], 200);
     }
 
     public function allfeaturedcourse(Request $request)
@@ -1165,28 +1142,24 @@ class MainController extends Controller
             return response()->json(['Invalid Secret Key !']);
         }
 
-        $featured = Course::where('status', 1)
+        $course = Course::where('status', 1)
             ->where('featured', 1)
             ->orderBy('id', 'DESC')
             ->with([
                 'include' => function ($query) {
                     $query->where('status', 1);
                 },
-            ])
-            ->with([
                 'whatlearns' => function ($query) {
                     $query->where('status', 1);
-                },
-            ])
-            ->with([
-                'language' => function ($query) {
+                },'language' => function ($query) {
                     $query->where('status', 1);
                 },
+                'user'
             ])
-            ->with('user')
-            ->paginate(5);
+            ->paginate(6);
 
-        foreach ($featured as $result) {
+
+        foreach ($course as $result) {
 
             if (isset($result->review)) {
                 $ratings_var11 = 0;
@@ -1206,40 +1179,33 @@ class MainController extends Controller
                     $ratings_var11 = ($rat1 * 100) / 5;
 
                     $review_like = ReviewHelpful::where('review_id', $review->id)
-                        ->where('course_id', $request->course_id)
+                        ->where('course_id', $result->id)
                         ->where('review_like', 1)
                         ->count();
 
                     $review_dislike = ReviewHelpful::where('review_id', $review->id)
-                        ->where('course_id', $request->course_id)
+                        ->where('course_id', $result->id)
                         ->where('review_dislike', 1)
                         ->count();
 
-                    $reviewszz[] = [
-                        'id' => $review->id,
-                        'user_id' => $review->user_id,
-                        'fname' => $review->user->fname,
-                        'lname' => $review->user->lname,
-                        'userimage' => $review->user->user_img,
-                        'imagepath' => url('images/user_img/'),
-                        'learn' => $review->learn,
-                        'price' => $review->price,
-                        'value' => $review->value,
-                        'reviews' => $review->review,
-                        'created_by' => $review->created_at,
-                        'updated_by' => $review->updated_at,
-                        'total_rating' => $ratings_var11,
-                        'like_count' => $review_like,
-                        'dislike_count' => $review_dislike,
-                    ];
+                    $review->review_like = $review_like;
+                    $review->review_dislike = $review_dislike;
                 }
             }
 
             $student_enrolled = Order::where('course_id', $result->course_id)->count();
             $result->student_enrolled = isset($student_enrolled) ? $student_enrolled : null;
             $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
-
+            
             $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
+            $progress = CourseProgress::where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
+            if(isset($progress)){
+                $result->mark_chapter_id = $progress->mark_chapter_id;
+                $result->all_chapter_id  = $progress->all_chapter_id;
+            } else{                
+                $result->mark_chapter_id = null;
+                $result->all_chapter_id  = null;
+            }
             if (isset($enrolled_status)) {
                 $result->enrolled_status = true;
             } else {
@@ -1294,9 +1260,299 @@ class MainController extends Controller
             $result->total_rating_percent = round($course_total_rating, 2);
             $result->total_rating = $total_rating;
         }
-
-        return response()->json(['course' => $featured], 200);
+        $course->makeHidden('chapter');
+        return response()->json(['allfeatured' => $course], 200);
     }
+
+    public function relatedCourses(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['Secret Key is required']);
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        $data = RelatedCourse::where('main_course_id', $request->course_id)->where('status', 1)->get();
+        
+        $related_courses_id = [];
+        foreach ($data as $related) {
+            array_push($related_courses_id, $related->course_id);
+        }
+        
+
+
+        $course = Course::where('status', 1)
+            ->whereIn('id', $related_courses_id)
+            ->orderBy('id', 'DESC')
+            ->with([
+                'include' => function ($query) {
+                    $query->where('status', 1);
+                },
+                'whatlearns' => function ($query) {
+                    $query->where('status', 1);
+                },'language' => function ($query) {
+                    $query->where('status', 1);
+                },
+                'user'
+            ])
+            ->get();
+
+
+        foreach ($course as $result) {
+
+            if (isset($result->review)) {
+                $ratings_var11 = 0;
+                $review_like = 0;
+                $review_dislike = 0;
+
+                foreach ($result->review as $key => $review) {
+                    $user_count = count([$review]);
+                    $user_sub_total = 0;
+                    $user_learn_t = $review->learn * 5;
+                    $user_price_t = $review->price * 5;
+                    $user_value_t = $review->value * 5;
+                    $user_sub_total = $user_sub_total + $user_learn_t + $user_price_t + $user_value_t;
+
+                    $user_count = $user_count * 3 * 5;
+                    $rat1 = $user_sub_total / $user_count;
+                    $ratings_var11 = ($rat1 * 100) / 5;
+
+                    $review_like = ReviewHelpful::where('review_id', $review->id)
+                        ->where('course_id', $result->id)
+                        ->where('review_like', 1)
+                        ->count();
+
+                    $review_dislike = ReviewHelpful::where('review_id', $review->id)
+                        ->where('course_id', $result->id)
+                        ->where('review_dislike', 1)
+                        ->count();
+
+                    $review->review_like = $review_like;
+                    $review->review_dislike = $review_dislike;
+                }
+            }
+
+            $student_enrolled = Order::where('course_id', $result->course_id)->count();
+            $result->student_enrolled = isset($student_enrolled) ? $student_enrolled : null;
+            $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
+            
+            $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
+            $progress = CourseProgress::where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
+            if(isset($progress)){
+                $result->mark_chapter_id = $progress->mark_chapter_id;
+                $result->all_chapter_id  = $progress->all_chapter_id;
+            } else{                
+                $result->mark_chapter_id = null;
+                $result->all_chapter_id  = null;
+            }
+            if (isset($enrolled_status)) {
+                $result->enrolled_status = true;
+            } else {
+                $result->enrolled_status = false;
+            }
+
+            $instructors_student = Order::where('instructor_id', $result->user->id)->count();
+            $result->user->instructors_student = isset($instructors_student) ? $instructors_student : null;
+            $result->user->course_count = Course::where('user_id', $result->user->id)->count();
+
+
+            $reviews = ReviewRating::where('course_id', $result->id)
+                ->where('status', '1')
+                ->get();
+            $count = ReviewRating::where('course_id', $result->id)->count();
+            $learn = 0;
+            $price = 0;
+            $value = 0;
+            $sub_total = 0;
+            $sub_total = 0;
+            $course_total_rating = 0;
+            $total_rating = 0;
+
+            if ($count > 0) {
+                foreach ($reviews as $review) {
+                    $learn = $review->learn * 5;
+                    $price = $review->price * 5;
+                    $value = $review->value * 5;
+                    $sub_total = $sub_total + $learn + $price + $value;
+                }
+
+                $count = $count * 3 * 5;
+                $rat = $sub_total / $count;
+                $ratings_var0 = ($rat * 100) / 5;
+
+                $course_total_rating = $ratings_var0;
+            }
+
+            $count = $count * 3 * 5;
+
+            if ($count != 0) {
+                $rat = $sub_total / $count;
+
+                $ratings_var = ($rat * 100) / 5;
+
+                $overallrating = $ratings_var0 / 2 / 10;
+
+                $total_rating = round($overallrating, 1);
+            }
+
+            $result->in_wishlist = Is_wishlist::in_wishlist($result->id);
+            $result->total_rating_percent = round($course_total_rating, 2);
+            $result->total_rating = $total_rating;
+        }
+        $course->makeHidden('chapter');
+        return response()->json(['course' => $course], 200);
+    }
+
+    public function instructorCourses(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['Secret Key is required']);
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        $course = Course::where('status', 1)
+            ->where('user_id', '=', $request->instructor_id)
+            ->orderBy('id', 'DESC')
+            ->with([
+                'include' => function ($query) {
+                    $query->where('status', 1);
+                },
+                'whatlearns' => function ($query) {
+                    $query->where('status', 1);
+                },'language' => function ($query) {
+                    $query->where('status', 1);
+                },
+                'user'
+            ])
+            ->get();
+
+
+        foreach ($course as $result) {
+
+            if (isset($result->review)) {
+                $ratings_var11 = 0;
+                $review_like = 0;
+                $review_dislike = 0;
+
+                foreach ($result->review as $key => $review) {
+                    $user_count = count([$review]);
+                    $user_sub_total = 0;
+                    $user_learn_t = $review->learn * 5;
+                    $user_price_t = $review->price * 5;
+                    $user_value_t = $review->value * 5;
+                    $user_sub_total = $user_sub_total + $user_learn_t + $user_price_t + $user_value_t;
+
+                    $user_count = $user_count * 3 * 5;
+                    $rat1 = $user_sub_total / $user_count;
+                    $ratings_var11 = ($rat1 * 100) / 5;
+
+                    $review_like = ReviewHelpful::where('review_id', $review->id)
+                        ->where('course_id', $result->id)
+                        ->where('review_like', 1)
+                        ->count();
+
+                    $review_dislike = ReviewHelpful::where('review_id', $review->id)
+                        ->where('course_id', $result->id)
+                        ->where('review_dislike', 1)
+                        ->count();
+
+                    $review->review_like = $review_like;
+                    $review->review_dislike = $review_dislike;
+                }
+            }
+
+            $student_enrolled = Order::where('course_id', $result->course_id)->count();
+            $result->student_enrolled = isset($student_enrolled) ? $student_enrolled : null;
+            $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
+            
+            $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
+            $progress = CourseProgress::where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
+            if(isset($progress)){
+                $result->mark_chapter_id = $progress->mark_chapter_id;
+                $result->all_chapter_id  = $progress->all_chapter_id;
+            } else{                
+                $result->mark_chapter_id = null;
+                $result->all_chapter_id  = null;
+            }
+            if (isset($enrolled_status)) {
+                $result->enrolled_status = true;
+            } else {
+                $result->enrolled_status = false;
+            }
+
+            $instructors_student = Order::where('instructor_id', $result->user->id)->count();
+            $result->user->instructors_student = isset($instructors_student) ? $instructors_student : null;
+            $result->user->course_count = Course::where('user_id', $result->user->id)->count();
+
+
+            $reviews = ReviewRating::where('course_id', $result->id)
+                ->where('status', '1')
+                ->get();
+            $count = ReviewRating::where('course_id', $result->id)->count();
+            $learn = 0;
+            $price = 0;
+            $value = 0;
+            $sub_total = 0;
+            $sub_total = 0;
+            $course_total_rating = 0;
+            $total_rating = 0;
+
+            if ($count > 0) {
+                foreach ($reviews as $review) {
+                    $learn = $review->learn * 5;
+                    $price = $review->price * 5;
+                    $value = $review->value * 5;
+                    $sub_total = $sub_total + $learn + $price + $value;
+                }
+
+                $count = $count * 3 * 5;
+                $rat = $sub_total / $count;
+                $ratings_var0 = ($rat * 100) / 5;
+
+                $course_total_rating = $ratings_var0;
+            }
+
+            $count = $count * 3 * 5;
+
+            if ($count != 0) {
+                $rat = $sub_total / $count;
+
+                $ratings_var = ($rat * 100) / 5;
+
+                $overallrating = $ratings_var0 / 2 / 10;
+
+                $total_rating = round($overallrating, 1);
+            }
+
+            $result->in_wishlist = Is_wishlist::in_wishlist($result->id);
+            $result->total_rating_percent = round($course_total_rating, 2);
+            $result->total_rating = $total_rating;
+        }
+        $course->makeHidden('chapter');
+        return response()->json(['course' => $course], 200);
+    }
+
 
     public function bundle(Request $request)
     {
@@ -1528,17 +1784,165 @@ class MainController extends Controller
 
         $user = Auth::guard('api')->user();
 
-        $wishlist = Wishlist::where('user_id', $user->id)
+        $wishlist = Wishlist::where('user_id', $user->id)->get();
 
+        $myWishlistCourses_id = [];
+        foreach ($wishlist as $wish) {
+            array_push($myWishlistCourses_id, $wish->course_id);
+        }
+
+        $course = Course::where('status', 1)
+            ->whereIn('id', $myWishlistCourses_id)
+            ->orderBy('id', 'DESC')
             ->with([
-                'courses' => function ($query) {
-                    $query->with('user');
+                'include' => function ($query) {
+                    $query->where('status', 1);
                 },
+                'whatlearns' => function ($query) {
+                    $query->where('status', 1);
+                },'language' => function ($query) {
+                    $query->where('status', 1);
+                },
+                'user'
             ])
-            ->get();
+            ->paginate(6);
 
-        return response()->json(['wishlist' => $wishlist], 200);
+
+        foreach ($course as $result) {
+
+            if (isset($result->review)) {
+                $ratings_var11 = 0;
+                $review_like = 0;
+                $review_dislike = 0;
+
+                foreach ($result->review as $key => $review) {
+                    $user_count = count([$review]);
+                    $user_sub_total = 0;
+                    $user_learn_t = $review->learn * 5;
+                    $user_price_t = $review->price * 5;
+                    $user_value_t = $review->value * 5;
+                    $user_sub_total = $user_sub_total + $user_learn_t + $user_price_t + $user_value_t;
+
+                    $user_count = $user_count * 3 * 5;
+                    $rat1 = $user_sub_total / $user_count;
+                    $ratings_var11 = ($rat1 * 100) / 5;
+
+                    $review_like = ReviewHelpful::where('review_id', $review->id)
+                        ->where('course_id', $result->id)
+                        ->where('review_like', 1)
+                        ->count();
+
+                    $review_dislike = ReviewHelpful::where('review_id', $review->id)
+                        ->where('course_id', $result->id)
+                        ->where('review_dislike', 1)
+                        ->count();
+
+                    $review->review_like = $review_like;
+                    $review->review_dislike = $review_dislike;
+                }
+            }
+
+            $student_enrolled = Order::where('course_id', $result->course_id)->count();
+            $result->student_enrolled = isset($student_enrolled) ? $student_enrolled : null;
+            $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
+            
+            $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
+            $progress = CourseProgress::where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
+            if(isset($progress)){
+                $result->mark_chapter_id = $progress->mark_chapter_id;
+                $result->all_chapter_id  = $progress->all_chapter_id;
+            } else{                
+                $result->mark_chapter_id = null;
+                $result->all_chapter_id  = null;
+            }
+            if (isset($enrolled_status)) {
+                $result->enrolled_status = true;
+            } else {
+                $result->enrolled_status = false;
+            }
+
+            $instructors_student = Order::where('instructor_id', $result->user->id)->count();
+            $result->user->instructors_student = isset($instructors_student) ? $instructors_student : null;
+            $result->user->course_count = Course::where('user_id', $result->user->id)->count();
+
+
+            $reviews = ReviewRating::where('course_id', $result->id)
+                ->where('status', '1')
+                ->get();
+            $count = ReviewRating::where('course_id', $result->id)->count();
+            $learn = 0;
+            $price = 0;
+            $value = 0;
+            $sub_total = 0;
+            $sub_total = 0;
+            $course_total_rating = 0;
+            $total_rating = 0;
+
+            if ($count > 0) {
+                foreach ($reviews as $review) {
+                    $learn = $review->learn * 5;
+                    $price = $review->price * 5;
+                    $value = $review->value * 5;
+                    $sub_total = $sub_total + $learn + $price + $value;
+                }
+
+                $count = $count * 3 * 5;
+                $rat = $sub_total / $count;
+                $ratings_var0 = ($rat * 100) / 5;
+
+                $course_total_rating = $ratings_var0;
+            }
+
+            $count = $count * 3 * 5;
+
+            if ($count != 0) {
+                $rat = $sub_total / $count;
+
+                $ratings_var = ($rat * 100) / 5;
+
+                $overallrating = $ratings_var0 / 2 / 10;
+
+                $total_rating = round($overallrating, 1);
+            }
+
+            $result->in_wishlist = Is_wishlist::in_wishlist($result->id);
+            $result->total_rating_percent = round($course_total_rating, 2);
+            $result->total_rating = $total_rating;
+        }
+        $course->makeHidden('chapter');
+        return response()->json(['course' => $course], 200);
     }
+    // public function showwishlist(Request $request)
+    // {
+    //     $validator = Validator::make($request->all(), [
+    //         'secret' => 'required',
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         return response()->json(['Secret Key is required']);
+    //     }
+
+    //     $key = DB::table('api_keys')
+    //         ->where('secret_key', '=', $request->secret)
+    //         ->first();
+
+    //     if (!$key) {
+    //         return response()->json(['Invalid Secret Key !']);
+    //     }
+
+    //     $user = Auth::guard('api')->user();
+
+    //     $wishlist = Wishlist::where('user_id', $user->id)
+
+    //         ->with([
+    //             'courses' => function ($query) {
+    //                 $query->with('user');
+    //             },
+    //         ])
+    //         ->get();
+
+    //     return response()->json(['wishlist' => $wishlist], 200);
+    // }
 
     public function addtowishlist(Request $request)
     {
@@ -4464,6 +4868,124 @@ class MainController extends Controller
             ]);
         }
     }
+    // public function mycourses(Request $request)
+    // {
+    //     $validator = Validator::make($request->all(), [
+    //         'secret' => 'required',
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         return response()->json(['Secret Key is required']);
+    //     }
+
+    //     $key = DB::table('api_keys')
+    //         ->where('secret_key', '=', $request->secret)
+    //         ->first();
+
+    //     if (!$key) {
+    //         return response()->json(['Invalid Secret Key !']);
+    //     }
+
+    //     $user = Auth::guard('api')->user();
+
+    //     $enroll = Order::where('user_id', $user->id)
+    //         ->where('status', 1)
+    //         ->get()
+    //         ->transform(function ($order) {
+    //             $order['bundle_course_id'] = isset($order->bundle) ? $order->bundle->course_id : null;
+    //             return $order;
+    //         });
+
+    //     $enroll_details = [];
+    //     $title = null;
+    //     if (isset($enroll)) {
+    //         foreach ($enroll as $enrol) {
+    //             $course = Course::where('status', 1)
+    //                 ->where('id', $enrol->course_id)
+    //                 ->with([
+    //                     'include' => function ($query) {
+    //                         $query->where('status', 1);
+    //                     },
+    //                 ])
+    //                 ->with(['user'])
+    //                 ->with([
+    //                     'whatlearns' => function ($query) {
+    //                         $query->where('status', 1);
+    //                     },
+    //                 ])
+    //                 ->with([
+    //                     'progress' => function ($query) {
+    //                         $query->where('user_id', Auth::guard('api')->user()->id);
+    //                     },
+    //                 ])
+    //                 ->first();
+
+    //             if (!isset($course)) {
+    //                 $bundle = BundleCourse::where('id', $enrol->bundle_id)
+    //                     ->with('user')
+    //                     ->first();
+    //             }
+
+    //             if (isset($bundle)) {
+    //                 $title = $bundle->title;
+    //             }
+
+    //             if (isset($bundle) || isset($course)) {
+    //                 $total_rating_percent = 0;
+    //                 $course_total_rating = 0;
+    //                 $total_rating = 0;
+
+    //                 if (isset($course)) {
+    //                     $reviews = ReviewRating::where('course_id', $course->id)
+    //                         ->where('status', '1')
+    //                         ->get();
+    //                     $count = ReviewRating::where('course_id', $course->id)->count();
+    //                     $learn = 0;
+    //                     $price = 0;
+    //                     $value = 0;
+    //                     $sub_total = 0;
+    //                     $sub_total = 0;
+    //                     $title = $course->title;
+
+    //                     if ($count > 0) {
+    //                         foreach ($reviews as $review) {
+    //                             $learn = $review->learn * 5;
+    //                             $price = $review->price * 5;
+    //                             $value = $review->value * 5;
+    //                             $sub_total = $sub_total + $learn + $price + $value;
+    //                         }
+    //                         $count = $count * 3 * 5;
+    //                         $rat = $sub_total / $count;
+    //                         $ratings_var0 = ($rat * 100) / 5;
+    //                         $course_total_rating = $ratings_var0;
+    //                     }
+
+    //                     $count = $count * 3 * 5;
+
+    //                     if ($count != 0) {
+    //                         $rat = $sub_total / $count;
+    //                         $ratings_var = ($rat * 100) / 5;
+    //                         $overallrating = $ratings_var0 / 2 / 10;
+    //                         $total_rating = round($overallrating, 1);
+    //                     }
+    //                     $total_rating_percent = round($course_total_rating, 2);
+    //                     $total_rating = $total_rating;
+    //                 }
+
+    //                 $enroll_details[] = [
+    //                     'title' => $title,
+    //                     'enroll' => $enrol,
+    //                     'course' => $course ?? null,
+    //                     'bundle' => $bundle ?? null,
+    //                     'total_rating_percent' => $total_rating_percent,
+    //                     'total_rating' => $total_rating,
+    //                 ];
+    //             }
+    //         }
+    //     }
+    //     return response()->json(['enroll_details' => $enroll_details], 200);
+    // }
+
     public function mycourses(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -4482,104 +5004,141 @@ class MainController extends Controller
             return response()->json(['Invalid Secret Key !']);
         }
 
-        $user = Auth::guard('api')->user();
-
-        $enroll = Order::where('user_id', $user->id)
-            ->where('status', 1)
-            ->get()
-            ->transform(function ($order) {
-                $order['bundle_course_id'] = isset($order->bundle) ? $order->bundle->course_id : null;
-                return $order;
-            });
-
-        $enroll_details = [];
-        $title = null;
-        if (isset($enroll)) {
-            foreach ($enroll as $enrol) {
-                $course = Course::where('status', 1)
-                    ->where('id', $enrol->course_id)
-                    ->with([
-                        'include' => function ($query) {
-                            $query->where('status', 1);
-                        },
-                    ])
-                    ->with(['user'])
-                    ->with([
-                        'whatlearns' => function ($query) {
-                            $query->where('status', 1);
-                        },
-                    ])
-                    ->with([
-                        'progress' => function ($query) {
-                            $query->where('user_id', Auth::guard('api')->user()->id);
-                        },
-                    ])
-                    ->first();
-
-                if (!isset($course)) {
-                    $bundle = BundleCourse::where('id', $enrol->bundle_id)
-                        ->with('user')
-                        ->first();
-                }
-
-                if (isset($bundle)) {
-                    $title = $bundle->title;
-                }
-
-                if (isset($bundle) || isset($course)) {
-                    $total_rating_percent = 0;
-                    $course_total_rating = 0;
-                    $total_rating = 0;
-
-                    if (isset($course)) {
-                        $reviews = ReviewRating::where('course_id', $course->id)
-                            ->where('status', '1')
-                            ->get();
-                        $count = ReviewRating::where('course_id', $course->id)->count();
-                        $learn = 0;
-                        $price = 0;
-                        $value = 0;
-                        $sub_total = 0;
-                        $sub_total = 0;
-                        $title = $course->title;
-
-                        if ($count > 0) {
-                            foreach ($reviews as $review) {
-                                $learn = $review->learn * 5;
-                                $price = $review->price * 5;
-                                $value = $review->value * 5;
-                                $sub_total = $sub_total + $learn + $price + $value;
-                            }
-                            $count = $count * 3 * 5;
-                            $rat = $sub_total / $count;
-                            $ratings_var0 = ($rat * 100) / 5;
-                            $course_total_rating = $ratings_var0;
-                        }
-
-                        $count = $count * 3 * 5;
-
-                        if ($count != 0) {
-                            $rat = $sub_total / $count;
-                            $ratings_var = ($rat * 100) / 5;
-                            $overallrating = $ratings_var0 / 2 / 10;
-                            $total_rating = round($overallrating, 1);
-                        }
-                        $total_rating_percent = round($course_total_rating, 2);
-                        $total_rating = $total_rating;
-                    }
-
-                    $enroll_details[] = [
-                        'title' => $title,
-                        'enroll' => $enrol,
-                        'course' => $course ?? null,
-                        'bundle' => $bundle ?? null,
-                        'total_rating_percent' => $total_rating_percent,
-                        'total_rating' => $total_rating,
-                    ];
+        
+        $my_orders = Order::where('status', '=', 1)->where('user_id', '=', Auth::guard('api')->id())->get(['id', 'course_id']);
+        $mycourses_id = [];
+        foreach ($my_orders as $myorder) {
+            if($myorder->course_id != null){
+                array_push($mycourses_id, $myorder->course_id);
+            }
+            if($myorder->bundle_id != null){
+                $bundle = BundleCourse::where('id', $myorder->bundle_id)->first();
+                foreach ($bundle->course_id as $bCourse_id) {
+                    array_push($mycourses_id, $bCourse_id);
                 }
             }
         }
-        return response()->json(['enroll_details' => $enroll_details], 200);
+
+        $course = Course::where('status', 1)
+            ->whereIn('id', $mycourses_id)
+            ->orderBy('id', 'DESC')
+            ->with([
+                'include' => function ($query) {
+                    $query->where('status', 1);
+                },
+                'whatlearns' => function ($query) {
+                    $query->where('status', 1);
+                },'language' => function ($query) {
+                    $query->where('status', 1);
+                },
+                'user'
+            ])
+            ->paginate(6);
+
+
+        foreach ($course as $result) {
+
+            if (isset($result->review)) {
+                $ratings_var11 = 0;
+                $review_like = 0;
+                $review_dislike = 0;
+
+                foreach ($result->review as $key => $review) {
+                    $user_count = count([$review]);
+                    $user_sub_total = 0;
+                    $user_learn_t = $review->learn * 5;
+                    $user_price_t = $review->price * 5;
+                    $user_value_t = $review->value * 5;
+                    $user_sub_total = $user_sub_total + $user_learn_t + $user_price_t + $user_value_t;
+
+                    $user_count = $user_count * 3 * 5;
+                    $rat1 = $user_sub_total / $user_count;
+                    $ratings_var11 = ($rat1 * 100) / 5;
+
+                    $review_like = ReviewHelpful::where('review_id', $review->id)
+                        ->where('course_id', $result->id)
+                        ->where('review_like', 1)
+                        ->count();
+
+                    $review_dislike = ReviewHelpful::where('review_id', $review->id)
+                        ->where('course_id', $result->id)
+                        ->where('review_dislike', 1)
+                        ->count();
+
+                    $review->review_like = $review_like;
+                    $review->review_dislike = $review_dislike;
+                }
+            }
+
+            $student_enrolled = Order::where('course_id', $result->course_id)->count();
+            $result->student_enrolled = isset($student_enrolled) ? $student_enrolled : null;
+            $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
+            
+            $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
+            $progress = CourseProgress::where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
+            if(isset($progress)){
+                $result->mark_chapter_id = $progress->mark_chapter_id;
+                $result->all_chapter_id  = $progress->all_chapter_id;
+            } else{                
+                $result->mark_chapter_id = null;
+                $result->all_chapter_id  = null;
+            }
+            if (isset($enrolled_status)) {
+                $result->enrolled_status = true;
+            } else {
+                $result->enrolled_status = false;
+            }
+
+            $instructors_student = Order::where('instructor_id', $result->user->id)->count();
+            $result->user->instructors_student = isset($instructors_student) ? $instructors_student : null;
+            $result->user->course_count = Course::where('user_id', $result->user->id)->count();
+
+
+            $reviews = ReviewRating::where('course_id', $result->id)
+                ->where('status', '1')
+                ->get();
+            $count = ReviewRating::where('course_id', $result->id)->count();
+            $learn = 0;
+            $price = 0;
+            $value = 0;
+            $sub_total = 0;
+            $sub_total = 0;
+            $course_total_rating = 0;
+            $total_rating = 0;
+
+            if ($count > 0) {
+                foreach ($reviews as $review) {
+                    $learn = $review->learn * 5;
+                    $price = $review->price * 5;
+                    $value = $review->value * 5;
+                    $sub_total = $sub_total + $learn + $price + $value;
+                }
+
+                $count = $count * 3 * 5;
+                $rat = $sub_total / $count;
+                $ratings_var0 = ($rat * 100) / 5;
+
+                $course_total_rating = $ratings_var0;
+            }
+
+            $count = $count * 3 * 5;
+
+            if ($count != 0) {
+                $rat = $sub_total / $count;
+
+                $ratings_var = ($rat * 100) / 5;
+
+                $overallrating = $ratings_var0 / 2 / 10;
+
+                $total_rating = round($overallrating, 1);
+            }
+
+            $result->in_wishlist = Is_wishlist::in_wishlist($result->id);
+            $result->total_rating_percent = round($course_total_rating, 2);
+            $result->total_rating = $total_rating;
+        }
+        $course->makeHidden('chapter');
+        return response()->json(['course' => $course], 200);
     }
 
     public function quiz_reports(Request $request, $id)

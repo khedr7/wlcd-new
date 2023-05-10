@@ -7,22 +7,25 @@ use App\Http\Controllers\Controller;
 use App\Http\Traits\SendNotification;
 use Illuminate\Http\Request;
 use App\{
+    Announcement,
+    Assignment,
     BundleCourse,
     Course,
     CourseChapter,
     CourseProgress,
     Googlemeet,
+    NewNotification,
     Order,
     PrivateCourse,
+    ReviewHelpful,
     ReviewRating,
-    
+    User,
 };
 use Illuminate\Support\Facades\{
     App,
     Auth,
     DB,
     Validator,
-    
 };
 
 class CourseController extends Controller
@@ -669,8 +672,17 @@ class CourseController extends Controller
         $my_orders = Order::where('status', '=', 1)->where('user_id', '=', Auth::guard('api')->id())->get(['id', 'course_id']);
         $mycourses_id = [];
         foreach ($my_orders as $myorder) {
-            array_push($mycourses_id, $myorder->course_id);
+            if ($myorder->course_id != null) {
+                array_push($mycourses_id, $myorder->course_id);
+            }
+            if ($myorder->bundle_id != null) {
+                $bundle = BundleCourse::where('id', $myorder->bundle_id)->first();
+                foreach ($bundle->course_id as $bCourse_id) {
+                    array_push($mycourses_id, $bCourse_id);
+                }
+            }
         }
+
 
         $course = Course::select([
             'id', 'user_id', 'category_id', 'subcategory_id', 'childcategory_id', 'language_id', 'title',
@@ -779,7 +791,15 @@ class CourseController extends Controller
         $my_orders = Order::where('status', '=', 1)->where('user_id', '=', Auth::guard('api')->id())->get(['id', 'course_id']);
         $mycourses_id = [];
         foreach ($my_orders as $myorder) {
-            array_push($mycourses_id, $myorder->course_id);
+            if ($myorder->course_id != null) {
+                array_push($mycourses_id, $myorder->course_id);
+            }
+            if ($myorder->bundle_id != null) {
+                $bundle = BundleCourse::where('id', $myorder->bundle_id)->first();
+                foreach ($bundle->course_id as $bCourse_id) {
+                    array_push($mycourses_id, $bCourse_id);
+                }
+            }
         }
 
 
@@ -1825,5 +1845,271 @@ class CourseController extends Controller
 
 
         return response()->json(array('google_meet' => $google_meet), 200);
+    }
+
+    public function courseAnnouncements(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+            'course_id' => 'required|exists:courses,id',
+
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($errors->first('secret')) {
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail']);
+            }
+            if ($errors->first('course_id')) {
+                return response()->json(['message' => $errors->first('course_id'), 'status' => 'fail']);
+            }
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        App::setlocale($request->lang);
+
+        $announcements = Announcement::where('status', 1)
+            ->where('course_id', $request->course_id)
+            ->get();
+
+        return response()->json(['announcements' => $announcements], 200);
+    }
+
+    public function submetAssignment(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret'     => 'required',
+            'course_id'  => 'required',
+            'chapter_id' => 'required',
+            'title'      => 'required',
+            'file'       => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($errors->first('secret')) {
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail']);
+            }
+            if ($errors->first('course_id')) {
+                return response()->json(['message' => $errors->first('course_id'), 'status' => 'fail']);
+            }
+            if ($errors->first('chapter_id')) {
+                return response()->json(['message' => $errors->first('chapter_id'), 'status' => 'fail']);
+            }
+            if ($errors->first('title')) {
+                return response()->json(['message' => $errors->first('title'), 'status' => 'fail']);
+            }
+            if ($errors->first('file')) {
+                return response()->json(['message' => $errors->first('file'), 'status' => 'fail']);
+            }
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+        $auth = Auth::guard('api')->user();
+        $course = Course::where('id', $request->course_id)->first();
+        if ($file = $request->file('file')) {
+            $name = time() . '_' . $file->getClientOriginalName();
+            $name = str_replace(" ", "_", $name);
+            $file->move('files/assignment', $name);
+            $input['assignment'] = $name;
+        }
+        $assignment = Assignment::create([
+            'user_id' => $auth->id,
+            'instructor_id' => $course->user_id,
+            'course_id' => $course->id,
+            'chapter_id' => $request->chapter_id,
+            'title' => $request->title,
+            'assignment' => $name,
+            'type' => 0,
+        ]);
+
+        if (isset($assignment) && isset($course->user_id)) {
+            $body = 'A new assignment has been added to course: ' . $course->title;
+            $notification = NewNotification::create(['body' => $body]);
+            $notification->users()->attach(['user_id' => $course->user_id]);
+            $user = User::where('id', $course->user_id)->first();
+            if (isset($user->device_token)) {
+                $this->send_notification($user->device_token, 'New Assignment', $body);
+            }
+        }
+
+        return response()->json(['message' => 'Assignment submitted successfully', 'status' => 'success'], 200);
+    }
+
+    public function myAssignments(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+            'course_id' => 'required|exists:courses,id',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($errors->first('secret')) {
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail']);
+            }
+            if ($errors->first('course_id')) {
+                return response()->json(['message' => $errors->first('course_id'), 'status' => 'fail']);
+            }
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        $auth = Auth::guard('api')->user();
+
+        $assignments = Assignment::where('user_id', $auth->id)
+            ->where('course_id', $request->course_id)
+            ->get();
+
+        return response()->json(['assignments' => $assignments], 200);
+    }
+
+    public function courseReviews(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+            'course_id' => 'required|exists:courses,id',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($errors->first('secret')) {
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail']);
+            }
+            if ($errors->first('course_id')) {
+                return response()->json(['message' => $errors->first('course_id'), 'status' => 'fail']);
+            }
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        $reviews = ReviewRating::where('course_id', $request->course_id)
+            ->with([
+                'user' => function ($query) {
+                    $query->where('status', 1)->select('id', 'fname', 'lname', 'user_img', 'role', 'email');
+                },
+            ])
+            ->get();
+
+        foreach ($reviews as $review) {
+
+            $review->review_like = ReviewHelpful::where('review_id', $review->id)
+                ->where('course_id', $request->course_id)
+                ->where('review_like', 1)
+                ->count();
+
+            $review->review_dislike = ReviewHelpful::where('review_id', $review->id)
+                ->where('course_id', $request->course_id)
+                ->where('review_dislike', 1)
+                ->count();
+        }
+
+        if ($reviews) {
+            return response()->json(['reviews' => $reviews], 200);
+        } else {
+            return response()->json(['error'], 401);
+        }
+    }
+
+    public function submetReview(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret'    => 'required',
+            'course_id' => 'required|exists:courses,id',
+            'learn'     => 'required|integer|min:1|max:5|between:1,5',
+            'price'     => 'required|integer|min:1|max:5|between:1,5',
+            'value'     => 'required|integer|min:1|max:5|between:1,5',
+            'review'    => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($errors->first('secret')) {
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail']);
+            }
+            if ($errors->first('course_id')) {
+                return response()->json(['message' => $errors->first('course_id'), 'status' => 'fail']);
+            }
+            if ($errors->first('learn')) {
+                return response()->json(['message' => $errors->first('learn'), 'status' => 'fail']);
+            }
+            if ($errors->first('price')) {
+                return response()->json(['message' => $errors->first('price'), 'status' => 'fail']);
+            }
+            if ($errors->first('value')) {
+                return response()->json(['message' => $errors->first('value'), 'status' => 'fail']);
+            }
+            if ($errors->first('review')) {
+                return response()->json(['message' => $errors->first('review'), 'status' => 'fail']);
+            }
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        $auth = Auth::guard('api')->user();
+
+        $course = Course::where('id', $request->course_id)->first();
+
+        $orders = Order::where('user_id', Auth::guard('api')->User()->id)
+            ->where('course_id', $course->id)
+            ->first();
+
+        $review = ReviewRating::where('user_id', Auth::guard('api')->User()->id)
+            ->where('course_id', $course->id)
+            ->first();
+
+        if (!empty($orders)) {
+            if (!empty($review)) {
+                return response()->json('Already Reviewed !', 402);
+            } else {
+                $input = $request->all();
+
+                $review = ReviewRating::create([
+                    'user_id'   => $auth->id,
+                    'course_id' => $input['course_id'],
+                    'learn'     => $input['learn'],
+                    'price'     => $input['price'],
+                    'value'     => $input['value'],
+                    'review'    => $input['review'],
+                    'approved'  => '1',
+                    'featured'  => '0',
+                    'status'    => '1',
+                ]);
+
+                return response()->json(['review' => $review], 200);
+            }
+        } else {
+            return response()->json('Please Purchase course !', 401);
+        }
     }
 }
