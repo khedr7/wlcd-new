@@ -70,6 +70,10 @@ Route::middleware(['ip_block'])->group(function () {
 	Route::get('all-recent/course', 'Api\MainController@allRecentcourse');
 	Route::get('discount/course', 'Api\MainController@discountcourses');
 
+	Route::get('related/courses', 'Api\MainController@relatedCourses');
+	Route::get('instructor/courses', 'Api\MainController@instructorCourses');
+
+
 	Route::get('bundle/courses', 'Api\MainController@bundle');
 	Route::get('user/faq', 'Api\MainController@studentfaq');
 	Route::get('instructor/faq', 'Api\MainController@instructorfaq');

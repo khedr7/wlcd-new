@@ -672,8 +672,17 @@ class CourseController extends Controller
         $my_orders = Order::where('status', '=', 1)->where('user_id', '=', Auth::guard('api')->id())->get(['id', 'course_id']);
         $mycourses_id = [];
         foreach ($my_orders as $myorder) {
-            array_push($mycourses_id, $myorder->course_id);
+            if ($myorder->course_id != null) {
+                array_push($mycourses_id, $myorder->course_id);
+            }
+            if ($myorder->bundle_id != null) {
+                $bundle = BundleCourse::where('id', $myorder->bundle_id)->first();
+                foreach ($bundle->course_id as $bCourse_id) {
+                    array_push($mycourses_id, $bCourse_id);
+                }
+            }
         }
+
 
         $course = Course::select([
             'id', 'user_id', 'category_id', 'subcategory_id', 'childcategory_id', 'language_id', 'title',
@@ -782,7 +791,15 @@ class CourseController extends Controller
         $my_orders = Order::where('status', '=', 1)->where('user_id', '=', Auth::guard('api')->id())->get(['id', 'course_id']);
         $mycourses_id = [];
         foreach ($my_orders as $myorder) {
-            array_push($mycourses_id, $myorder->course_id);
+            if ($myorder->course_id != null) {
+                array_push($mycourses_id, $myorder->course_id);
+            }
+            if ($myorder->bundle_id != null) {
+                $bundle = BundleCourse::where('id', $myorder->bundle_id)->first();
+                foreach ($bundle->course_id as $bCourse_id) {
+                    array_push($mycourses_id, $bCourse_id);
+                }
+            }
         }
 
 
@@ -1991,20 +2008,20 @@ class CourseController extends Controller
         }
 
         $reviews = ReviewRating::where('course_id', $request->course_id)
-        ->with([
-            'user' => function ($query) {
-                $query->where('status', 1)->select('id', 'fname', 'lname', 'user_img', 'role', 'email');
-            },
-        ])
+            ->with([
+                'user' => function ($query) {
+                    $query->where('status', 1)->select('id', 'fname', 'lname', 'user_img', 'role', 'email');
+                },
+            ])
             ->get();
 
-        foreach($reviews as $review){
+        foreach ($reviews as $review) {
 
             $review->review_like = ReviewHelpful::where('review_id', $review->id)
                 ->where('course_id', $request->course_id)
                 ->where('review_like', 1)
                 ->count();
-            
+
             $review->review_dislike = ReviewHelpful::where('review_id', $review->id)
                 ->where('course_id', $request->course_id)
                 ->where('review_dislike', 1)
