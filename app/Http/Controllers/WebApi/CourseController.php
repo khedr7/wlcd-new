@@ -2,22 +2,28 @@
 
 namespace App\Http\Controllers\WebApi;
 
-use App\BundleCourse;
-use App\Course;
-use App\CourseChapter;
-use App\CourseProgress;
-use App\Googlemeet;
 use App\Helpers\Is_wishlist;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\SendNotification;
-use App\Order;
-use App\PrivateCourse;
-use App\ReviewRating;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
+use App\{
+    BundleCourse,
+    Course,
+    CourseChapter,
+    CourseProgress,
+    Googlemeet,
+    Order,
+    PrivateCourse,
+    ReviewRating,
+    
+};
+use Illuminate\Support\Facades\{
+    App,
+    Auth,
+    DB,
+    Validator,
+    
+};
 
 class CourseController extends Controller
 {

@@ -730,19 +730,15 @@ class MainController extends Controller
                 'include' => function ($query) {
                     $query->where('status', 1);
                 },
-            ])
-            ->with([
                 'whatlearns' => function ($query) {
                     $query->where('status', 1);
-                },
-            ])
-            ->with([
-                'language' => function ($query) {
+                },'language' => function ($query) {
                     $query->where('status', 1);
                 },
+                'user'
             ])
-            ->with('user')
             ->get();
+
 
         foreach ($course as $result) {
 
@@ -764,32 +760,17 @@ class MainController extends Controller
                     $ratings_var11 = ($rat1 * 100) / 5;
 
                     $review_like = ReviewHelpful::where('review_id', $review->id)
-                        ->where('course_id', $request->course_id)
+                        ->where('course_id', $result->id)
                         ->where('review_like', 1)
                         ->count();
 
                     $review_dislike = ReviewHelpful::where('review_id', $review->id)
-                        ->where('course_id', $request->course_id)
+                        ->where('course_id', $result->id)
                         ->where('review_dislike', 1)
                         ->count();
 
-                    $reviewszz[] = [
-                        'id' => $review->id,
-                        'user_id' => $review->user_id,
-                        'fname' => $review->user->fname,
-                        'lname' => $review->user->lname,
-                        'userimage' => $review->user->user_img,
-                        'imagepath' => url('images/user_img/'),
-                        'learn' => $review->learn,
-                        'price' => $review->price,
-                        'value' => $review->value,
-                        'reviews' => $review->review,
-                        'created_by' => $review->created_at,
-                        'updated_by' => $review->updated_at,
-                        'total_rating' => $ratings_var11,
-                        'like_count' => $review_like,
-                        'dislike_count' => $review_dislike,
-                    ];
+                    $review->review_like = $review_like;
+                    $review->review_dislike = $review_dislike;
                 }
             }
 
@@ -798,6 +779,14 @@ class MainController extends Controller
             $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
             
             $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
+            $progress = CourseProgress::where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
+            if(isset($progress)){
+                $result->mark_chapter_id = $progress->mark_chapter_id;
+                $result->all_chapter_id  = $progress->all_chapter_id;
+            } else{                
+                $result->mark_chapter_id = null;
+                $result->all_chapter_id  = null;
+            }
             if (isset($enrolled_status)) {
                 $result->enrolled_status = true;
             } else {
@@ -852,7 +841,7 @@ class MainController extends Controller
             $result->total_rating_percent = round($course_total_rating, 2);
             $result->total_rating = $total_rating;
         }
-
+        $course->makeHidden('chapter');
         return response()->json(['course' => $course], 200);
     }
 
