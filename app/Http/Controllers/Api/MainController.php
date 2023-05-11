@@ -732,10 +732,13 @@ class MainController extends Controller
                 },
                 'whatlearns' => function ($query) {
                     $query->where('status', 1);
-                },'language' => function ($query) {
+                }, 'language' => function ($query) {
                     $query->where('status', 1);
                 },
-                'user'
+                'review' => function ($query) {
+                    $query->with('user:id,fname,lname,user_img');
+                },
+                'user',
             ])
             ->get();
 
@@ -777,13 +780,13 @@ class MainController extends Controller
             $student_enrolled = Order::where('course_id', $result->course_id)->count();
             $result->student_enrolled = isset($student_enrolled) ? $student_enrolled : null;
             $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
-            
+
             $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
             $progress = CourseProgress::where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
-            if(isset($progress)){
+            if (isset($progress)) {
                 $result->mark_chapter_id = $progress->mark_chapter_id;
                 $result->all_chapter_id  = $progress->all_chapter_id;
-            } else{                
+            } else {
                 $result->mark_chapter_id = null;
                 $result->all_chapter_id  = null;
             }
@@ -870,8 +873,11 @@ class MainController extends Controller
                 },
                 'whatlearns' => function ($query) {
                     $query->where('status', 1);
-                },'language' => function ($query) {
+                }, 'language' => function ($query) {
                     $query->where('status', 1);
+                },
+                'review' => function ($query) {
+                    $query->with('user:id,fname,lname,user_img');
                 },
                 'user'
             ])
@@ -915,13 +921,13 @@ class MainController extends Controller
             $student_enrolled = Order::where('course_id', $result->course_id)->count();
             $result->student_enrolled = isset($student_enrolled) ? $student_enrolled : null;
             $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
-            
+
             $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
             $progress = CourseProgress::where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
-            if(isset($progress)){
+            if (isset($progress)) {
                 $result->mark_chapter_id = $progress->mark_chapter_id;
                 $result->all_chapter_id  = $progress->all_chapter_id;
-            } else{                
+            } else {
                 $result->mark_chapter_id = null;
                 $result->all_chapter_id  = null;
             }
@@ -1011,8 +1017,11 @@ class MainController extends Controller
                 },
                 'whatlearns' => function ($query) {
                     $query->where('status', 1);
-                },'language' => function ($query) {
+                }, 'language' => function ($query) {
                     $query->where('status', 1);
+                },
+                'review' => function ($query) {
+                    $query->with('user:id,fname,lname,user_img');
                 },
                 'user'
             ])
@@ -1056,13 +1065,13 @@ class MainController extends Controller
             $student_enrolled = Order::where('course_id', $result->course_id)->count();
             $result->student_enrolled = isset($student_enrolled) ? $student_enrolled : null;
             $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
-            
+
             $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
             $progress = CourseProgress::where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
-            if(isset($progress)){
+            if (isset($progress)) {
                 $result->mark_chapter_id = $progress->mark_chapter_id;
                 $result->all_chapter_id  = $progress->all_chapter_id;
-            } else{                
+            } else {
                 $result->mark_chapter_id = null;
                 $result->all_chapter_id  = null;
             }
@@ -1151,8 +1160,11 @@ class MainController extends Controller
                 },
                 'whatlearns' => function ($query) {
                     $query->where('status', 1);
-                },'language' => function ($query) {
+                }, 'language' => function ($query) {
                     $query->where('status', 1);
+                },
+                'review' => function ($query) {
+                    $query->with('user:id,fname,lname,user_img');
                 },
                 'user'
             ])
@@ -1196,13 +1208,13 @@ class MainController extends Controller
             $student_enrolled = Order::where('course_id', $result->course_id)->count();
             $result->student_enrolled = isset($student_enrolled) ? $student_enrolled : null;
             $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
-            
+
             $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
             $progress = CourseProgress::where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
-            if(isset($progress)){
+            if (isset($progress)) {
                 $result->mark_chapter_id = $progress->mark_chapter_id;
                 $result->all_chapter_id  = $progress->all_chapter_id;
-            } else{                
+            } else {
                 $result->mark_chapter_id = null;
                 $result->all_chapter_id  = null;
             }
@@ -1283,12 +1295,12 @@ class MainController extends Controller
         }
 
         $data = RelatedCourse::where('main_course_id', $request->course_id)->where('status', 1)->get();
-        
+
         $related_courses_id = [];
         foreach ($data as $related) {
             array_push($related_courses_id, $related->course_id);
         }
-        
+
 
 
         $course = Course::where('status', 1)
@@ -1300,8 +1312,11 @@ class MainController extends Controller
                 },
                 'whatlearns' => function ($query) {
                     $query->where('status', 1);
-                },'language' => function ($query) {
+                }, 'language' => function ($query) {
                     $query->where('status', 1);
+                },
+                'review' => function ($query) {
+                    $query->with('user:id,fname,lname,user_img');
                 },
                 'user'
             ])
@@ -1345,13 +1360,13 @@ class MainController extends Controller
             $student_enrolled = Order::where('course_id', $result->course_id)->count();
             $result->student_enrolled = isset($student_enrolled) ? $student_enrolled : null;
             $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
-            
+
             $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
             $progress = CourseProgress::where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
-            if(isset($progress)){
+            if (isset($progress)) {
                 $result->mark_chapter_id = $progress->mark_chapter_id;
                 $result->all_chapter_id  = $progress->all_chapter_id;
-            } else{                
+            } else {
                 $result->mark_chapter_id = null;
                 $result->all_chapter_id  = null;
             }
@@ -1440,8 +1455,11 @@ class MainController extends Controller
                 },
                 'whatlearns' => function ($query) {
                     $query->where('status', 1);
-                },'language' => function ($query) {
+                }, 'language' => function ($query) {
                     $query->where('status', 1);
+                },
+                'review' => function ($query) {
+                    $query->with('user:id,fname,lname,user_img');
                 },
                 'user'
             ])
@@ -1485,13 +1503,13 @@ class MainController extends Controller
             $student_enrolled = Order::where('course_id', $result->course_id)->count();
             $result->student_enrolled = isset($student_enrolled) ? $student_enrolled : null;
             $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
-            
+
             $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
             $progress = CourseProgress::where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
-            if(isset($progress)){
+            if (isset($progress)) {
                 $result->mark_chapter_id = $progress->mark_chapter_id;
                 $result->all_chapter_id  = $progress->all_chapter_id;
-            } else{                
+            } else {
                 $result->mark_chapter_id = null;
                 $result->all_chapter_id  = null;
             }
@@ -1800,8 +1818,12 @@ class MainController extends Controller
                 },
                 'whatlearns' => function ($query) {
                     $query->where('status', 1);
-                },'language' => function ($query) {
+                },
+                'language' => function ($query) {
                     $query->where('status', 1);
+                },
+                'review' => function ($query) {
+                    $query->with('user:id,fname,lname,user_img');
                 },
                 'user'
             ])
@@ -1845,13 +1867,13 @@ class MainController extends Controller
             $student_enrolled = Order::where('course_id', $result->course_id)->count();
             $result->student_enrolled = isset($student_enrolled) ? $student_enrolled : null;
             $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
-            
+
             $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
             $progress = CourseProgress::where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
-            if(isset($progress)){
+            if (isset($progress)) {
                 $result->mark_chapter_id = $progress->mark_chapter_id;
                 $result->all_chapter_id  = $progress->all_chapter_id;
-            } else{                
+            } else {
                 $result->mark_chapter_id = null;
                 $result->all_chapter_id  = null;
             }
@@ -5004,14 +5026,14 @@ class MainController extends Controller
             return response()->json(['Invalid Secret Key !']);
         }
 
-        
+
         $my_orders = Order::where('status', '=', 1)->where('user_id', '=', Auth::guard('api')->id())->get(['id', 'course_id']);
         $mycourses_id = [];
         foreach ($my_orders as $myorder) {
-            if($myorder->course_id != null){
+            if ($myorder->course_id != null) {
                 array_push($mycourses_id, $myorder->course_id);
             }
-            if($myorder->bundle_id != null){
+            if ($myorder->bundle_id != null) {
                 $bundle = BundleCourse::where('id', $myorder->bundle_id)->first();
                 foreach ($bundle->course_id as $bCourse_id) {
                     array_push($mycourses_id, $bCourse_id);
@@ -5028,8 +5050,11 @@ class MainController extends Controller
                 },
                 'whatlearns' => function ($query) {
                     $query->where('status', 1);
-                },'language' => function ($query) {
+                }, 'language' => function ($query) {
                     $query->where('status', 1);
+                },
+                'review' => function ($query) {
+                    $query->with('user:id,fname,lname,user_img');
                 },
                 'user'
             ])
@@ -5073,13 +5098,13 @@ class MainController extends Controller
             $student_enrolled = Order::where('course_id', $result->course_id)->count();
             $result->student_enrolled = isset($student_enrolled) ? $student_enrolled : null;
             $result->lecture_count = isset($result->chapter) ? count($result->chapter) : 0;
-            
+
             $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
             $progress = CourseProgress::where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
-            if(isset($progress)){
+            if (isset($progress)) {
                 $result->mark_chapter_id = $progress->mark_chapter_id;
                 $result->all_chapter_id  = $progress->all_chapter_id;
-            } else{                
+            } else {
                 $result->mark_chapter_id = null;
                 $result->all_chapter_id  = null;
             }

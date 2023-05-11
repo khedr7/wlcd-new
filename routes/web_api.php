@@ -34,10 +34,15 @@ Route::middleware(['ip_block'])->group(function () {
         Route::get('course/progress',         [CourseController::class, 'courseProgress']);
         Route::post('course/progress/update', [CourseController::class, 'courseprogressupdate']);
         Route::get('course/googleMeetings',   [CourseController::class, 'courseGoogleMeetings']);
-        Route::get('course/announcement',     [CourseController::class, 'courseAnnouncements']);
-        Route::post('course/assignment',      [CourseController::class, 'submetAssignment']);
-        Route::get('course/myAssignments',    [CourseController::class, 'myAssignments']);
-        Route::post('review/submit',           [CourseController::class, 'submetReview']);
+        Route::get('course/announcement',  [CourseController::class, 'courseAnnouncements']);
+        Route::post('course/assignment',   [CourseController::class, 'submetAssignment']);
+        Route::get('course/myAssignments', [CourseController::class, 'myAssignments']);
+        Route::post('review/submit',    [CourseController::class, 'submetReview']);
+        Route::post('quiz/submit',      [CourseController::class, 'quizsubmit']);
+        Route::get('quiz/reports/{id}', [CourseController::class, 'quizReports']);
+        Route::get('quiz/get',          [CourseController::class, 'getQuiz']);
+        Route::get('course/quizzes',    [CourseController::class, 'courseQuizzes']);
+
     });
 
     //general api
@@ -58,16 +63,16 @@ Route::middleware(['ip_block'])->group(function () {
 
 
     //Get Courses.
-    Route::get('recent/course',         [CourseController::class, 'recentCourses']);
-    Route::get('featured/course',       [CourseController::class, 'featuredCourses']);
-    Route::get('best-selling/course',   [CourseController::class, 'bestSellingCourses']);
+    Route::get('recent/course',       [CourseController::class, 'recentCourses']);
+    Route::get('featured/course',     [CourseController::class, 'featuredCourses']);
+    Route::get('best-selling/course', [CourseController::class, 'bestSellingCourses']);
     Route::get('free/course',           [CourseController::class, 'freeCourses']);
     Route::get('top-discounted/course', [CourseController::class, 'topDiscountedCourses']);
     Route::get('bundle/course',         [CourseController::class, 'bundleCourses']);
-    Route::get('all-recent/course',         [CourseController::class, 'allRecentCourses']);
-    Route::get('all-featured/course',       [CourseController::class, 'allFeaturedCourses']);
-    Route::get('all-best-selling/course',   [CourseController::class, 'allBestSellingCourses']);
-    Route::get('all-free/course',           [CourseController::class, 'allFreeCourses']);
+    Route::get('all-recent/course',       [CourseController::class, 'allRecentCourses']);
+    Route::get('all-featured/course',     [CourseController::class, 'allFeaturedCourses']);
+    Route::get('all-best-selling/course', [CourseController::class, 'allBestSellingCourses']);
+    Route::get('all-free/course',         [CourseController::class, 'allFreeCourses']);
     Route::get('all-top-discounted/course', [CourseController::class, 'allTopDiscountedCourses']);
     Route::get('all-bundle/course',         [CourseController::class, 'allBundleCourses']);
 
