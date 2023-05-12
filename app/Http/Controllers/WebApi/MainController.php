@@ -20,6 +20,7 @@ use App\Contactreason;
 use App\Setting;
 use App\Videosetting;
 use App\Announcement;
+use App\NewNotification;
 use App\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -418,7 +419,7 @@ class MainController extends Controller
         return response()->json(['testimonial' => $testimonial_result], 200);
     }
 
-    //------------iNTRO VIDEO-----------------
+    //------------INTRO VIDEO-----------------
 
     function videoSetting(Request $request)
     {
@@ -623,4 +624,146 @@ class MainController extends Controller
             return response()->json(['error'], 401);
         }
     }
+
+    //------------NOTiIFICATIONS-----------------
+
+    public function userNotifications(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($errors->first('secret')) {
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail'], 400);
+            }
+        }
+
+        $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        $user = User::where('id', Auth::id())->first();
+
+        $notifications = $user->newNotifications()->orderBy('created_at', 'desc')->get();
+        foreach ($notifications as $notification) {
+            $notification->status = $notification->pivot->status;
+        }
+        $notifications->makeHidden(['pivot']);
+        return response()->json([
+            'notifications' => $notifications,
+        ], 200);
+    }
+
+    public function unreadNotificationsCount(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($errors->first('secret')) {
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail'], 400);
+            }
+        }
+
+        $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        $user = User::where('id', Auth::id())->first();
+
+        $notifications = $user->newNotifications()->where('status', 0)->orderBy('created_at', 'desc')->count();
+
+        return response()->json([
+            'notifications_count' => $notifications,
+        ], 200);
+    }
+
+    public function editNotificationsStatus(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($errors->first('secret')) {
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail'], 400);
+            }
+        }
+
+        $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        DB::table('notification_user')->where('user_id', '=',  Auth::id())->update(['status' => 1]);
+
+
+        return response()->json([
+            'message' => 'All notifications have been read.',
+        ], 200);
+    }
+    public function deleteNotification(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+            'id' => 'required|exists:new_notifications,id',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($errors->first('secret')) {
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail']);
+            }
+            if ($errors->first('id')) {
+                return response()->json(['message' => $errors->first('id'), 'status' => 'fail']);
+            }
+        }
+
+        $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        $notification = NewNotification::where('id', $request->id)->first();
+
+        DB::table('notification_user')->where('notification_id', '=',  $request->id)->where('user_id', '=',  Auth::id())->delete();
+
+        return response()->json([
+            'message' => 'Notification has been deleted successfully.',
+        ], 200);
+    }
+
+    public function bulkDeleteNotification(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($errors->first('secret')) {
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail'], 400);
+            }
+        }
+
+        $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        $user = User::where('id', Auth::id())->first();
+
+        $notifications = $user->newNotifications;
+        foreach ($notifications as $notification) {
+            DB::table('notification_user')->where('notification_id', '=',  $notification->id)->where('user_id', '=',  Auth::id())->delete();
+        }
+
+        return response()->json([
+            'message' => 'Notifications have been deleted successfully.',
+        ], 200);
+    }
+
 }
