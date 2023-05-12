@@ -44,9 +44,16 @@ Route::middleware(['ip_block'])->group(function () {
         Route::get('course/quizzes',    [CourseController::class, 'courseQuizzes']);
 
         //wishlist
-        Route::post('addtowishlist',  [MainController::class, 'addToWishlist']);
-        Route::post('remove/wishlist',[MainController::class, 'removeWishlist']);
+        Route::post('addtowishlist',   [MainController::class, 'addToWishlist']);
+        Route::post('remove/wishlist', [MainController::class, 'removeWishlist']);
         Route::get('wishlist/course',  [CourseController::class, 'showWishlist']);
+
+        //newNotifications
+        Route::get('user-notifications',         [MainController::class, 'userNotifications']);
+        Route::get('unread-notifications-count', [MainController::class, 'unreadNotificationsCount']);
+        Route::post('edit-notifications-status', [MainController::class, 'editNotificationsStatus']);
+        Route::post('delete-notification',     [MainController::class, 'deleteNotification']);
+        Route::post('delete-all-notification', [MainController::class, 'bulkDeleteNotification']);
 
     });
 

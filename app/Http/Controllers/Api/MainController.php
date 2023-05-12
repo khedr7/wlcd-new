@@ -5607,11 +5607,16 @@ class MainController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'secret' => 'required',
+            'id' => 'required|exists:new_notifications,id',
         ]);
+
         if ($validator->fails()) {
             $errors = $validator->errors();
             if ($errors->first('secret')) {
-                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail'], 400);
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail']);
+            }
+            if ($errors->first('id')) {
+                return response()->json(['message' => $errors->first('id'), 'status' => 'fail']);
             }
         }
 
