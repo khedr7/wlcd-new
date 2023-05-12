@@ -17,6 +17,9 @@ use App\{
     NewNotification,
     Order,
     PrivateCourse,
+    Quiz,
+    QuizAnswer,
+    QuizTopic,
     ReviewHelpful,
     ReviewRating,
     User,
@@ -2111,5 +2114,193 @@ class CourseController extends Controller
         } else {
             return response()->json('Please Purchase course !', 401);
         }
+    }
+
+    public function quizSubmit(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+            'course_id' => 'required',
+            'question_id' => 'required',
+            'topic_id' => 'required',
+        ]);
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($errors->first('secret')) {
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail'], 400);
+            }
+            if ($errors->first('course_id')) {
+                return response()->json(['message' => $errors->first('course_id'), 'status' => 'fail'], 400);
+            }
+            if ($errors->first('question_id')) {
+                return response()->json(['message' => $errors->first('question_id'), 'status' => 'fail'], 400);
+            }
+            if ($errors->first('topic_id')) {
+                return response()->json(['message' => $errors->first('topic_id'), 'status' => 'fail'], 400);
+            }
+        }
+
+        $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        $auth = Auth::guard('api')->user();
+        $course = Course::where('id', $request->course_id)->first();
+        $topics = QuizTopic::where('id', $request->topic_id)->first();
+        $unique_question = array_unique($request->question_id);
+        $quiz_already = QuizAnswer::where('user_id', $auth->id)->where('topic_id', $topics->id)->first();
+        if ($quiz_already != null && $topics->quiz_again == 1) {
+            QuizAnswer::where('user_id', $auth->id)->where('topic_id', $topics->id)->delete();
+        } elseif ($quiz_already != null && $topics->quiz_again == 0) {
+            return response()->json(array('message' => 'you did the quiz befor', 'status' => 'error'), 400);
+        }
+        if ($topics->type == null) {
+            for ($i = 1; $i <= count($request->answer); $i++) {
+                $already_answer = QuizAnswer::where('question_id', $unique_question[$i])->where('topic_id', $topics->id)->where('user_id', Auth::guard('api')->user()->id)->first();
+                if ($already_answer == null) {
+                    $question = Quiz::where('id', $unique_question[$i])->first();
+
+                    $answers[] = [
+                        'user_id' => Auth::guard('api')->user()->id,
+                        'user_answer' => $request->answer[$i],
+                        'question_id' => $unique_question[$i],
+                        'course_id' => $topics->course_id,
+                        'topic_id' => $topics->id,
+                        'answer' => $question->answer,
+                        // 'answer' => $request->canswer[$i],
+                        'created_at' => \Carbon\Carbon::now()->toDateTimeString(),
+                    ];
+                }
+            }
+            QuizAnswer::insert($answers);
+            return response()->json(array('message' => 'Quiz Submitted', 'status' => 'success'), 200);
+        } elseif ($topics->type == 1) {
+            for ($i = 1; $i <= count($request->txt_answer); $i++) {
+
+                $already_answer = QuizAnswer::where('question_id', $unique_question[$i])->where('topic_id', $topics->id)->where('user_id', Auth::guard('api')->user()->id)->first();
+                if (!isset($already_answer)) {
+                    $answers[] = [
+                        'user_id' => Auth::guard('api')->user()->id,
+                        'question_id' => $unique_question[$i],
+                        'course_id' => $topics->course_id,
+                        'topic_id' => $topics->id,
+                        'txt_answer' => $request->txt_answer[$i],
+                        'type' => '1',
+                        'txt_approved' => '0',
+                        'created_at' => \Carbon\Carbon::now()->toDateTimeString(),
+                    ];
+                }
+            }
+            QuizAnswer::insert($answers);
+            return response()->json(array('message' => 'Quiz Submitted', 'status' => 'success'), 200);
+        }
+    }
+
+    public function quizReports(Request $request, $id)
+    {
+        $auth = Auth::user();
+        $questions = Quiz::where('topic_id', $id)->get();
+        $count_questions = $questions->count();
+        $topics = QuizTopic::where('id', $id)->first();
+        $ans = QuizAnswer::where('user_id', $auth->id)
+            ->where('topic_id', $id)
+            ->get();
+
+        $mark = 0;
+
+        if ($topics->type == null) {
+            foreach ($ans as $answer) {
+                if ($answer->answer == $answer->user_answer) {
+                    $mark++;
+                }
+            }
+        } else {
+            foreach ($ans as $answer) {
+                if ($answer->txt_approved == 1) {
+                    $mark++;
+                }
+            }
+        }
+
+        return response()->json([
+            'question_count' => $count_questions,
+            'correct_answer' => $mark,
+            'per_question_mark' => $topics->per_q_mark,
+            'total_marks' => $mark * $topics->per_q_mark,
+        ], 200);
+    }
+
+    public function courseQuizzes(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+            'course_id' => 'required|exists:courses,id',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($errors->first('secret')) {
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail']);
+            }
+            if ($errors->first('course_id')) {
+                return response()->json(['message' => $errors->first('course_id'), 'status' => 'fail']);
+            }
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        App::setlocale($request->lang);
+
+        $quiz = QuizTopic::where('course_id', $request->course_id)->where('status', 1)
+            ->withCount([
+                'quizquestion' => function ($query) {
+                    $query->where('status', 1);
+                },
+            ])->get();
+
+        return response()->json(['quiz' => $quiz], 200);
+    }
+
+    public function getQuiz(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+            'quiz_id' => 'required|exists:quiz_topics,id',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($errors->first('secret')) {
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail']);
+            }
+            if ($errors->first('quiz_id')) {
+                return response()->json(['message' => $errors->first('quiz_id'), 'status' => 'fail']);
+            }
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        App::setlocale($request->lang);
+
+        $quiz = QuizTopic::where('id', $request->quiz_id)->where('status', 1)
+            ->with(['quizquestion'])
+            ->withCount(['quizquestion'])
+            ->get();
+
+
+        return response()->json(['quiz' => $quiz], 200);
     }
 }
