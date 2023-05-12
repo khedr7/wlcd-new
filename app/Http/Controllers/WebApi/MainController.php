@@ -20,7 +20,7 @@ use App\Contactreason;
 use App\Setting;
 use App\Videosetting;
 use App\Announcement;
-
+use App\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -532,6 +532,95 @@ class MainController extends Controller
         ], 200);
     }
 
-    
 
+    //------------WISH LIST-----------------
+
+    public function addToWishlist(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+            'course_id' => 'required|exists:courses,id',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($errors->first('secret')) {
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail']);
+            }
+            if ($errors->first('course_id')) {
+                return response()->json(['message' => $errors->first('course_id'), 'status' => 'fail']);
+            }
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        $auth = Auth::guard('api')->user();
+
+        $orders = Order::where('user_id', $auth->id)
+            ->where('course_id', $request->course_id)
+            ->first();
+
+        $wishlist = Wishlist::where('course_id', $request->course_id)
+            ->where('user_id', $auth->id)
+            ->first();
+
+        if (isset($orders)) {
+            return response()->json('You Already purchased this course !', 401);
+        } else {
+            if (!empty($wishlist)) {
+                return response()->json('Course is already in wishlist !', 401);
+            } else {
+                $wishlist = Wishlist::create([
+                    'course_id' => $request->course_id,
+                    'user_id' => $auth->id,
+                ]);
+
+                return response()->json('Course is added to your wishlist !', 200);
+            }
+        }
+    }
+
+    public function removeWishlist(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+            'course_id' => 'required|exists:courses,id',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($errors->first('secret')) {
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail']);
+            }
+            if ($errors->first('course_id')) {
+                return response()->json(['message' => $errors->first('course_id'), 'status' => 'fail']);
+            }
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        $auth = Auth::guard('api')->user();
+
+        $wishlist = Wishlist::where('course_id', $request->course_id)
+            ->where('user_id', $auth->id)
+            ->delete();
+
+        if ($wishlist == 1) {
+            return response()->json(['done'], 200);
+        } else {
+            return response()->json(['error'], 401);
+        }
+    }
 }

@@ -43,6 +43,11 @@ Route::middleware(['ip_block'])->group(function () {
         Route::get('quiz/get',          [CourseController::class, 'getQuiz']);
         Route::get('course/quizzes',    [CourseController::class, 'courseQuizzes']);
 
+        //wishlist
+        Route::post('addtowishlist',  [MainController::class, 'addToWishlist']);
+        Route::post('remove/wishlist',[MainController::class, 'removeWishlist']);
+        Route::get('wishlist/course',  [CourseController::class, 'showWishlist']);
+
     });
 
     //general api

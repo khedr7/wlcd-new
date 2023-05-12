@@ -23,6 +23,7 @@ use App\{
     ReviewHelpful,
     ReviewRating,
     User,
+    Wishlist,
 };
 use Illuminate\Support\Facades\{
     App,
@@ -2302,5 +2303,117 @@ class CourseController extends Controller
 
 
         return response()->json(['quiz' => $quiz], 200);
+    }
+
+
+    public function showWishlist(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['Secret Key is required']);
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        App::setlocale($request->lang);
+
+        $user = Auth::guard('api')->user();
+        $wishlist = Wishlist::where('user_id', $user->id)->orderBy('id', 'desc')->get();
+
+        $myWishlistCourses_id = [];
+        foreach ($wishlist as $wish) {
+            array_push($myWishlistCourses_id, $wish->course_id);
+        }
+
+        $course = Course::select([
+            'id', 'user_id', 'category_id', 'subcategory_id', 'childcategory_id', 'language_id', 'title',
+            'price', 'discount_price', 'featured', 'slug', 'status', 'preview_image', 'type', 'level_tags'
+        ])
+            ->where('status', 1)
+            ->whereIn('id', $myWishlistCourses_id)
+            ->orderByRaw("FIELD(id, " . implode(',', $myWishlistCourses_id) . ")")
+            ->with([
+                'language' => function ($query) {
+                    $query->where('status', 1)->select('id', 'name');
+                },
+                'user' => function ($query) {
+                    $query->where('status', 1)->select('id', 'fname', 'lname', 'user_img');
+                },
+            ])
+            ->withCount([
+                'chapter' => function ($query) {
+                    $query->where('status', 1);
+                },
+                'order' => function ($query) {
+                    $query->where('status', 1);
+                },
+            ])
+            ->paginate(8);
+
+
+
+        foreach ($course as $result) {
+            $enrolled_status = Order::where('status', '=', 1)->where('course_id', $result->id)->where('user_id', Auth::guard('api')->id())->first();
+            if (isset($enrolled_status)) {
+                $result->enrolled_status = true;
+            } else {
+                $result->enrolled_status = false;
+            }
+
+
+            $reviews = ReviewRating::where('course_id', $result->id)
+                ->where('status', '1')
+                ->get();
+            $count = ReviewRating::where('course_id', $result->id)->count();
+            $learn = 0;
+            $price = 0;
+            $value = 0;
+            $sub_total = 0;
+            $sub_total = 0;
+            $course_total_rating = 0;
+            $total_rating = 0;
+
+            if ($count > 0) {
+                foreach ($reviews as $review) {
+                    $learn = $review->learn * 5;
+                    $price = $review->price * 5;
+                    $value = $review->value * 5;
+                    $sub_total = $sub_total + $learn + $price + $value;
+                }
+
+                $count = $count * 3 * 5;
+                $rat = $sub_total / $count;
+                $ratings_var0 = ($rat * 100) / 5;
+
+                $course_total_rating = $ratings_var0;
+            }
+
+            $count = $count * 3 * 5;
+
+            if ($count != 0) {
+                $rat = $sub_total / $count;
+
+                $ratings_var = ($rat * 100) / 5;
+
+                $overallrating = $ratings_var0 / 2 / 10;
+
+                $total_rating = round($overallrating, 1);
+            }
+
+            $result->in_wishlist = Is_wishlist::in_wishlist($result->id);
+            $result->total_rating_percent = round($course_total_rating, 2);
+            $result->total_rating = $total_rating;
+        }
+
+        return response()->json(['wishcourses' => $course], 200);
     }
 }
