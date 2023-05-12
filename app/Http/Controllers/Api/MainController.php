@@ -1802,7 +1802,7 @@ class MainController extends Controller
 
         $user = Auth::guard('api')->user();
 
-        $wishlist = Wishlist::where('user_id', $user->id)->get();
+        $wishlist = Wishlist::where('user_id', $user->id)->orderBy('id', 'desc')->get();
 
         $myWishlistCourses_id = [];
         foreach ($wishlist as $wish) {
@@ -1811,7 +1811,7 @@ class MainController extends Controller
 
         $course = Course::where('status', 1)
             ->whereIn('id', $myWishlistCourses_id)
-            ->orderBy('id', 'DESC')
+            ->orderByRaw("FIELD(id, " . implode(',', $myWishlistCourses_id) . ")")
             ->with([
                 'include' => function ($query) {
                     $query->where('status', 1);
