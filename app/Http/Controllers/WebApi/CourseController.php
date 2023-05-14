@@ -2305,7 +2305,6 @@ class CourseController extends Controller
         return response()->json(['quiz' => $quiz], 200);
     }
 
-
     public function showWishlist(Request $request)
     {
         $validator = Validator::make($request->all(), [

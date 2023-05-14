@@ -26,6 +26,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class MainController extends Controller
@@ -765,5 +766,89 @@ class MainController extends Controller
             'message' => 'Notifications have been deleted successfully.',
         ], 200);
     }
+
+    //------------USER PROFILE-----------------
+
+    public function userprofile(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['Secret Key is required']);
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        $user = Auth::guard('api')->user();
+        $code = $user->token();
+        return response()->json(['user' => $user, 'code' => $code->id], 200);
+    }
+
+    public function updateprofile(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['Secret Key is required']);
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        $auth = Auth::guard('api')->user();
+
+        $request->validate([
+            'email' => 'required',
+            'current_password' => 'required',
+        ]);
+        $input = $request->all();
+
+        if (Hash::check($request->current_password, $auth->password)) {
+            if ($file = $request->file('user_img')) {
+                if ($auth->user_img != null) {
+                    $image_file = @file_get_contents(public_path() . '/images/user_img/' . $auth->user_img);
+                    if ($image_file) {
+                        unlink(public_path() . '/images/user_img/' . $auth->user_img);
+                    }
+                }
+                $name = time() . '_' . $file->getClientOriginalName();
+                $name = str_replace(" ", "_", $name);
+                $file->move('images/user_img', $name);
+                $input['user_img'] = $name;
+            }
+            $auth->update([
+                'fname' => isset($input['fname']) ? $input['fname'] : $auth->fname,
+                'lname' => isset($input['lname']) ? $input['lname'] : $auth->lname,
+                'email' => $input['email'],
+                'password' => isset($input['password']) ? bcrypt($input['password']) : $auth->password,
+                'mobile' => isset($input['mobile']) ? $input['mobile'] : $auth->mobile,
+                'dob' => isset($input['dob']) ? $input['dob'] : $auth->dob,
+                'user_img' => isset($input['user_img']) ? $input['user_img'] : $auth->user_img,
+                'address' => isset($input['address']) ? $input['address'] : $auth->address,
+                'detail' => isset($input['detail']) ? $input['detail'] : $auth->detail,
+            ]);
+
+            $auth->save();
+            return response()->json(['auth' => $auth], 200);
+        } else {
+            return response()->json('error: password doesnt match', 400);
+        }
+    }
+
 
 }

@@ -77,6 +77,7 @@ Route::middleware(['ip_block'])->group(function () {
 	Route::get('bundle/courses', 'Api\MainController@bundle');
 	Route::get('user/faq', 'Api\MainController@studentfaq');
 	Route::get('instructor/faq', 'Api\MainController@instructorfaq');
+	
 
 	Route::get('main', 'Api\MainController@main');
 
@@ -146,7 +147,6 @@ Route::middleware(['ip_block'])->group(function () {
 		Route::post('addtocart/bundle', 'Api\MainController@addbundletocart');
 		Route::post('remove/bundle', 'Api\MainController@removebundlecart');
 
-		//userprofile
 		Route::get('notifications', 'Api\MainController@allnotification');
 		Route::get('readnotification/{id}', 'Api\MainController@notificationread');
 		Route::post('readall/notification', 'Api\MainController@readallnotification');
@@ -180,6 +180,8 @@ Route::middleware(['ip_block'])->group(function () {
 
 
 		Route::post('review/submit', 'Api\MainController@userreview');
+
+		Route::get('course/announcement', 'Api\MainController@courseAnnouncements');
 
 
 		//Instructor API
