@@ -54,6 +54,10 @@ Route::middleware(['ip_block'])->group(function () {
         Route::post('edit-notifications-status', [MainController::class, 'editNotificationsStatus']);
         Route::post('delete-notification',     [MainController::class, 'deleteNotification']);
         Route::post('delete-all-notification', [MainController::class, 'bulkDeleteNotification']);
+        
+        //userprofile
+        Route::post('show/profile',   [MainController::class, 'userprofile']);
+        Route::post('update/profile', [MainController::class, 'updateprofile']);
 
     });
 
