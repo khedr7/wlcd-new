@@ -16,6 +16,7 @@ use App\{
     Googlemeet,
     NewNotification,
     Order,
+    PreviousPaper,
     PrivateCourse,
     Quiz,
     QuizAnswer,
@@ -1884,6 +1885,41 @@ class CourseController extends Controller
             ->get();
 
         return response()->json(['announcements' => $announcements], 200);
+    }
+
+    public function coursePrevPapers(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+            'course_id' => 'required|exists:courses,id',
+
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($errors->first('secret')) {
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail']);
+            }
+            if ($errors->first('course_id')) {
+                return response()->json(['message' => $errors->first('course_id'), 'status' => 'fail']);
+            }
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        App::setlocale($request->lang);
+
+        $PreviousPapers = PreviousPaper::where('status', 1)
+            ->where('course_id', $request->course_id)
+            ->get();
+
+        return response()->json(['PreviousPapers' => $PreviousPapers], 200);
     }
 
     public function submetAssignment(Request $request)

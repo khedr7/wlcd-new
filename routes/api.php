@@ -182,6 +182,8 @@ Route::middleware(['ip_block'])->group(function () {
 		Route::post('review/submit', 'Api\MainController@userreview');
 
 		Route::get('course/announcement', 'Api\MainController@courseAnnouncements');
+		Route::get('course/googleMeetings', 'Api\MainController@courseGoogleMeetings');
+		Route::get('course/previousPapers', 'Api\MainController@coursePrevPapers');
 
 
 		//Instructor API
