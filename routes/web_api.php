@@ -6,6 +6,7 @@ use App\Http\Controllers\WebApi\Auth\LoginController;
 use App\Http\Controllers\WebApi\Auth\RegisterController;
 use App\Http\Controllers\WebApi\CourseController;
 use App\Http\Controllers\WebApi\MainController;
+use App\Http\Controllers\WebApi\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,7 @@ Route::middleware(['ip_block'])->group(function () {
         Route::post('course/progress/update', [CourseController::class, 'courseprogressupdate']);
         Route::get('course/googleMeetings',   [CourseController::class, 'courseGoogleMeetings']);
         Route::get('course/announcement',  [CourseController::class, 'courseAnnouncements']);
+        Route::get('course/previousPapers',  [CourseController::class, 'coursePrevPapers']);
         Route::post('course/assignment',   [CourseController::class, 'submetAssignment']);
         Route::get('course/myAssignments', [CourseController::class, 'myAssignments']);
         Route::post('review/submit',    [CourseController::class, 'submetReview']);
@@ -58,6 +60,9 @@ Route::middleware(['ip_block'])->group(function () {
         //userprofile
         Route::post('show/profile',   [MainController::class, 'userprofile']);
         Route::post('update/profile', [MainController::class, 'updateprofile']);
+        
+        //Enrollment
+        Route::post('free/enroll', [PaymentController::class, 'enroll']);
 
     });
 
