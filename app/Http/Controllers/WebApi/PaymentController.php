@@ -80,4 +80,51 @@ class PaymentController extends Controller
 
         return response()->json(array('message' => 'User Enrolled', 'status' => 'success'), 200);
     }
+
+    public function purchaseHistory(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['Secret Key is required']);
+        }
+
+        $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        $user = Auth::user();
+
+        $enroll = Order::where('user_id', $user->id)->where('status', 1)
+        ->with([
+            'courses' => function ($query) {
+                $query->where('status', 1)->select( 'id', 'user_id', 'category_id', 'subcategory_id', 'childcategory_id', 'language_id', 'title',
+                                        'price', 'discount_price', 'featured', 'slug', 'status', 'preview_image', 'type', 'level_tags')
+                    ->where('status', 1)
+                    ->with([
+                        'language' => function ($query) {
+                            $query->where('status', 1)->select('id', 'name');
+                        },
+                        'user' => function ($query) {
+                            $query->where('status', 1)->select('id', 'fname', 'lname', 'user_img');
+                        },
+                    ])
+                    ->withCount([
+                        'chapter' => function ($query) {
+                            $query->where('status', 1);
+                        },
+                        'order' => function ($query) {
+                            $query->where('status', 1);
+                        },
+                    ]);
+            },
+        ])
+        ->get();
+
+        return response()->json(array('orderhistory' => $enroll), 200);
+    }
 }

@@ -5772,4 +5772,78 @@ class MainController extends Controller
         return response()->json(['PreviousPapers' => $PreviousPapers], 200);
     }
 
+    public function courseQuizzes(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+            'course_id' => 'required|exists:courses,id',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($errors->first('secret')) {
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail']);
+            }
+            if ($errors->first('course_id')) {
+                return response()->json(['message' => $errors->first('course_id'), 'status' => 'fail']);
+            }
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        // App::setlocale($request->lang);
+
+        $quiz = QuizTopic::where('course_id', $request->course_id)->where('status', 1)
+            ->with(['quizquestion'])
+            ->withCount(['quizquestion'])->get();
+
+        return response()->json(['quiz' => $quiz], 200);
+    }
+    public function courseQuestions(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+            'course_id' => 'required|exists:courses,id',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($errors->first('secret')) {
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail']);
+            }
+            if ($errors->first('course_id')) {
+                return response()->json(['message' => $errors->first('course_id'), 'status' => 'fail']);
+            }
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        // App::setlocale($request->lang);
+
+        $questions = Question::where('course_id', $request->course_id)->where('status', 1)
+        ->with([
+            'answers' => function ($query) {
+                $query->where('status', 1);
+            },
+        ])
+        ->withCount([
+            'answers' => function ($query) {
+                $query->where('status', 1);
+            },
+        ])
+        ->get();
+        return response()->json(['questions' => $questions], 200);
+    }
 }

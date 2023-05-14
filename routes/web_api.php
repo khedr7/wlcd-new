@@ -35,15 +35,20 @@ Route::middleware(['ip_block'])->group(function () {
         Route::get('course/progress',         [CourseController::class, 'courseProgress']);
         Route::post('course/progress/update', [CourseController::class, 'courseprogressupdate']);
         Route::get('course/googleMeetings',   [CourseController::class, 'courseGoogleMeetings']);
-        Route::get('course/announcement',  [CourseController::class, 'courseAnnouncements']);
-        Route::get('course/previousPapers',  [CourseController::class, 'coursePrevPapers']);
-        Route::post('course/assignment',   [CourseController::class, 'submetAssignment']);
-        Route::get('course/myAssignments', [CourseController::class, 'myAssignments']);
+        Route::get('course/announcement',   [CourseController::class, 'courseAnnouncements']);
+        Route::get('course/previousPapers', [CourseController::class, 'coursePrevPapers']);
+        Route::post('course/assignment',    [CourseController::class, 'submetAssignment']);
+        Route::get('course/myAssignments',  [CourseController::class, 'myAssignments']);
         Route::post('review/submit',    [CourseController::class, 'submetReview']);
         Route::post('quiz/submit',      [CourseController::class, 'quizsubmit']);
         Route::get('quiz/reports/{id}', [CourseController::class, 'quizReports']);
         Route::get('quiz/get',          [CourseController::class, 'getQuiz']);
         Route::get('course/quizzes',    [CourseController::class, 'courseQuizzes']);
+        Route::post('question/submit',  [CourseController::class, 'submetQuestion']);
+        Route::get('course/questions',  [CourseController::class, 'courseQuestions']);
+        Route::get('course/user-questions', [CourseController::class, 'userQuestions']);
+
+
 
         //wishlist
         Route::post('addtowishlist',   [MainController::class, 'addToWishlist']);
@@ -63,6 +68,8 @@ Route::middleware(['ip_block'])->group(function () {
         
         //Enrollment
         Route::post('free/enroll', [PaymentController::class, 'enroll']);
+        Route::get('purchase/history', [PaymentController::class, 'purchaseHistory']);
+
 
     });
 
