@@ -184,6 +184,8 @@ Route::middleware(['ip_block'])->group(function () {
 		Route::get('course/announcement', 'Api\MainController@courseAnnouncements');
 		Route::get('course/googleMeetings', 'Api\MainController@courseGoogleMeetings');
 		Route::get('course/previousPapers', 'Api\MainController@coursePrevPapers');
+		Route::get('course/questions', 'Api\MainController@courseQuestions');
+		
 
 
 		//Instructor API
@@ -326,6 +328,8 @@ Route::middleware(['ip_block'])->group(function () {
 		Route::post('vacationmodeupdate', 'Api\InstructorApiController@vacationmodeupdate');
 
 		Route::get('quiz/reports/{id}', 'Api\MainController@quiz_reports');
+		Route::get('course/quizzes', 'Api\MainController@courseQuizzes');
+		
 	});
 
 	Route::get('course/assignment/{id}', 'Api\InstructorApiController@getassignment');

@@ -20,6 +20,7 @@ use App\Contactreason;
 use App\Setting;
 use App\Videosetting;
 use App\Announcement;
+use App\Currency;
 use App\NewNotification;
 use App\Wishlist;
 use Illuminate\Http\Request;
@@ -418,6 +419,45 @@ class MainController extends Controller
         }
 
         return response()->json(['testimonial' => $testimonial_result], 200);
+    }
+
+    //------------SETTINGS-----------------
+
+    function homeSetting(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['Secret Key is required'], 402);
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !'], 400);
+        }
+
+        $settings = Setting::first();
+
+        $currency2 = Currency::where('default', '1')->first();
+
+        $currency = [
+            'id' => $currency2->id,
+            'icon' => $currency2->symbol,
+            'currency' => $currency2->code,
+            'default' => $currency2->default,
+            'created_at' => $currency2->created_at,
+            'updated_at' => $currency2->updated_at,
+            'name' => $currency2->name,
+            'format' => $currency2->format,
+            'exchange_rate' => $currency2->default == 1 ? 1 : $currency2->exchange_rate,
+        ];
+
+        return response()->json(['settings' => $settings, 'currency' => $currency], 200);
     }
 
     //------------INTRO VIDEO-----------------

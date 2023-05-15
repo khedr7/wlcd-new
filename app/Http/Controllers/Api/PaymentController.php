@@ -209,7 +209,6 @@ class PaymentController extends Controller
 
                 $created_order = Order::create(
                     [
-
                         'course_id' => $course_id,
                         'user_id' => $auth->id,
                         'instructor_id' => $instructor_id,
@@ -234,14 +233,9 @@ class PaymentController extends Controller
 
 
                 if ($cart->type == 1) {
-
                     Cart::where('user_id', $auth->id)->where('bundle_id', $cart->bundle_id)->delete();
                 } else {
-
                     Wishlist::where('user_id', $auth->id)->where('course_id', $cart->course_id)->delete();
-
-
-
                     Cart::where('user_id', $auth->id)->where('course_id', $cart->course_id)->delete();
                 }
 
@@ -271,38 +265,37 @@ class PaymentController extends Controller
                 }
 
 
-                if ($created_order) {
-                    try {
+                // if ($created_order) {
+                //     try {
+                //         /*sending email*/
+                //         $x = 'You are successfully enrolled in a course';
+                //         $order = $created_order;
+                //         Mail::to(Auth::User()->email)->send(new SendOrderMail($x, $order));
+                //     } catch (\Swift_TransportException $e) {
+                //     }
+                // }
 
-                        /*sending email*/
-                        $x = 'You are successfully enrolled in a course';
-                        $order = $created_order;
-                        Mail::to(Auth::User()->email)->send(new SendOrderMail($x, $order));
-                    } catch (\Swift_TransportException $e) {
-                    }
-                }
+                // if ($cart->type == 0) {
 
-                if ($cart->type == 0) {
+                //     if ($created_order) {
+                //         // Notification when user enroll
+                //         $cor = Course::where('id', $cart->course_id)->first();
 
-                    if ($created_order) {
-                        // Notification when user enroll
-                        $cor = Course::where('id', $cart->course_id)->first();
+                //         $course = [
+                //             'title' => $cor->title,
+                //             'image' => $cor->preview_image,
+                //         ];
 
-                        $course = [
-                            'title' => $cor->title,
-                            'image' => $cor->preview_image,
-                        ];
+                //         $enroll = Order::where('course_id', $cart->course_id)->get();
 
-                        $enroll = Order::where('course_id', $cart->course_id)->get();
-
-                        if (!$enroll->isEmpty()) {
-                            foreach ($enroll as $enrol) {
-                                $user = User::where('id', $enrol->user_id)->get();
-                                Notification::send($user, new UserEnroll($course));
-                            }
-                        }
-                    }
-                }
+                //         if (!$enroll->isEmpty()) {
+                //             foreach ($enroll as $enrol) {
+                //                 $user = User::where('id', $enrol->user_id)->get();
+                //                 Notification::send($user, new UserEnroll($course));
+                //             }
+                //         }
+                //     }
+                // }
             }
 
             return response()->json('Payment Successfull !', 200);
@@ -314,8 +307,6 @@ class PaymentController extends Controller
 
         return response()->json('Payment Failed !', 401);
     }
-
-
 
     public function purchasehistory(Request $request)
     {

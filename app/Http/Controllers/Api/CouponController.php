@@ -474,7 +474,6 @@ class CouponController extends Controller
         }
     }
 
-
     public function remove(Request $request)
     {
 
