@@ -111,6 +111,7 @@ class MainController extends Controller
 
         return response()->json(['settings' => $settings, 'currency' => $currency], 200);
     }
+    
     function homeSliders(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -5799,9 +5800,130 @@ class MainController extends Controller
 
         // App::setlocale($request->lang);
 
-        $quiz = QuizTopic::where('course_id', $request->course_id)->where('status', 1)
-            ->with(['quizquestion'])
-            ->withCount(['quizquestion'])->get();
+        
+        $result = Course::where('id', $request->course_id)->first();
+        
+        $quiz = [];
+        
+        $quizz = QuizTopic::where('course_id', $request->course_id)->where('status', 1)
+        ->with(['quizquestion'])
+        ->withCount(['quizquestion'])->get();
+        
+        foreach ($quizz as $key => $topic) {
+                $questions = [];
+
+                if ($topic->type == null) {
+                    foreach ($topic->quizquestion as $key => $data) {
+                        if ($data->type == null) {
+                            if ($data->answer == 'A') {
+                                $correct_answer = $data->a;
+
+                                $options = [$data->b, $data->c, $data->d];
+                            } elseif ($data->answer == 'B') {
+                                $correct_answer = $data->b;
+
+                                $options = [$data->a, $data->c, $data->d];
+                            } elseif ($data->answer == 'C') {
+                                $correct_answer = $data->c;
+
+                                $options = [$data->a, $data->b, $data->d];
+                            } elseif ($data->answer == 'D') {
+                                $correct_answer = $data->d;
+
+                                $options = [$data->a, $data->b, $data->c];
+                            }
+                        }
+
+                        $all_options = [
+                            'A' => $data->a,
+                            'B' => $data->b,
+                            'C' => $data->c,
+                            'D' => $data->d,
+                        ];
+
+                        $questions[] = [
+                            'id' => $data->id,
+                            'course' => $result->title,
+                            'topic' => $topic->title,
+                            'question' => $data->question,
+                            'correct' => $correct_answer,
+                            'status' => $data->status,
+                            'incorrect_answers' => $options,
+                            'all_answers' => $all_options,
+                            'correct_answer' => $data->answer,
+                        ];
+                    }
+                } elseif ($topic->type == 1) {
+                    foreach ($topic->quizquestion as $key => $data) {
+                        $questions[] = [
+                            'id' => $data->id,
+                            'course' => $result->title,
+                            'topic' => $topic->title,
+                            'question' => $data->question,
+                            'status' => $data->status,
+                            'correct' => null,
+                            'correct' => null,
+                            'status' => $data->status,
+                            'incorrect_answers' => null,
+                            'correct_answer' => null,
+                        ];
+                    }
+                }
+
+                $startDate = '0';
+
+                if (Auth::guard('api')->check()) {
+                    $order = Order::where('course_id', $request->course_id)
+                        ->where('user_id', '=', Auth::guard('api')->user()->id)
+                        ->first();
+
+                    $days = $topic->due_days;
+                    $orderDate = optional($order)['created_at'];
+
+                    $bundle = Order::where('user_id', Auth::guard('api')->user()->id)
+                        ->where('bundle_id', '!=', null)
+                        ->get();
+
+                    $course_id = [];
+
+                    foreach ($bundle as $b) {
+                        $bundle = BundleCourse::where('id', $b->bundle_id)->first();
+                        array_push($course_id, $bundle->course_id);
+                    }
+
+                    $course_id = array_values(array_filter($course_id));
+                    $course_id = array_flatten($course_id);
+
+                    if ($orderDate != null) {
+                        $startDate = date('Y-m-d', strtotime("$orderDate +$days days"));
+                    } elseif (isset($course_id) && in_array($request->course_id, $course_id)) {
+                        $startDate = date('Y-m-d', strtotime("$bundle->created_at +$days days"));
+                    } else {
+                        $startDate = '0';
+                    }
+                }
+
+                $mytime = \Carbon\Carbon::now()->toDateString();
+
+                $quiz[] = [
+                    'id' => $topic->id,
+                    'course_id' => $result->id,
+                    'course' => $result->title,
+                    'title' => $topic->title,
+                    'description' => $topic->description,
+                    'per_question_mark' => $topic->per_q_mark,
+                    'status' => $topic->status,
+                    'quiz_again' => $topic->quiz_again,
+                    'due_days' => $topic->due_days,
+                    'type' => $topic->type,
+                    'timer' => $topic->timer,
+                    'created_by' => $topic->created_at,
+                    'updated_by' => $topic->updated_at,
+                    'quiz_live_days' => $startDate,
+                    'today_date' => $mytime,
+                    'questions' => $questions,
+                ];
+            }
 
         return response()->json(['quiz' => $quiz], 200);
     }
@@ -5835,8 +5957,9 @@ class MainController extends Controller
         $questions = Question::where('course_id', $request->course_id)->where('status', 1)
         ->with([
             'answers' => function ($query) {
-                $query->where('status', 1);
+                $query->where('status', 1)->with('user:id,fname,lname,user_img');
             },
+            'user:id,fname,lname,user_img',
         ])
         ->withCount([
             'answers' => function ($query) {

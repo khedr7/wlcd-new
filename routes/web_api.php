@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\CouponController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WebApi\Auth\LoginController;
@@ -61,19 +62,33 @@ Route::middleware(['ip_block'])->group(function () {
         Route::post('edit-notifications-status', [MainController::class, 'editNotificationsStatus']);
         Route::post('delete-notification',     [MainController::class, 'deleteNotification']);
         Route::post('delete-all-notification', [MainController::class, 'bulkDeleteNotification']);
-        
+
         //userprofile
         Route::post('show/profile',   [MainController::class, 'userprofile']);
         Route::post('update/profile', [MainController::class, 'updateprofile']);
-        
+
         //Enrollment
-        Route::post('free/enroll', [PaymentController::class, 'enroll']);
+        Route::post('free/enroll',     [PaymentController::class, 'enroll']);
+        Route::post('pay/store',       [PaymentController::class, 'payStore']);
+        Route::get('manual/payment',   [PaymentController::class, 'getManual']);
         Route::get('purchase/history', [PaymentController::class, 'purchaseHistory']);
 
-
+        
+        //cart
+        Route::post('addtocart',   [PaymentController::class, 'addToCart']);
+        Route::post('remove/cart', [PaymentController::class, 'removeCart']);
+        Route::post('show/cart',   [PaymentController::class, 'showCart']);
+        Route::post('remove-all/cart',  [PaymentController::class, 'removeAllCart']);
+        Route::post('addtocart/bundle', [PaymentController::class, 'addBundleToCart']);
+        Route::post('remove/bundle',    [PaymentController::class, 'removeBundleCart']);
+        
+        Route::post('apply/coupon',  [CouponController::class, 'applycoupon']);
+        Route::post('remove/coupon', [CouponController::class, 'remove']);
+        
     });
 
     //general api
+    Route::get('home/setting', [MainController::class, 'homeSetting']);
     Route::get('sliders',      [MainController::class, 'homeSliders']);
     Route::get('testimonials', [MainController::class, 'homeTestimonials']);
     Route::get('videoSetting', [MainController::class, 'videoSetting']);
