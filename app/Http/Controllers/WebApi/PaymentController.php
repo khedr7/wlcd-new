@@ -17,6 +17,7 @@ use App\User;
 use App\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\APP;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -304,6 +305,8 @@ class PaymentController extends Controller
         if (!$key) {
             return response()->json(['Invalid Secret Key !']);
         }
+
+        App::setlocale($request->lang);
 
         $user = Auth::guard('api')->user();
 

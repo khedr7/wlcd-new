@@ -204,7 +204,7 @@ Route::middleware(['ip_block'])->group(function () {
 		Route::post('course/class/{id}', 'Api\InstructorApiController@updateclass');
 		Route::delete('course/class/{id}', 'Api\InstructorApiController@deleteclass');
 
-		/* Certicficate api */
+		/* Certificate api */
 		Route::get('certificate/download/{progress_id}', 'Api\OtherApiController@apipdfdownload');
 
 		/* Certificate Module */
