@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\CouponController;
+use App\Http\Controllers\Api\OtherApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WebApi\Auth\LoginController;
@@ -96,7 +97,10 @@ Route::middleware(['ip_block'])->group(function () {
     Route::get('contactus/reasons', [MainController::class, 'contactReasons']);
     Route::get('contact/details',   [MainController::class, 'contactDetails']);
     Route::get('course/reviews',    [CourseController::class, 'courseReviews']);
-
+    
+    
+    Route::get('certificate/download/{progress_id}',    [OtherApiController::class, 'apipdfdownload']);
+    Route::get('/certificate/{progress_id}',    [OtherApiController::class, 'getCertificate']);
 
 
     //category
