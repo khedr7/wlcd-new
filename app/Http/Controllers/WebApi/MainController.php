@@ -9,7 +9,11 @@ use App\Http\Traits\SendNotification;
 use App\Order;
 use App\ReviewRating;
 use App\User;
+use Illuminate\Support\Facades\Hash;
+use App\Wishlist;
 use App\Blog;
+use App\Currency;
+use App\NewNotification;
 use App\Slider;
 use App\SliderFacts;
 use App\FaqStudent;
@@ -459,7 +463,44 @@ class MainController extends Controller
 
         return response()->json(['testimonial' => $testimonial_result], 200);
     }
+    //------------SETTINGS-----------------
 
+    function homeSetting(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['Secret Key is required'], 402);
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !'], 400);
+        }
+
+        $settings = Setting::first();
+
+        $currency2 = Currency::where('default', '1')->first();
+
+        $currency = [
+            'id' => $currency2->id,
+            'icon' => $currency2->symbol,
+            'currency' => $currency2->code,
+            'default' => $currency2->default,
+            'created_at' => $currency2->created_at,
+            'updated_at' => $currency2->updated_at,
+            'name' => $currency2->name,
+            'format' => $currency2->format,
+            'exchange_rate' => $currency2->default == 1 ? 1 : $currency2->exchange_rate,
+        ];
+
+        return response()->json(['settings' => $settings, 'currency' => $currency], 200);
+    }
     //------------iNTRO VIDEO-----------------
 
     function videoSetting(Request $request)
@@ -665,6 +706,98 @@ class MainController extends Controller
         $blog  = Blog::findorfail($request->id);
         return response()->json(['blog' => $blog], 200);
     }
+
+     //------------WISH LIST-----------------
+
+     public function addToWishlist(Request $request)
+     {
+         $validator = Validator::make($request->all(), [
+             'secret' => 'required',
+             'course_id' => 'required|exists:courses,id',
+         ]);
+ 
+         if ($validator->fails()) {
+             $errors = $validator->errors();
+             if ($errors->first('secret')) {
+                 return response()->json(['message' => $errors->first('secret'), 'status' => 'fail']);
+             }
+             if ($errors->first('course_id')) {
+                 return response()->json(['message' => $errors->first('course_id'), 'status' => 'fail']);
+             }
+         }
+ 
+         $key = DB::table('api_keys')
+             ->where('secret_key', '=', $request->secret)
+             ->first();
+ 
+         if (!$key) {
+             return response()->json(['Invalid Secret Key !']);
+         }
+ 
+         $auth = Auth::guard('api')->user();
+ 
+         $orders = Order::where('user_id', $auth->id)
+             ->where('course_id', $request->course_id)
+             ->first();
+ 
+         $wishlist = Wishlist::where('course_id', $request->course_id)
+             ->where('user_id', $auth->id)
+             ->first();
+ 
+         if (isset($orders)) {
+             return response()->json('You Already purchased this course !', 401);
+         } else {
+             if (!empty($wishlist)) {
+                 return response()->json('Course is already in wishlist !', 401);
+             } else {
+                 $wishlist = Wishlist::create([
+                     'course_id' => $request->course_id,
+                     'user_id' => $auth->id,
+                 ]);
+ 
+                 return response()->json('Course is added to your wishlist !', 200);
+             }
+         }
+     }
+ 
+     public function removeWishlist(Request $request)
+     {
+         $validator = Validator::make($request->all(), [
+             'secret' => 'required',
+             'course_id' => 'required|exists:courses,id',
+         ]);
+ 
+         if ($validator->fails()) {
+             $errors = $validator->errors();
+             if ($errors->first('secret')) {
+                 return response()->json(['message' => $errors->first('secret'), 'status' => 'fail']);
+             }
+             if ($errors->first('course_id')) {
+                 return response()->json(['message' => $errors->first('course_id'), 'status' => 'fail']);
+             }
+         }
+ 
+         $key = DB::table('api_keys')
+             ->where('secret_key', '=', $request->secret)
+             ->first();
+ 
+         if (!$key) {
+             return response()->json(['Invalid Secret Key !']);
+         }
+ 
+         $auth = Auth::guard('api')->user();
+ 
+         $wishlist = Wishlist::where('course_id', $request->course_id)
+             ->where('user_id', $auth->id)
+             ->delete();
+ 
+         if ($wishlist == 1) {
+             return response()->json(['done'], 200);
+         } else {
+             return response()->json(['error'], 401);
+         }
+     }
+ 
     //--------------FAQ-----------------
     public function faq(Request $request)
     {
@@ -792,5 +925,227 @@ class MainController extends Controller
         }
         $follower = Followers::where('user_id', $request->user_id)->where('follower_id', $request->follower_id)->delete();
         return response()->json(['success']);
+    }
+    //------------NOTiIFICATIONS-----------------
+
+    public function userNotifications(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($errors->first('secret')) {
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail'], 400);
+            }
+        }
+
+        $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        $user = User::where('id', Auth::id())->first();
+
+        $notifications = $user->newNotifications()->orderBy('created_at', 'desc')->get();
+        foreach ($notifications as $notification) {
+            $notification->status = $notification->pivot->status;
+        }
+        $notifications->makeHidden(['pivot']);
+        return response()->json([
+            'notifications' => $notifications,
+        ], 200);
+    }
+
+    public function unreadNotificationsCount(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($errors->first('secret')) {
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail'], 400);
+            }
+        }
+
+        $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        $user = User::where('id', Auth::id())->first();
+
+        $notifications = $user->newNotifications()->where('status', 0)->orderBy('created_at', 'desc')->count();
+
+        return response()->json([
+            'notifications_count' => $notifications,
+        ], 200);
+    }
+
+    public function editNotificationsStatus(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($errors->first('secret')) {
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail'], 400);
+            }
+        }
+
+        $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        DB::table('notification_user')->where('user_id', '=',  Auth::id())->update(['status' => 1]);
+
+
+        return response()->json([
+            'message' => 'All notifications have been read.',
+        ], 200);
+    }
+    public function deleteNotification(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+            'id' => 'required|exists:new_notifications,id',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($errors->first('secret')) {
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail']);
+            }
+            if ($errors->first('id')) {
+                return response()->json(['message' => $errors->first('id'), 'status' => 'fail']);
+            }
+        }
+
+        $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        $notification = NewNotification::where('id', $request->id)->first();
+
+        DB::table('notification_user')->where('notification_id', '=',  $request->id)->where('user_id', '=',  Auth::id())->delete();
+
+        return response()->json([
+            'message' => 'Notification has been deleted successfully.',
+        ], 200);
+    }
+
+    public function bulkDeleteNotification(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            if ($errors->first('secret')) {
+                return response()->json(['message' => $errors->first('secret'), 'status' => 'fail'], 400);
+            }
+        }
+
+        $key = DB::table('api_keys')->where('secret_key', '=', $request->secret)->first();
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        $user = User::where('id', Auth::id())->first();
+
+        $notifications = $user->newNotifications;
+        foreach ($notifications as $notification) {
+            DB::table('notification_user')->where('notification_id', '=',  $notification->id)->where('user_id', '=',  Auth::id())->delete();
+        }
+
+        return response()->json([
+            'message' => 'Notifications have been deleted successfully.',
+        ], 200);
+    }
+    //------------USER PROFILE-----------------
+
+    public function userprofile(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['Secret Key is required']);
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        $user = Auth::guard('api')->user();
+        $code = $user->token();
+        return response()->json(['user' => $user, 'code' => $code->id], 200);
+    }
+
+    public function updateprofile(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['Secret Key is required']);
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        $auth = Auth::guard('api')->user();
+
+        $request->validate([
+            'email' => 'required',
+            'current_password' => 'required',
+        ]);
+        $input = $request->all();
+
+        if (Hash::check($request->current_password, $auth->password)) {
+            if ($file = $request->file('user_img')) {
+                if ($auth->user_img != null) {
+                    $image_file = @file_get_contents(public_path() . '/images/user_img/' . $auth->user_img);
+                    if ($image_file) {
+                        unlink(public_path() . '/images/user_img/' . $auth->user_img);
+                    }
+                }
+                $name = time() . '_' . $file->getClientOriginalName();
+                $name = str_replace(" ", "_", $name);
+                $file->move('images/user_img', $name);
+                $input['user_img'] = $name;
+            }
+            $auth->update([
+                'fname' => isset($input['fname']) ? $input['fname'] : $auth->fname,
+                'lname' => isset($input['lname']) ? $input['lname'] : $auth->lname,
+                'email' => $input['email'],
+                'password' => isset($input['password']) ? bcrypt($input['password']) : $auth->password,
+                'mobile' => isset($input['mobile']) ? $input['mobile'] : $auth->mobile,
+                'dob' => isset($input['dob']) ? $input['dob'] : $auth->dob,
+                'user_img' => isset($input['user_img']) ? $input['user_img'] : $auth->user_img,
+                'address' => isset($input['address']) ? $input['address'] : $auth->address,
+                'detail' => isset($input['detail']) ? $input['detail'] : $auth->detail,
+            ]);
+
+            $auth->save();
+            return response()->json(['auth' => $auth], 200);
+        } else {
+            return response()->json('error: password doesnt match', 400);
+        }
     }
 }
