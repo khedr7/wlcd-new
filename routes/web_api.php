@@ -33,7 +33,6 @@ Route::middleware(['ip_block'])->group(function () {
         Route::post('join_us',      [RegisterController::class, 'instructor']);
         Route::get('my-courses',    [CourseController::class, 'myCourses']);
         Route::get('my-allcourses', [CourseController::class, 'myAllCourses']);
-
         Route::get('course/progress', [CourseController::class, 'courseProgress']);
         Route::post('course/progress/update',[CourseController::class, 'courseprogressupdate']);
         Route::get('course/googleMeetings', [CourseController::class, 'courseGoogleMeetings']);
@@ -46,8 +45,15 @@ Route::middleware(['ip_block'])->group(function () {
     Route::post('contactus',   [MainController::class, 'contactus']);
     Route::get('contactus/reasons', [MainController::class, 'contactReasons']);
     Route::get('contact/details',   [MainController::class, 'contactDetails']);
-
-
+    Route::get('blog',              [MainController::class,'blog']);
+    Route::get('home_blog',         [MainController::class,'home_blog']);
+    Route::get('blogdetail',        [MainController::class,'blogdetail']);
+    Route::get('faq',               [MainController::class,'faq']);
+    Route::get('policy',            [MainController::class,'terms']);
+    Route::get('deals',             [MainController::class,'deals']);
+    Route::post('follow',           [MainController::class,'follow']);
+    Route::post('unfollow',         [MainController::class,'unfollow']);
+   
     //category
     Route::get('categories',     [MainController::class, 'homeCategories']);
     Route::get('all-categories', [MainController::class, 'homeAllCategories']);

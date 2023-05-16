@@ -9,14 +9,19 @@ use App\Http\Traits\SendNotification;
 use App\Order;
 use App\ReviewRating;
 use App\User;
+use App\Blog;
 use App\Slider;
 use App\SliderFacts;
+use App\FaqStudent;
 use App\Categories;
 use App\SubCategory;
 use App\Testimonial;
 use App\CategorySlider;
+use App\Terms;
 use App\Contact;
 use App\Contactreason;
+use App\Followers;
+use App\Flashsale;
 use App\Setting;
 use App\Videosetting;
 use Illuminate\Http\Request;
@@ -126,9 +131,29 @@ class MainController extends Controller
 
         App::setlocale($request->lang);
 
-        $instructor = User::select('id', 'fname', 'lname', 'dob', 'mobile', 'email', 'address', 'user_img', 'role',
-                                'detail', 'address', 'city_id', 'state_id', 'country_id', 'gender', 'created_at',
-                                'practical_experience', 'basic_skills', 'professional_summary', 'scientific_background', 'courses')
+        $instructor = User::select(
+            'id',
+            'fname',
+            'lname',
+            'dob',
+            'mobile',
+            'email',
+            'address',
+            'user_img',
+            'role',
+            'detail',
+            'address',
+            'city_id',
+            'state_id',
+            'country_id',
+            'gender',
+            'created_at',
+            'practical_experience',
+            'basic_skills',
+            'professional_summary',
+            'scientific_background',
+            'courses'
+        )
             ->where('status', 1)
             ->where('id', $request->id)
             ->withCount([
@@ -161,7 +186,6 @@ class MainController extends Controller
             if ($errors->first('course_id')) {
                 return response()->json(['message' => $errors->first('course_id'), 'status' => 'fail']);
             }
-           
         }
 
         $key = DB::table('api_keys')
@@ -176,9 +200,29 @@ class MainController extends Controller
 
         $course = Course::where('id', $request->course_id)->first(['id', 'user_id']);
 
-        $instructor = User::select('id', 'fname', 'lname', 'dob', 'mobile', 'email', 'address', 'user_img', 'role',
-                                'detail', 'address', 'city_id', 'state_id', 'country_id', 'gender', 'created_at',
-                                'practical_experience', 'basic_skills', 'professional_summary', 'scientific_background', 'courses')
+        $instructor = User::select(
+            'id',
+            'fname',
+            'lname',
+            'dob',
+            'mobile',
+            'email',
+            'address',
+            'user_img',
+            'role',
+            'detail',
+            'address',
+            'city_id',
+            'state_id',
+            'country_id',
+            'gender',
+            'created_at',
+            'practical_experience',
+            'basic_skills',
+            'professional_summary',
+            'scientific_background',
+            'courses'
+        )
             ->where('status', 1)
             ->where('id', $course->user_id)
             ->withCount([
@@ -194,7 +238,7 @@ class MainController extends Controller
 
         return response()->json(['instructor' => $instructor], 200);
     }
-    
+
     //------------SLIDER----------------
 
     function homeSliders(Request $request)
@@ -278,7 +322,7 @@ class MainController extends Controller
         if (!$key) {
             return response()->json(['Invalid Secret Key !'], 400);
         }
-        
+
         App::setlocale($request->lang);
 
         $category = Categories::where('status', 1)
@@ -395,7 +439,7 @@ class MainController extends Controller
             return response()->json(['Invalid Secret Key !'], 400);
         }
         App::setlocale($request->lang);
-        
+
         $testimonials = Testimonial::where('status', 1)->get();
 
         $testimonial_result = [];
@@ -442,7 +486,7 @@ class MainController extends Controller
     }
 
     //------------CONTACT US-----------------
-    
+
     public function contactus(Request $request)
     {
         $this->validate($request, [
@@ -529,5 +573,224 @@ class MainController extends Controller
             'data' => $setting,
         ], 200);
     }
+    //--------------BLOG-----------------------
+    public function blog(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
 
+        if ($validator->fails()) {
+            return response()->json(['Secret Key is required']);
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+
+        App::setlocale($request->lang);
+        $blog = Blog::where('status', 1)->get();
+
+        $blog_result = [];
+
+        foreach ($blog as $data) {
+            $blog_result[] = [
+                'id' => $data->id,
+                'user' => $data->user_id,
+                'date' => $data->date,
+                'image' => $data->image,
+                'heading' => preg_replace("/\r\n|\r|\n/", '', strip_tags(html_entity_decode($data->heading))),
+                'detail' => preg_replace("/\r\n|\r|\n/", '', strip_tags(html_entity_decode($data->detail))),
+                'text' => $data->text,
+                'approved' => $data->approved,
+                'status' => $data->status,
+                'created_at' => $data->created_at,
+                'updated_at' => $data->updated_at,
+            ];
+        }
+
+        return response()->json(['blog' => $blog_result], 200);
+    }
+    //----------HOMEBLOG---------------
+
+    public function home_blog(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['Secret Key is required']);
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+        App::setlocale($request->lang);
+
+        $blog = Blog::where('status', 1)
+            ->orderBy('id', 'DESC')->take(5)->get();
+
+        return response()->json(['blog' => $blog], 200);
+    }
+    //---------BLOGDETAILS------------------
+
+    public function blogdetail(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['Secret Key is required']);
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+        App::setlocale($request->lang);
+
+        $blog  = Blog::findorfail($request->id);
+        return response()->json(['blog' => $blog], 200);
+    }
+    //--------------FAQ-----------------
+    public function faq(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['Secret Key is required']);
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+        App::setlocale($request->lang);
+
+        $faq = FaqStudent::where('status', 1)->get();
+        return response()->json(['faq' => $faq], 200);
+    }
+    // ---------policy--------------------
+
+    public function terms(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['Secret Key is required']);
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+        App::setlocale($request->lang);
+
+        $terms_policy = Terms::get()->toArray();
+
+        return response()->json(['terms_policy' => $terms_policy], 200);
+    }
+    // ------------FLASHDEALS------------
+    public function deals(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['Secret Key is required']);
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+        App::setlocale($request->lang);
+
+        $deals = Flashsale::get()->toArray();
+
+        return response()->json(['deals' => $deals], 200);
+    }
+    // ---------FOLLOW--------------
+
+    public function follow(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret'      => 'required',
+            'user_id'     => 'required',
+            'follower_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['Secret Key is required']);
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+        if ($request->user_id != $request->follower_id) {
+
+            $follower = Followers::create([
+                'user_id'     => $request->user_id,
+                'follower_id' => $request->follower_id,
+                'created_at'  => \Carbon\Carbon::now()->toDateTimeString(),
+            ]);
+            return response()->json(['success']);
+        } else {
+            return response()->json(['Unauthorized Action']);
+        }
+    }
+    //  ---------UNFOLLOW--------------
+    public function unfollow(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'secret'      => 'required',
+            'user_id'     => 'required',
+            'follower_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['Secret Key is required']);
+        }
+
+        $key = DB::table('api_keys')
+            ->where('secret_key', '=', $request->secret)
+            ->first();
+
+        if (!$key) {
+            return response()->json(['Invalid Secret Key !']);
+        }
+        $follower = Followers::where('user_id', $request->user_id)->where('follower_id', $request->follower_id)->delete();
+        return response()->json(['success']);
+    }
 }

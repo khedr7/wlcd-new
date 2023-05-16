@@ -589,7 +589,15 @@
                             @endcan
                             <!-- faq start  -->
                             @canany(['faq.faq-student.view','faq.faq-instructor.view'])
+                            {{-- tala --}}
                             <li class="{{ Nav::isResource('faq') }} {{ Nav::isResource('faqinstructor') }}">
+                                <a href="{{url('faq')}}" class="menu">
+                                    <i class="feather icon-message-square text-secondary"></i>
+                                     <span>{{ __('adminstaticword.Faq') }}</span>
+                                </a>
+                            </li>
+                            {{-- tala --}}
+                            {{-- <li class="{{ Nav::isResource('faq') }} {{ Nav::isResource('faqinstructor') }}">
                                 <a href="javaScript:void();" class="menu">
                                     <i class="feather icon-help-circle text-secondary"></i>
                                     <span>{{ __('adminstaticword.Faq') }}<div class="sub-menu truncate">Faq Student, Faq Instructor</div></span>
@@ -606,7 +614,7 @@
                                     </li>
 
                                 </ul>
-                            </li>
+                            </li> --}}
                             @endcanany
                             {{-- @can(['career.manage'])
                             <li class="{{ Nav::isRoute('careers.page') }}">

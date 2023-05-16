@@ -10,10 +10,14 @@ use Image;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
+use App\Http\Traits\TranslationTrait;
+
 
 
 class FlashSaleController extends Controller
 {
+    use TranslationTrait;
+
     public function __construct()
     {
     
@@ -68,8 +72,10 @@ class FlashSaleController extends Controller
         DB::beginTransaction();
 
         $newdeal = new Flashsale();
+        $input   = $this->getTranslatableRequest($newdeal->getTranslatableAttributes(), $request->all(), ['en', 'ar']);
 
-        $input = $request->all();
+
+        // $input = $request->all();
 
         if (!is_dir(public_path() . '/images/flashdeals')) {
             mkdir(public_path() . '/images/flashdeals');
@@ -98,7 +104,7 @@ class FlashSaleController extends Controller
 
             $newdeal->saleitems()->create([
                 'sale_id'           => $newdeal->id,
-                'course_id'        => $request->course_id[$key],
+                'course_id'         => $request->course_id[$key],
                 'discount'          => $request->discount[$key],
                 'discount_type'     => $request->discount_type[$key]
             ]);
@@ -122,8 +128,7 @@ class FlashSaleController extends Controller
         DB::beginTransaction();
 
         $newdeal = Flashsale::findorfail($id);
-
-        $input = $request->all();
+        $input   = $this->getTranslatableRequest($newdeal->getTranslatableAttributes(), $request->all(), [$request->lang]);
 
         if($request->hasFile('background_image')){
 
@@ -144,7 +149,7 @@ class FlashSaleController extends Controller
 
         }
 
-        $input['detail'] = clean($request->detail);
+        // $input['detail'] = clean($request->detail);
         $input['start_date'] = date('Y-m-d H:i:s',strtotime($request->start_date));
         $input['end_date'] = date('Y-m-d H:i:s',strtotime($request->end_date));
         $input['status'] = $request->status ? 1 : 0;
@@ -156,7 +161,7 @@ class FlashSaleController extends Controller
 
             $newdeal->saleitems()->create([
                 'sale_id'           => $newdeal->id,
-                'course_id'        => $request->course_id[$key],
+                'course_id'         => $request->course_id[$key],
                 'discount'          => $request->discount[$key],
                 'discount_type'     => $request->discount_type[$key]
             ]);

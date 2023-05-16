@@ -114,7 +114,7 @@
                                   {{$item->user->fname}}
                                 </td>  
                                 <td>
-                                  {{$item->heading}}
+                                  {{$item->getTranslation('heading', Session::get('changed_language'), false)}}
                                 </td>    
                                 <td style="width:100%">
                                  {{ preg_replace("/\r\n|\r|\n/",'',strip_tags(html_entity_decode(str_limit($item->detail, 60)))) }}
@@ -164,7 +164,7 @@
                                                 </div>
                                                 <div class="modal-body">
                                                         <h4>{{ __('Are You Sure ?')}}</h4>
-                                                        <p>{{ __('Do you really want to delete')}} <b>{{$item->heading}}</b> ? {{ __('This process cannot be undone.')}}</p>
+                                                        <p>{{ __('Do you really want to delete')}} <b>{{ $item->heading}}</b> ? {{ __('This process cannot be undone.')}}</p>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <form method="post" action="{{url('blog/'.$item->id)}}" class="pull-right">
