@@ -11,9 +11,11 @@ use Auth;
 use Illuminate\Support\Facades\Validator;
 use Session;
 use Spatie\Permission\Models\Role;
+use App\Http\Traits\TranslationTrait;
 
 class BlogController extends Controller
 {
+    use TranslationTrait;
     public function __construct()
     {
 
@@ -52,6 +54,8 @@ class BlogController extends Controller
             'detail' => 'required',
         ]);
 
+        $test  = new Blog;
+        $input = $this->getTranslatableRequest($test->getTranslatableAttributes(), $request->all(), ['en', 'ar']);
 
         $input = $request->all();
 
@@ -111,11 +115,8 @@ class BlogController extends Controller
 
     public function update(Request $request, $id)
     {
-
-        $blog = Blog::findOrFail($id);
-
-        $input = $request->all();
-
+        $blog = Blog::findorfail($id);
+        $input = $this->getTranslatableRequest($blog->getTranslatableAttributes(), $request->all(), [$request->lang]);
 
         if (Auth::user()->role == 'admin') {
             if ($request->image != null) {
@@ -199,7 +200,7 @@ class BlogController extends Controller
     public function blogdetailpage($id, $request)
     {
         $blogs = Blog::where('status', 1)->where('approved', 1)->where('id', '!=', $id)->get();
-        $blog = Blog::findorfail($id);
+        $blog  = Blog::findorfail($id);
         return view('front.blog.blog_detail', compact('blog', 'blogs'));
     }
 

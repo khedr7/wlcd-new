@@ -1778,7 +1778,7 @@ class MainController extends Controller
         }
 
         $blog = Blog::where('status', 1)
-            ->orderBy('id', 'DESC')
+            ->orderBy('id', 'DESC')->tack(5)
             ->get();
 
         return response()->json(['blog' => $blog], 200);

@@ -130,7 +130,7 @@
                                                 </div>
                                                 <div class="modal-body">
                                                         <h4>{{ __('Are You Sure ?')}}</h4>
-                                                        <p>{{ __('Do you really want to delete')}} <b>{{$p->title}}</b> ? {{ __('This process cannot be undone.')}}</p>
+                                                        <p>{{ __('Do you really want to delete')}} <b>{{  $p->getTranslation('title', Session::get('changed_language'), false) }}</b> ? {{ __('This process cannot be undone.')}}</p>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <form method="post" action="{{url('faq/'.$p->id)}}" class="pull-right">

@@ -8,9 +8,11 @@ use Illuminate\Http\Request;
 use DB;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
+use App\Http\Traits\TranslationTrait;
 
 class FaqController extends Controller
 {
+    use TranslationTrait;
     public function __construct()
     {
       
@@ -57,7 +59,8 @@ class FaqController extends Controller
             
         ]);
         
-        $input = $request->all();
+        $faq  = new FaqStudent;
+        $input = $this->getTranslatableRequest($faq->getTranslatableAttributes(), $request->all(), ['en', 'ar']);
         $data = FaqStudent::create($input);
 
         if(isset($request->status))
@@ -106,8 +109,8 @@ class FaqController extends Controller
      */
     public function update(Request $request,$id)
     {
-        $data = FaqStudent::findorfail($id);
-        $input = $request->all();
+        $Faq = FaqStudent::findorfail($id);
+        $input = $this->getTranslatableRequest($Faq->getTranslatableAttributes(), $request->all(), [$request->lang]);
 
         if(isset($request->status))
         {
@@ -118,7 +121,7 @@ class FaqController extends Controller
             $input['status'] = '0';
         }
         
-        $data->update($input);
+        $Faq->update($input);
         Session::flash('success', trans('flash.UpdatedSuccessfully'));
         return redirect('faq'); 
     }

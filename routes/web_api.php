@@ -34,58 +34,9 @@ Route::middleware(['ip_block'])->group(function () {
         Route::get('my-courses',    [CourseController::class, 'myCourses']);
         Route::get('my-allcourses', [CourseController::class, 'myAllCourses']);
 
-        Route::get('course/progress',         [CourseController::class, 'courseProgress']);
-        Route::post('course/progress/update', [CourseController::class, 'courseprogressupdate']);
-        Route::get('course/googleMeetings',   [CourseController::class, 'courseGoogleMeetings']);
-        Route::get('course/announcement',   [CourseController::class, 'courseAnnouncements']);
-        Route::get('course/previousPapers', [CourseController::class, 'coursePrevPapers']);
-        Route::post('course/assignment',    [CourseController::class, 'submetAssignment']);
-        Route::get('course/myAssignments',  [CourseController::class, 'myAssignments']);
-        Route::post('review/submit',    [CourseController::class, 'submetReview']);
-        Route::post('quiz/submit',      [CourseController::class, 'quizsubmit']);
-        Route::get('quiz/reports/{id}', [CourseController::class, 'quizReports']);
-        Route::get('quiz/get',          [CourseController::class, 'getQuiz']);
-        Route::get('course/quizzes',    [CourseController::class, 'courseQuizzes']);
-        Route::post('question/submit',  [CourseController::class, 'submetQuestion']);
-        Route::get('course/questions',  [CourseController::class, 'courseQuestions']);
-        Route::get('course/user-questions', [CourseController::class, 'userQuestions']);
-
-
-
-        //wishlist
-        Route::post('addtowishlist',   [MainController::class, 'addToWishlist']);
-        Route::post('remove/wishlist', [MainController::class, 'removeWishlist']);
-        Route::get('wishlist/course',  [CourseController::class, 'showWishlist']);
-
-        //newNotifications
-        Route::get('user-notifications',         [MainController::class, 'userNotifications']);
-        Route::get('unread-notifications-count', [MainController::class, 'unreadNotificationsCount']);
-        Route::post('edit-notifications-status', [MainController::class, 'editNotificationsStatus']);
-        Route::post('delete-notification',     [MainController::class, 'deleteNotification']);
-        Route::post('delete-all-notification', [MainController::class, 'bulkDeleteNotification']);
-
-        //userprofile
-        Route::post('show/profile',   [MainController::class, 'userprofile']);
-        Route::post('update/profile', [MainController::class, 'updateprofile']);
-
-        //Enrollment
-        Route::post('free/enroll',     [PaymentController::class, 'enroll']);
-        Route::post('pay/store',       [PaymentController::class, 'payStore']);
-        Route::get('manual/payment',   [PaymentController::class, 'getManual']);
-        Route::get('purchase/history', [PaymentController::class, 'purchaseHistory']);
-
-        
-        //cart
-        Route::post('addtocart',   [PaymentController::class, 'addToCart']);
-        Route::post('remove/cart', [PaymentController::class, 'removeCart']);
-        Route::post('show/cart',   [PaymentController::class, 'showCart']);
-        Route::post('remove-all/cart',  [PaymentController::class, 'removeAllCart']);
-        Route::post('addtocart/bundle', [PaymentController::class, 'addBundleToCart']);
-        Route::post('remove/bundle',    [PaymentController::class, 'removeBundleCart']);
-        
-        Route::post('apply/coupon',  [CouponController::class, 'applycoupon']);
-        Route::post('remove/coupon', [CouponController::class, 'remove']);
-        
+        Route::get('course/progress', [CourseController::class, 'courseProgress']);
+        Route::post('course/progress/update',[CourseController::class, 'courseprogressupdate']);
+        Route::get('course/googleMeetings', [CourseController::class, 'courseGoogleMeetings']);
     });
 
     //general api
@@ -96,11 +47,6 @@ Route::middleware(['ip_block'])->group(function () {
     Route::post('contactus',   [MainController::class, 'contactus']);
     Route::get('contactus/reasons', [MainController::class, 'contactReasons']);
     Route::get('contact/details',   [MainController::class, 'contactDetails']);
-    Route::get('course/reviews',    [CourseController::class, 'courseReviews']);
-    
-    
-    Route::get('certificate/download/{progress_id}',    [OtherApiController::class, 'apipdfdownload']);
-    Route::get('/certificate/{progress_id}',    [OtherApiController::class, 'getCertificate']);
 
 
     //category
