@@ -24,7 +24,7 @@
 			<div class="row">
 
 				<!-- Start col -->
-				<div class="col-lg-12">
+				{{-- <div class="col-lg-12">
 
 					<div class="alert alert-success alert-dismissible fade show">
 
@@ -47,7 +47,7 @@
 						</button>
 
 					</div>
-				</div>
+				</div> --}}
 
 				<div class="col-lg-12">
 
