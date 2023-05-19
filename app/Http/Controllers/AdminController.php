@@ -285,7 +285,7 @@ class AdminController extends Controller
             foreach ($progresses as $progress) {
                 $chapters = $progress->mark_chapter_id;
                 foreach ($chapters as $chapter) {
-                    $classes = CourseClass::where('coursechapter_id', $chapter)->where('type', 'video')->get('duration');
+                    $classes = CourseClass::where('coursechapter_id', $chapter)->get('duration');
                     foreach ($classes as $class) {
                         $TotalMinutesViewed = $TotalMinutesViewed + (float)$class->duration;
                     }

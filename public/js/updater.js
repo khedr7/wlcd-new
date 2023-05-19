@@ -1,43 +1,43 @@
-"use Strict";
+// "use Strict";
 
-/** This will check for updates on every load at admin dashboard ! */
+// /** This will check for updates on every load at admin dashboard ! */
 
-$(function(){
+// $(function(){
 
-    $.ajax({
+//     $.ajax({
 
-        method : 'GET',
-        url : baseurl+'/api/check-for-update',
-        dataType: 'json',
-        beforeSend : function(){
-            $('#update_text').html("<i class='fa fa-cloud-upload'></i> Checking for update....");
-        },
-        success : function(response){
+//         method : 'GET',
+//         url : baseurl+'/api/check-for-update',
+//         dataType: 'json',
+//         beforeSend : function(){
+//             $('#update_text').html("<i class='fa fa-cloud-upload'></i> Checking for update....");
+//         },
+//         success : function(response){
 
-            console.log(response);
+//             console.log(response);
 
 
-            if(response.status != 'uptodate'){
+//             if(response.status != 'uptodate'){
 
-                $('input[name="filename"]').val(response.filename);
-                $('input[name="version"]').val(response.version);
+//                 $('input[name="filename"]').val(response.filename);
+//                 $('input[name="version"]').val(response.version);
 
-                $('#update_text').html('<i class="fa fa-cloud-upload"></i>  <b>'+response.msg+'</b> <span class="label label-primary">v'+response.version+'</span>');
+//                 $('#update_text').html('<i class="fa fa-cloud-upload"></i>  <b>'+response.msg+'</b> <span class="label label-primary">v'+response.version+'</span>');
 
-                $('.updaterform').removeClass('d-none');
+//                 $('.updaterform').removeClass('d-none');
                 
 
-            }else{
+//             }else{
             
-                $('#update_text').html('<i class="fa fa-check-circle"></i>   <b>'+response.msg+'</b>');
+//                 $('#update_text').html('<i class="fa fa-check-circle"></i>   <b>'+response.msg+'</b>');
 
-            }
+//             }
             
-        },
-        error : function(jqXHR, xml, err){
+//         },
+//         error : function(jqXHR, xml, err){
 
-        }
+//         }
 
-    });
+//     });
 
-});
+// });

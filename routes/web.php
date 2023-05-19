@@ -88,10 +88,10 @@
         Route::get('bigblue/api/callback', 'BigBlueController@logout');
 
         //Updater Routes
-        Route::get('/ota/update', 'OtaUpdateController@getotaview')->name('ota.update');
-        Route::post('/ota/proccess', 'OtaUpdateController@update')->name('update.proccess');
-        Route::get('update/process', 'OtaUpdateController@updateprocess')->name('update.process');
-        Route::post('/change-domain', 'AdminController@changedomain');
+        // Route::get('/ota/update', 'OtaUpdateController@getotaview')->name('ota.update');
+        // Route::post('/ota/proccess', 'OtaUpdateController@update')->name('update.proccess');
+        // Route::get('update/process', 'OtaUpdateController@updateprocess')->name('update.process');
+        // Route::post('/change-domain', 'AdminController@changedomain');
 
 
         Route::view('/ipblock', 'ipblock')->name('ip.block');

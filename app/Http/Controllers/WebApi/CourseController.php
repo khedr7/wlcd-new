@@ -79,6 +79,7 @@ class CourseController extends Controller
                     $query->where('status', 1);
                 },
             ])
+            ->withSum('courseclass', 'duration')
             ->orderByDesc('id')
             ->take(8)
             ->get();
@@ -142,22 +143,6 @@ class CourseController extends Controller
 
     public function allRecentCourses(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'secret' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['Secret Key is required']);
-        }
-
-        $key = DB::table('api_keys')
-            ->where('secret_key', '=', $request->secret)
-            ->first();
-
-        if (!$key) {
-            return response()->json(['Invalid Secret Key !']);
-        }
-
         App::setlocale($request->lang);
 
         $course = Course::select([
@@ -181,6 +166,7 @@ class CourseController extends Controller
                     $query->where('status', 1);
                 },
             ])
+            ->withSum('courseclass', 'duration')
             ->orderByDesc('id')
             ->paginate(8);
 
@@ -283,6 +269,7 @@ class CourseController extends Controller
                     $query->where('status', 1);
                 },
             ])
+            ->withSum('courseclass', 'duration')
             ->orderByDesc('id')
             ->take(8)
             ->get();
@@ -346,22 +333,6 @@ class CourseController extends Controller
 
     public function allFeaturedCourses(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'secret' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['Secret Key is required']);
-        }
-
-        $key = DB::table('api_keys')
-            ->where('secret_key', '=', $request->secret)
-            ->first();
-
-        if (!$key) {
-            return response()->json(['Invalid Secret Key !']);
-        }
-
 
         App::setlocale($request->lang);
 
@@ -388,6 +359,7 @@ class CourseController extends Controller
                     $query->where('status', 1);
                 },
             ])
+            ->withSum('courseclass', 'duration')
             ->orderByDesc('id')
             ->paginate();
 
@@ -490,6 +462,7 @@ class CourseController extends Controller
                     $query->where('status', 1);
                 },
             ])
+            ->withSum('courseclass', 'duration')
             ->orderBy('order_count', 'desc')
             ->take(8)
             ->get();
@@ -553,22 +526,6 @@ class CourseController extends Controller
 
     public function allBestSellingCourses(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'secret' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['Secret Key is required']);
-        }
-
-        $key = DB::table('api_keys')
-            ->where('secret_key', '=', $request->secret)
-            ->first();
-
-        if (!$key) {
-            return response()->json(['Invalid Secret Key !']);
-        }
-
 
         App::setlocale($request->lang);
 
@@ -594,6 +551,7 @@ class CourseController extends Controller
                     $query->where('status', 1);
                 },
             ])
+            ->withSum('courseclass', 'duration')
             ->orderBy('order_count', 'desc')
             ->paginate(8);
 
@@ -712,6 +670,7 @@ class CourseController extends Controller
                     $query->where('status', 1);
                 },
             ])
+            ->withSum('courseclass', 'duration')
             ->orderByDesc('id')
             ->take(8)
             ->get();
@@ -776,22 +735,7 @@ class CourseController extends Controller
 
     public function myAllCourses(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'secret' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['Secret Key is required']);
-        }
-
-        $key = DB::table('api_keys')
-            ->where('secret_key', '=', $request->secret)
-            ->first();
-
-        if (!$key) {
-            return response()->json(['Invalid Secret Key !']);
-        }
-
+        
         App::setlocale($request->lang);
 
         $my_orders = Order::where('status', '=', 1)->where('user_id', '=', Auth::guard('api')->id())->get(['id', 'course_id']);
@@ -831,6 +775,7 @@ class CourseController extends Controller
                     $query->where('status', 1);
                 },
             ])
+            ->withSum('courseclass', 'duration')
             ->orderByDesc('id')
             ->paginate(8);
 
@@ -933,7 +878,7 @@ class CourseController extends Controller
                 'order' => function ($query) {
                     $query->where('status', 1);
                 },
-            ])
+            ])->withSum('courseclass', 'duration')
             ->orderByDesc('id')
             ->take(8)
             ->get();
@@ -998,23 +943,6 @@ class CourseController extends Controller
 
     public function allFreeCourses(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'secret' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['Secret Key is required']);
-        }
-
-        $key = DB::table('api_keys')
-            ->where('secret_key', '=', $request->secret)
-            ->first();
-
-        if (!$key) {
-            return response()->json(['Invalid Secret Key !']);
-        }
-
-
         App::setlocale($request->lang);
 
 
@@ -1040,6 +968,7 @@ class CourseController extends Controller
                     $query->where('status', 1);
                 },
             ])
+            ->withSum('courseclass', 'duration')
             ->orderByDesc('id')
             ->paginate(8);
 
@@ -1144,6 +1073,7 @@ class CourseController extends Controller
                     $query->where('status', 1);
                 },
             ])
+            ->withSum('courseclass', 'duration')
             ->get();
 
         foreach ($course as $result) {
@@ -1211,23 +1141,6 @@ class CourseController extends Controller
 
     public function allTopDiscountedCourses(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'secret' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['Secret Key is required']);
-        }
-
-        $key = DB::table('api_keys')
-            ->where('secret_key', '=', $request->secret)
-            ->first();
-
-        if (!$key) {
-            return response()->json(['Invalid Secret Key !']);
-        }
-
-
         App::setlocale($request->lang);
 
         $course = Course::select([
@@ -1253,6 +1166,7 @@ class CourseController extends Controller
                     $query->where('status', 1);
                 },
             ])
+            ->withSum('courseclass', 'duration')
             ->paginate(8);
 
         foreach ($course as $result) {
@@ -1391,22 +1305,6 @@ class CourseController extends Controller
 
     public function allBundleCourses(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'secret' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['Secret Key is required']);
-        }
-
-        $key = DB::table('api_keys')
-            ->where('secret_key', '=', $request->secret)
-            ->first();
-
-        if (!$key) {
-            return response()->json(['Invalid Secret Key !']);
-        }
-
         App::setlocale($request->lang);
 
         $bundles = BundleCourse::where('status', 1)->paginate(8);
@@ -1515,7 +1413,6 @@ class CourseController extends Controller
                 'language' => function ($query) {
                     $query->where('status', 1)->select('id', 'name');
                 },
-
                 'policy',
             ])
             ->withCount([
@@ -1526,6 +1423,7 @@ class CourseController extends Controller
                     $query->where('status', 1);
                 },
             ])
+            ->withSum('courseclass', 'duration')
             ->first();
 
         if (!$result) {
@@ -1686,6 +1584,7 @@ class CourseController extends Controller
                     $query->where('status', 1);
                 },
             ])
+            ->withSum('courseclass', 'duration')
             ->get();
 
         return response()->json(['chapters' => $chapters], 200);
@@ -2370,17 +2269,17 @@ class CourseController extends Controller
         // App::setlocale($request->lang);
 
         $questions = Question::where('course_id', $request->course_id)->where('status', 1)
-        ->with([
-            'answers' => function ($query) {
-                $query->where('status', 1);
-            },
-        ])
-        ->withCount([
-            'answers' => function ($query) {
-                $query->where('status', 1);
-            },
-        ])
-        ->get();
+            ->with([
+                'answers' => function ($query) {
+                    $query->where('status', 1);
+                },
+            ])
+            ->withCount([
+                'answers' => function ($query) {
+                    $query->where('status', 1);
+                },
+            ])
+            ->get();
         return response()->json(['questions' => $questions], 200);
     }
 
@@ -2412,18 +2311,18 @@ class CourseController extends Controller
         // App::setlocale($request->lang);
 
         $questions = Question::where('course_id', $request->course_id)->where('status', 1)
-        ->where('user_id', Auth::id())
-        ->with([
-            'answers' => function ($query) {
-                $query->where('status', 1);
-            },
-        ])
-        ->withCount([
-            'answers' => function ($query) {
-                $query->where('status', 1);
-            },
-        ])
-        ->get();
+            ->where('user_id', Auth::id())
+            ->with([
+                'answers' => function ($query) {
+                    $query->where('status', 1);
+                },
+            ])
+            ->withCount([
+                'answers' => function ($query) {
+                    $query->where('status', 1);
+                },
+            ])
+            ->get();
         return response()->json(['questions' => $questions], 200);
     }
 
@@ -2489,22 +2388,6 @@ class CourseController extends Controller
 
     public function showWishlist(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'secret' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['Secret Key is required']);
-        }
-
-        $key = DB::table('api_keys')
-            ->where('secret_key', '=', $request->secret)
-            ->first();
-
-        if (!$key) {
-            return response()->json(['Invalid Secret Key !']);
-        }
-
         App::setlocale($request->lang);
 
         $user = Auth::guard('api')->user();
@@ -2538,6 +2421,7 @@ class CourseController extends Controller
                     $query->where('status', 1);
                 },
             ])
+            ->withSum('courseclass', 'duration')
             ->paginate(8);
 
 

@@ -80,7 +80,7 @@ $rtl = array('ar','he','ur', 'arc', 'az', 'dv', 'ku', 'fa'); //make a list of rt
 <script src="{{ url('admin_assets/assets/js/custom/custom-form-colorpicker.js') }}"></script>
 <script src="{{ url('admin_assets/assets/js/custom/custom-dashboard.js') }}"></script>
 <script>var baseurl = @json(url('/'));</script>
-<script src="{{ url('js/updater.js') }}"></script>
+{{-- <script src="{{ url('js/updater.js') }}"></script> --}}
 
 <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
