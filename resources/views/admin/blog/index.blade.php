@@ -117,7 +117,9 @@
                                   {{$item->getTranslation('heading', Session::get('changed_language'), false)}}
                                 </td>    
                                 <td style="width:100%">
-                                 {{ preg_replace("/\r\n|\r|\n/",'',strip_tags(html_entity_decode(str_limit($item->detail, 60)))) }}
+                                    {{ preg_replace('/\s+|&nbsp;/u', ' ', mb_substr(strip_tags(html_entity_decode($item->detail)), 0, 60, 'UTF-8')) }}
+                                    @if (mb_strlen($item->detail, 'UTF-8') > 60) ...
+                                    @endif
                                 </td>
                                 {{-- <td>
                                   {{$item->text}}
