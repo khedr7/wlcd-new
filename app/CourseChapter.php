@@ -43,6 +43,6 @@ class CourseChapter extends Model
 
     public function user()
     {
-      return $this->belongsTo('App\user','user_id','id')->withDefault();
+      return $this->belongsTo('App\User','user_id','id')->withDefault();
     }
 }
