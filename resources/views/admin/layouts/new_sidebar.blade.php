@@ -682,7 +682,7 @@
                                 </a>
                             </li>
                             @endcan --}}
-                             <!-- @can(['themes.manage']) -->
+                             {{-- <!-- @can(['themes.manage']) -->
                              
                             <li class="{{ Nav::isRoute('themesettings.index') }}">
                                 <a href="{{route('themesettings.index')}}" class="menu">
@@ -690,7 +690,7 @@
                                     <span>{{ __('adminstaticword.Themes') }}</span>
                                 </a>
                             </li>
-                            <!-- @endcan  -->
+                            <!-- @endcan  --> --}}
                             {{-- @can(['homepage-setting.manage'])
                             <li class="{{ Nav::isRoute('homepage.setting') }}">
                                 <a href="{{route('homepage.setting')}}" class="menu"><i
@@ -739,36 +739,36 @@
                                             href="{{route('category.slider')}}"><span>{{ __('adminstaticword.CategorySlider') }}</span></a>
                                     </li>
                                     @endcan
-                                    @can(['get-started.manage'])
+                                    {{-- @can(['get-started.manage'])
 
                                     <li class="{{ Nav::isResource('getstarted') }}"><a
                                             href="{{url('getstarted')}}">{{ __('adminstaticword.GetStarted') }}</a>
                                     </li>
-                                    @endcan
-                                    @can(['front-settings.trusted-sliders.view'])
+                                    @endcan --}}
+                                    {{-- @can(['front-settings.trusted-sliders.view'])
                                     <li class="{{ Nav::isResource('trusted') }}"><a
                                             href="{{url('trusted')}}"><span>{{ __('adminstaticword.TrustedSlider') }}</span></a>
                                     </li>
-                                    @endcan
+                                    @endcan --}}
                                     {{-- @can(['widget.manage'])
                                     
                                     <li class="{{ Nav::isRoute('widget.setting') }}"><a
                                             href="{{route('widget.setting')}}">{{ __('Widget') }}</a>
                                     </li>
                                     @endcan --}}
-                                    @can(['front-settings.seo-directory.view'])
+                                    {{-- @can(['front-settings.seo-directory.view'])
                                     <li class="{{ Nav::isResource('directory') }}"><a
                                             href="{{url('directory')}}"><span>{{ __('adminstaticword.Seo') }}
                                                 {{ __('adminstaticword.Directory') }}</span></a>
                                     </li>
-                                    @endcan
-                                    @can(['coming-soon.manage'])
+                                    @endcan --}}
+                                    {{-- @can(['coming-soon.manage'])
 
                                     <li class="{{ Nav::isRoute('comingsoon.page') }}">
                                         <a
                                             href="{{route('comingsoon.page')}}">{{ __('adminstaticword.ComingSoon') }}</a>
                                     </li>
-                                    @endcan
+                                    @endcan --}}
                                     @can(['terms-condition.manage'])
                                     <li class="{{ Nav::isRoute('termscondition') }}">
                                         <a href="{{route('termscondition')}}">{{ __('adminstaticword.Terms&Condition') }}
@@ -780,18 +780,18 @@
                                         <a href="{{route('policy')}}">{{ __('adminstaticword.PrivacyPolicy') }}</a>
                                     </li>
                                     @endcan
-                                    @can(['invoice-design.manage'])
+                                    {{-- @can(['invoice-design.manage'])
                                    
 
                                     <li class="{{ Nav::isRoute('invoice/settings') }}">
                                         <a href="{{ url('invoice/settings') }}">{{ __('Invoice Design') }}{{ __('') }}</a>
                                     </li>
-                                    @endcan
-                                    @can(['login-signup.manage'])
+                                    @endcan --}}
+                                    {{-- @can(['login-signup.manage'])
                                     <li class="{{ Nav::isRoute('login') }}">
                                         <a href="{{ url('settings/login') }}">{{ __('Login/Signup') }}{{ __('') }}</a>
                                     </li>
-                                    @endcan
+                                    @endcan --}}
                                     @can(['video-setting.manage'])
                                     <li class="{{ Nav::isRoute('videosetting') }}">
                                         <a href="{{ route('videosetting') }}">{{ __('Videosetting') }}{{ __('') }}</a>
@@ -807,11 +807,11 @@
                                         <a href="{{ url('fact') }}">{{ __('Factsetting, ') }}{{ __('') }}</a>
                                     </li>
                                     @endcan
-                                    @can(['join-an-instructor.manage'])
+                                    {{-- @can(['join-an-instructor.manage'])
                                     <li class="{{ Nav::isRoute('joininstructor') }}">
                                         <a href="{{ url('join/setting') }}">{{ __('Join an Instructor') }}{{ __('') }}</a>
                                     </li>
-                                    @endcan
+                                    @endcan --}}
 
                                 </ul>
                             </li>

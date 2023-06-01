@@ -60,7 +60,7 @@
 			<div class="row">
 				<div class="col-lg-6 col-xl-6 order-lg-2" style="padding: 0;">
 					<div class="row">
-						<img src="{{ asset('images/slider/wlcd_family.png') }}" class="img-fluid" alt="">
+						<img src="{{ asset('images/slider/wlcd_family.webp') }}" class="img-fluid" alt="">
 					</div>
 					<div class="row watch-center">
 						<div class="col-lg-12 text-center mt-4">
@@ -69,23 +69,26 @@
 										xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
 										<path id="Icon_material-play-circle-outline" data-name="Icon material-play-circle-outline"
 											d="M12.6,20.4,19.8,15,12.6,9.6ZM15,3A12,12,0,1,0,27,15,12,12,0,0,0,15,3Zm0,21.6A9.6,9.6,0,1,1,24.6,15,9.613,9.613,0,0,1,15,24.6Z"
-											transform="translate(-3 -3)" fill="#283772"></path>
+											transform="translate(-3 -3)" fill="#007b4e "></path>
 									</svg>Watch Video</a>
+
+								{{-- <a class="venobox play_btn" data-autoplay="true" data-vbtype="video" href="https://youtu.be/xsnCYCEbdr4"> --}}
 							</div>
 						</div>
 					</div>
 				</div>
 				<div class="col-lg-6 col-xl-6 order-lg-1 my-auto">
 					<div class="row">
-						<div class="col-md-10 mx-auto text-light">
-							<h3 class="mb-4 display-4 font-weight-bold" style="color:#fff;">For a strong building ... of
+						<div class="col-md-10 mx-auto text-light hero-text">
+							<h3 class="mb-4 display-4 font-weight-bold" style="color:#ffffff;">For a strong building ...
+								of
 								a solid foundation</h3>
 							<p class="mb-4" style="color:#fff;">Online tutorial website contains various topics and
 								courses of the best teachers, trainers and advisers!</p>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-10 mx-auto" style="justify-content: flex-start;
+						<div class="col-md-10 mx-auto" style="justify-content: flex-start; padding:0;
                 display: flex;">
 							@if (Auth::check())
 								<div class="home-btn mb-3">
@@ -109,44 +112,44 @@
 @endif
 <!-- home end -->
 <!-- learning-work start -->
-@if (isset($facts))
-	<div class="container hero-section">
-		<div class="row" style="display: flex; justify-content:space-between">
+{{-- @if (isset($facts))
+    <div class="container hero-section">
+        <div class="row" style="display: flex; justify-content:space-between">
 
-			<div class="col-lg-2 col-md-2 d-flex flex-column">
-				<div class="learning-work-block">
-					<div class="row">
-						<div class="col-lg-12 col-md-12 d-flex flex-column">
-							<div class="learning-work" style="color:#283772">
-								<div class="work-heading text-center">Here begins your journey from knowledge to action
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			@foreach ($facts as $fact)
-				<div class="col-lg-2 col-md-2 d-flex flex-column">
-					<div class="learning-work-block">
-						<div class="row">
-							<div class="col-lg-2 col-md-2 d-flex flex-column">
-								<div class="learning-work" style="color:#283772">
-									<i style="font-size: 20px" class="fa {{ $fact['icon'] }}"></i>
-								</div>
-							</div>
-							<div class="col-lg-10 col-md-10 d-flex flex-column">
-								<div class="learning-work" style="color:#283772">
-									<div class="work-heading">{{ $fact['heading'] }}</div>
-									<p>{{ $fact['sub_heading'] }}</p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			@endforeach
-		</div>
-	</div>
-@endif
+            <div class="col-lg-2 col-md-2 d-flex flex-column">
+                <div class="learning-work-block">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 d-flex flex-column">
+                            <div class="learning-work" style="color:#283772">
+                                <div class="work-heading text-center">Here begins your journey from knowledge to action
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @foreach ($facts as $fact)
+                <div class="col-lg-2 col-md-2 d-flex flex-column">
+                    <div class="learning-work-block">
+                        <div class="row">
+                            <div class="col-lg-2 col-md-2 d-flex flex-column">
+                                <div class="learning-work" style="color:#283772">
+                                    <i style="font-size: 20px" class="fa {{ $fact['icon'] }}"></i>
+                                </div>
+                            </div>
+                            <div class="col-lg-10 col-md-10 d-flex flex-column">
+                                <div class="learning-work" style="color:#283772">
+                                    <div class="work-heading">{{ $fact['heading'] }}</div>
+                                    <p>{{ $fact['sub_heading'] }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+@endif --}}
 
 <!-- learning-work end -->
 <!-- fact start -->
@@ -200,8 +203,7 @@
 <!-- categories start -->
 
 @if ($hsetting->featuredcategories_enable == 1 && !$category->isEmpty())
-	<section id="categories" class="categories-main-block style-section"
-		style="background-color: #f2f2f2; margin-top: 10%;">
+	<section id="categories" class="categories-main-block style-section">
 		<div class="container">
 			@if (count($category->where('featured', '1')) > 0)
 
@@ -212,7 +214,7 @@
 						@if ($t->status == 1 && $t->featured == 1)
 							<div class="col-lg-2 col-md-4 col-sm-4 col-6" style="display: grid; justify-content: center;">
 
-								<div class="image-container btm-20">
+								<div class="image-container btm-30">
 									<a
 										href="{{ route('category.page', ['id' => $t->id, 'category' => str_slug(str_replace('-', '&', $t->slug))]) }}">
 
@@ -230,7 +232,7 @@
                                             </div>
                                         </span>
                                     </div> --}}
-									<h5 class="text-dark text-center" style="margin: 0;">{{ $t['title'] }}</h5>
+									<h5 class="text-center" style="margin: 0;">{{ $t['title'] }}</h5>
 								</div>
 							</div>
 						@endif
@@ -243,471 +245,512 @@
 @endif
 <!-- categories end -->
 
+<section class="student-main-block top-40 style-section">
+	<div class="container">
+		<div class="row ads-section">
+			<div class="col-lg-12">
+				<div id="ads-view-slider" class="student-view-slider-main-block owl-carousel">
+					{{-- <h4 class="student-heading my-5 font-weight-bold" style="font-size: 2.5rem;"></h4> --}}
+					<div class="tab-badges text-center">
+						{{-- <img src="{{ url('images/slider/instructor.jpg') }}" class="img-fluid" alt=""> --}}
+						<div class="tab-badges-heading">some ads some ads</div>
+						<p class="ads-text">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Optio odio
+							maiores tempore at similique id illum nesciunt veniam rerum est totam eum earum sequi eos
+							voluptatibus corrupti, ut error molestias?</p>
+					</div>
+					<div class="tab-badges text-center">
+						{{-- <img src="{{ url('images/slider/instructor.jpg') }}" class="img-fluid" alt=""> --}}
+						<div class="tab-badges-heading">some ads some ads</div>
+						<p class="ads-text">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Optio odio
+							maiores tempore at similique id illum nesciunt veniam rerum est totam eum earum sequi eos
+							voluptatibus corrupti, ut error molestias?</p>
+					</div>
+					<div class="tab-badges text-center">
+						{{-- <img src="{{ url('images/slider/instructor.jpg') }}" class="img-fluid" alt=""> --}}
+						<div class="tab-badges-heading">some ads some ads</div>
+						<p class="ads-text">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Optio odio
+							maiores tempore at similique id illum nesciunt veniam rerum est totam eum earum sequi eos
+							voluptatibus corrupti, ut error molestias?</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+
 @if ($hsetting->discount_enable == 1 && isset($discountcourse) && count($discountcourse) > 0)
 	<section id="student" class="student-main-block top-40 style-section">
 		<div class="container">
-			<div class="row">
-				<div class="col-lg-12 text-center">
-					<h4 class="student-heading my-5 font-weight-bold" style="font-size: 2.5rem;">
-						{{ __('Top Discounted Courses') }}</h4>
-				</div>
-			</div>
-			<div id="discounted-view-slider" class="student-view-slider-main-block owl-carousel">
-				@foreach ($discountcourse as $discount)
-					@if ($discount->status == 1 && $discount->featured == 1)
-						<div class="item student-view-block student-view-block-1">
-							<div class="genre-slide-image @if ($gsetting['course_hover'] == 1) protip @endif" data-pt-placement="outside"
-								data-pt-interactive="false" data-pt-title="#prime-next-item-description-block{{ $discount->id }}">
-								<div class="view-block">
-									<div class="view-img">
-										@if ($discount['preview_image'] !== null && $discount['preview_image'] !== '')
-											<a href="{{ route('user.course.show', ['id' => $discount->id, 'slug' => $discount->slug]) }}"><img
-													data-src="{{ asset('images/course/' . $discount['preview_image']) }}" alt="course"
-													class="img-fluid owl-lazy"></a>
-										@else
-											<a href="{{ route('user.course.show', ['id' => $discount->id, 'slug' => $discount->slug]) }}"><img
-													data-src="{{ Avatar::create($discount->title)->toBase64() }}" alt="course"
-													class="img-fluid owl-lazy"></a>
-										@endif
-									</div>
-									<div class="advance-badge">
-										@if ($discount['level_tags'] == !null)
-											<span class="badge bg-primary">{{ $discount['level_tags'] }}</span>
-										@endif
-									</div>
-									<div class="view-user-img">
+			<div class="row banner-ads">
+				<div class="col-lg-12">
+					<div class="row">
+						<div class="col-lg-12 text-center">
+							<h4 class="student-heading my-5 font-weight-bold" style="font-size: 2.5rem;">
+								{{ __('Top Discounted Courses') }}</h4>
+						</div>
+					</div>
+					<div id="discounted-view-slider" class="student-view-slider-main-block owl-carousel">
+						@foreach ($discountcourse as $discount)
+							@if ($discount->status == 1 && $discount->featured == 1)
+								<div class="item student-view-block student-view-block-1">
+									<div class="genre-slide-image @if ($gsetting['course_hover'] == 1) protip @endif" data-pt-placement="outside"
+										data-pt-interactive="false" data-pt-title="#prime-next-item-description-block{{ $discount->id }}">
+										<div class="view-block">
+											<div class="view-img">
+												@if ($discount['preview_image'] !== null && $discount['preview_image'] !== '')
+													<a href="{{ route('user.course.show', ['id' => $discount->id, 'slug' => $discount->slug]) }}"><img
+															data-src="{{ asset('images/course/' . $discount['preview_image']) }}" alt="course"
+															class="img-fluid owl-lazy"></a>
+												@else
+													<a href="{{ route('user.course.show', ['id' => $discount->id, 'slug' => $discount->slug]) }}"><img
+															data-src="{{ Avatar::create($discount->title)->toBase64() }}" alt="course"
+															class="img-fluid owl-lazy"></a>
+												@endif
+											</div>
+											<div class="advance-badge">
+												@if ($discount['level_tags'] == !null)
+													<span class="badge bg-primary">{{ $discount['level_tags'] }}</span>
+												@endif
+											</div>
+											<div class="view-user-img">
 
-										@if (optional($discount->user)['user_img'] !== null && optional($discount->user)['user_img'] !== '')
-											<a href="" title=""><img src="{{ asset('images/user_img/' . $discount->user['user_img']) }}"
-													class="img-fluid user-img-one" alt=""></a>
-										@else
-											<a href="" title=""><img src="{{ asset('images/default/user.png') }}"
-													class="img-fluid user-img-one" alt=""></a>
-										@endif
-									</div>
-									<div class="view-dtl">
-										<div class="view-heading"><a
-												href="{{ route('user.course.show', ['id' => $discount->id, 'slug' => $discount->slug]) }}">{{ str_limit($discount->title, $limit = 30, $end = '...') }}</a>
-										</div>
-										<div class="user-name">
-											<h6>By <span>{{ optional($discount->user)['fname'] }}</span></h6>
-										</div>
-										<div class="rating">
-											<ul>
-												<li>
-													<?php
-													$learn = 0;
-													$price = 0;
-													$value = 0;
-													$sub_total = 0;
-													$sub_total = 0;
-													$reviews = App\ReviewRating::where('course_id', $discount->id)->get();
-													?>
-													@if (!empty($reviews[0]))
+												@if (optional($discount->user)['user_img'] !== null && optional($discount->user)['user_img'] !== '')
+													<a href="" title=""><img
+															src="{{ asset('images/user_img/' . $discount->user['user_img']) }}" class="img-fluid user-img-one"
+															alt=""></a>
+												@else
+													<a href="" title=""><img src="{{ asset('images/default/user.png') }}"
+															class="img-fluid user-img-one" alt=""></a>
+												@endif
+											</div>
+											<div class="view-dtl">
+												<div class="view-heading"><a
+														href="{{ route('user.course.show', ['id' => $discount->id, 'slug' => $discount->slug]) }}">{{ str_limit($discount->title, $limit = 30, $end = '...') }}</a>
+												</div>
+												<div class="user-name">
+													<h6>By <span>{{ optional($discount->user)['fname'] }}</span></h6>
+												</div>
+												<div class="rating">
+													<ul>
+														<li>
+															<?php
+															$learn = 0;
+															$price = 0;
+															$value = 0;
+															$sub_total = 0;
+															$sub_total = 0;
+															$reviews = App\ReviewRating::where('course_id', $discount->id)->get();
+															?>
+															@if (!empty($reviews[0]))
+																<?php
+																$count = App\ReviewRating::where('course_id', $discount->id)->count();
+																
+																foreach ($reviews as $review) {
+																    $learn = $review->price * 5;
+																    $price = $review->price * 5;
+																    $value = $review->value * 5;
+																    $sub_total = $sub_total + $learn + $price + $value;
+																}
+																
+																$count = $count * 3 * 5;
+																$rat = $sub_total / $count;
+																$ratings_var = ($rat * 100) / 5;
+																?>
+
+																<div class="pull-left">
+																	<div class="star-ratings-sprite"><span style="width:<?php echo $ratings_var; ?>%"
+																			class="star-ratings-sprite-rating"></span>
+																	</div>
+																</div>
+															@else
+																<div class="pull-left">{{ __('No Rating') }}</div>
+															@endif
+														</li>
+														<!-- overall rating-->
 														<?php
-														$count = App\ReviewRating::where('course_id', $discount->id)->count();
+														$learn = 0;
+														$price = 0;
+														$value = 0;
+														$sub_total = 0;
+														// $count =  count($reviews);
+														$count = 1;
+														$onlyrev = [];
+														
+														$reviewcount = App\ReviewRating::where('course_id', $discount->id)
+														    ->WhereNotNull('review')
+														    ->get();
 														
 														foreach ($reviews as $review) {
-														    $learn = $review->price * 5;
+														    $learn = $review->learn * 5;
 														    $price = $review->price * 5;
 														    $value = $review->value * 5;
 														    $sub_total = $sub_total + $learn + $price + $value;
 														}
 														
 														$count = $count * 3 * 5;
-														$rat = $sub_total / $count;
-														$ratings_var = ($rat * 100) / 5;
+														$overallrating;
+														
+														if ($count != 0) {
+														    $rat = $sub_total / $count;
+														
+														    $ratings_var = ($rat * 100) / 5;
+														
+														    $overallrating = $ratings_var / 2 / 10;
+														}
+														
 														?>
 
-														<div class="pull-left">
-															<div class="star-ratings-sprite"><span style="width:<?php echo $ratings_var; ?>%"
-																	class="star-ratings-sprite-rating"></span>
-															</div>
-														</div>
-													@else
-														<div class="pull-left">{{ __('No Rating') }}</div>
-													@endif
-												</li>
-												<!-- overall rating-->
-												<?php
-												$learn = 0;
-												$price = 0;
-												$value = 0;
-												$sub_total = 0;
-												// $count =  count($reviews);
-												$count = 1;
-												$onlyrev = [];
-												
-												$reviewcount = App\ReviewRating::where('course_id', $discount->id)
-												    ->WhereNotNull('review')
-												    ->get();
-												
-												foreach ($reviews as $review) {
-												    $learn = $review->learn * 5;
-												    $price = $review->price * 5;
-												    $value = $review->value * 5;
-												    $sub_total = $sub_total + $learn + $price + $value;
-												}
-												
-												$count = $count * 3 * 5;
-												$overallrating;
-												
-												if ($count != 0) {
-												    $rat = $sub_total / $count;
-												
-												    $ratings_var = ($rat * 100) / 5;
-												
-												    $overallrating = $ratings_var / 2 / 10;
-												}
-												
-												?>
-
-												@php
-													$reviewsrating = App\ReviewRating::where('course_id', $discount->id)->first();
-												@endphp
-												@if (!empty($reviewsrating))
-													<!-- <li>
-																																												<b>{{ round($overallrating, 1) }}</b>
-																																								</li> -->
-												@endif
-												<li class="reviews">
-													(@php
-														$data = App\ReviewRating::where('course_id', $discount->id)->count();
-														if ($data > 0) {
-														    echo $data;
-														} else {
-														    echo '0';
-														}
-													@endphp Reviews)
-												</li>
-
-											</ul>
-										</div>
-										<div class="view-footer">
-											<div class="row">
-												<div class="col-lg-6 col-md-6 col-sm-6 col-6">
-													<div class="count-user">
-														<i data-feather="user"></i><span>
-															@php
-																$data = App\Order::where('course_id', $discount->id)->count();
+														@php
+															$reviewsrating = App\ReviewRating::where('course_id', $discount->id)->first();
+														@endphp
+														@if (!empty($reviewsrating))
+															<!-- <li>
+																																																				<b>{{ round($overallrating, 1) }}</b>
+																																																</li> -->
+														@endif
+														<li class="reviews">
+															(@php
+																$data = App\ReviewRating::where('course_id', $discount->id)->count();
 																if ($data > 0) {
 																    echo $data;
 																} else {
 																    echo '0';
 																}
-															@endphp</span>
-													</div>
-												</div>
-												<div class="col-lg-6 col-md-6 col-sm-6 col-6">
-													@if ($discount->type == 1)
-														<div class="rate text-right">
-															<ul>
-
-																@if ($discount->discount_price == !null)
-																	<li>
-																		<a><b>{{ activeCurrency()->getData()->position == 'l' ? activeCurrency()->getData()->symbol : '' }}{{ price_format(currency($discount['discount_price'], $from = $currency->code, $to = Session::has('changed_currency') ? Session::get('changed_currency') : $currency->code, $format = false)) }}
-																				{{ activeCurrency()->getData()->position == 'r' ? activeCurrency()->getData()->symbol : '' }}</b></a>
-																	</li>
-
-																	<li>
-																		<a><b><strike>{{ activeCurrency()->getData()->position == 'l' ? activeCurrency()->getData()->symbol : '' }}{{ price_format(currency($discount['price'], $from = $currency->code, $to = Session::has('changed_currency') ? Session::get('changed_currency') : $currency->code, $format = false)) }}{{ activeCurrency()->getData()->position == 'r' ? activeCurrency()->getData()->symbol : '' }}</strike></b></a>
-																	</li>
-																@else
-																	{{-- @if ($c->price == !null) --}}
-																	<li>
-																		<a><b>{{ activeCurrency()->getData()->position == 'l' ? activeCurrency()->getData()->symbol : '' }}{{ price_format(currency($discount['price'], $from = $currency->code, $to = Session::has('changed_currency') ? Session::get('changed_currency') : $currency->code, $format = false)) }}{{ activeCurrency()->getData()->position == 'r' ? activeCurrency()->getData()->symbol : '' }}</b></a>
-																	</li>
-																	{{-- @endif --}}
-																@endif
-															</ul>
-														</div>
-													@else
-														<div class="rate text-right">
-															<ul>
-																<li><a><b>{{ __('Free') }}</b></a></li>
-															</ul>
-														</div>
-													@endif
-												</div>
-											</div>
-										</div>
-
-
-
-										<div class="img-wishlist">
-											<div class="protip-wishlist">
-												<ul>
-
-													<li class="protip-wish-btn"><a
-															href="https://calendar.google.com/calendar/r/eventedit?text={{ $discount['title'] }}" target="__blank"
-															title="reminder"><i data-feather="bell"></i></a></li>
-
-													@if (Auth::check())
-														<li class="protip-wish-btn"><a class="compare" data-id="{{ filter_var($discount->id) }}"
-																title="compare"><i data-feather="bar-chart"></i></a>
+															@endphp Reviews)
 														</li>
 
-														@php
-															$wish = App\Wishlist::where('user_id', Auth::User()->id)
-															    ->where('course_id', $discount->id)
-															    ->first();
-														@endphp
-														@if ($wish == null)
-															<li class="protip-wish-btn">
-																<form id="demo-form2" method="post" action="{{ url('show/wishlist', $discount->id) }}"
-																	data-parsley-validate class="form-horizontal form-label-left">
-																	{{ csrf_field() }}
-
-																	<input type="hidden" name="user_id" value="{{ Auth::User()->id }}" />
-																	<input type="hidden" name="course_id" value="{{ $discount->id }}" />
-
-																	<button class="wishlisht-btn" title="Add to wishlist" type="submit"><i
-																			data-feather="heart"></i></button>
-																</form>
-															</li>
-														@else
-															<li class="protip-wish-btn-two">
-																<form id="demo-form2" method="post" action="{{ url('remove/wishlist', $discount->id) }}"
-																	data-parsley-validate class="form-horizontal form-label-left">
-																	{{ csrf_field() }}
-
-																	<input type="hidden" name="user_id" value="{{ Auth::User()->id }}" />
-																	<input type="hidden" name="course_id" value="{{ $discount->id }}" />
-
-																	<button class="wishlisht-btn heart-fill" title="Remove from Wishlist" type="submit"><i
-																			data-feather="heart"></i></button>
-																</form>
-															</li>
-														@endif
-													@else
-														<li class="protip-wish-btn"><a href="{{ route('login') }}" title="heart"><i
-																	data-feather="heart"></i></a></li>
-													@endif
-												</ul>
-											</div>
-										</div>
-
-
-									</div>
-								</div>
-							</div>
-							<div id="prime-next-item-description-block{{ $discount->id }}" class="prime-description-block">
-								<div class="prime-description-under-block">
-									<div class="prime-description-under-block">
-										<h5 class="description-heading">{{ $discount['title'] }}</h5>
-										<div class="main-des">
-											<p>Last Updated: {{ date('jS F Y', strtotime($discount->updated_at)) }}</p>
-										</div>
-
-										<ul class="description-list">
-											<li>
-												<i data-feather="play-circle"></i>
-												<div class="class-des">
-													{{ __('Classes') }}:
-													@php
-														$data = App\CourseClass::where('course_id', $discount->id)->count();
-														if ($data > 0) {
-														    echo $data;
-														} else {
-														    echo '0';
-														}
-													@endphp
+													</ul>
 												</div>
-											</li>
-											&nbsp;
-											<li>
-												<div>
-													<div class="time-des">
-														<span class="">
-															<i data-feather="clock"></i>
-															@php
-																
-																$classtwo = App\CourseClass::where('course_id', $discount->id)->sum('duration');
-																
-															@endphp
-															{{ $classtwo }} {{ __('Minutes') }}
-														</span>
-													</div>
-												</div>
-											</li>
-											<li>
-												<div class="lang-des">
-													@if ($discount['language_id'] == !null)
-														@if (isset($c->language))
-															<i data-feather="globe"></i>
-															{{ $discount->language['name'] }}
-														@endif
-													@endif
-												</div>
-											</li>
-
-										</ul>
-
-										<div class="product-main-des">
-											<p>{{ $discount->short_detail }}</p>
-										</div>
-										<div>
-											@if ($discount->whatlearns->isNotEmpty())
-												@foreach ($discount->whatlearns as $wl)
-													@if ($wl->status == 1)
-														<div class="product-learn-dtl">
-															<ul>
-																<li><i data-feather="check-circle"></i>{{ str_limit($wl['detail'], $limit = 120, $end = '...') }}
-																</li>
-															</ul>
+												<div class="view-footer">
+													<div class="row">
+														<div class="col-lg-6 col-md-6 col-sm-6 col-6">
+															<div class="count-user">
+																<i data-feather="user"></i><span>
+																	@php
+																		$data = App\Order::where('course_id', $discount->id)->count();
+																		if ($data > 0) {
+																		    echo $data;
+																		} else {
+																		    echo '0';
+																		}
+																	@endphp</span>
+															</div>
 														</div>
-													@endif
-												@endforeach
-											@endif
-										</div>
-										<div class="des-btn-block">
-											<div class="row">
-												<div class="col-lg-8">
-													@if ($discount->type == 1)
-														@if (Auth::check())
-															@if (Auth::User()->role == 'admin')
-																<div class="protip-btn">
-																	<a href="{{ route('course.content', ['id' => $discount->id, 'slug' => $discount->slug]) }}"
-																		class="btn secondary" title="course">{{ __('Go To Course') }}</a>
+														<div class="col-lg-6 col-md-6 col-sm-6 col-6">
+															@if ($discount->type == 1)
+																<div class="rate text-right">
+																	<ul>
+
+																		@if ($discount->discount_price == !null)
+																			<li>
+																				<a><b>{{ activeCurrency()->getData()->position == 'l' ? activeCurrency()->getData()->symbol : '' }}{{ price_format(currency($discount['discount_price'], $from = $currency->code, $to = Session::has('changed_currency') ? Session::get('changed_currency') : $currency->code, $format = false)) }}
+																						{{ activeCurrency()->getData()->position == 'r' ? activeCurrency()->getData()->symbol : '' }}</b></a>
+																			</li>
+
+																			<li>
+																				<a><b><strike>{{ activeCurrency()->getData()->position == 'l' ? activeCurrency()->getData()->symbol : '' }}{{ price_format(currency($discount['price'], $from = $currency->code, $to = Session::has('changed_currency') ? Session::get('changed_currency') : $currency->code, $format = false)) }}{{ activeCurrency()->getData()->position == 'r' ? activeCurrency()->getData()->symbol : '' }}</strike></b></a>
+																			</li>
+																		@else
+																			{{-- @if ($c->price == !null) --}}
+																			<li>
+																				<a><b>{{ activeCurrency()->getData()->position == 'l' ? activeCurrency()->getData()->symbol : '' }}{{ price_format(currency($discount['price'], $from = $currency->code, $to = Session::has('changed_currency') ? Session::get('changed_currency') : $currency->code, $format = false)) }}{{ activeCurrency()->getData()->position == 'r' ? activeCurrency()->getData()->symbol : '' }}</b></a>
+																			</li>
+																			{{-- @endif --}}
+																		@endif
+																	</ul>
 																</div>
 															@else
+																<div class="rate text-right">
+																	<ul>
+																		<li><a><b>{{ __('Free') }}</b></a></li>
+																	</ul>
+																</div>
+															@endif
+														</div>
+													</div>
+												</div>
+
+
+
+												<div class="img-wishlist">
+													<div class="protip-wishlist">
+														<ul>
+
+															<li class="protip-wish-btn"><a
+																	href="https://calendar.google.com/calendar/r/eventedit?text={{ $discount['title'] }}"
+																	target="__blank" title="reminder"><i data-feather="bell"></i></a></li>
+
+															@if (Auth::check())
+																<li class="protip-wish-btn"><a class="compare" data-id="{{ filter_var($discount->id) }}"
+																		title="compare"><i data-feather="bar-chart"></i></a>
+																</li>
+
 																@php
-																	$order = App\Order::where('user_id', Auth::User()->id)
+																	$wish = App\Wishlist::where('user_id', Auth::User()->id)
 																	    ->where('course_id', $discount->id)
 																	    ->first();
 																@endphp
-																@if (!empty($order) && $order->status == 1)
-																	<div class="protip-btn">
-																		<a href="{{ route('course.content', ['id' => $discount->id, 'slug' => $discount->slug]) }}"
-																			class="btn secondary" title="course">{{ __('Go To Course') }}</a>
-																	</div>
-																@else
-																	@php
-																		$cart = App\Cart::where('user_id', Auth::User()->id)
-																		    ->where('course_id', $discount->id)
-																		    ->first();
-																	@endphp
-																	@if (!empty($cart))
-																		<div class="protip-btn">
-																			<form id="demo-form2" method="post" action="{{ route('remove.item.cart', $cart->id) }}">
-																				{{ csrf_field() }}
+																@if ($wish == null)
+																	<li class="protip-wish-btn">
+																		<form id="demo-form2" method="post" action="{{ url('show/wishlist', $discount->id) }}"
+																			data-parsley-validate class="form-horizontal form-label-left">
+																			{{ csrf_field() }}
 
-																				<div class="box-footer">
-																					<button type="submit" class="btn btn-primary">{{ __('Remove From Cart') }}</button>
-																				</div>
-																			</form>
+																			<input type="hidden" name="user_id" value="{{ Auth::User()->id }}" />
+																			<input type="hidden" name="course_id" value="{{ $discount->id }}" />
+
+																			<button class="wishlisht-btn" title="Add to wishlist" type="submit"><i
+																					data-feather="heart"></i></button>
+																		</form>
+																	</li>
+																@else
+																	<li class="protip-wish-btn-two">
+																		<form id="demo-form2" method="post" action="{{ url('remove/wishlist', $discount->id) }}"
+																			data-parsley-validate class="form-horizontal form-label-left">
+																			{{ csrf_field() }}
+
+																			<input type="hidden" name="user_id" value="{{ Auth::User()->id }}" />
+																			<input type="hidden" name="course_id" value="{{ $discount->id }}" />
+
+																			<button class="wishlisht-btn heart-fill" title="Remove from Wishlist" type="submit"><i
+																					data-feather="heart"></i></button>
+																		</form>
+																	</li>
+																@endif
+															@else
+																<li class="protip-wish-btn"><a href="{{ route('login') }}" title="heart"><i
+																			data-feather="heart"></i></a></li>
+															@endif
+														</ul>
+													</div>
+												</div>
+
+
+											</div>
+										</div>
+									</div>
+									<div id="prime-next-item-description-block{{ $discount->id }}" class="prime-description-block">
+										<div class="prime-description-under-block">
+											<div class="prime-description-under-block">
+												<h5 class="description-heading">{{ $discount['title'] }}</h5>
+												<div class="main-des">
+													<p>Last Updated:
+														{{ date('jS F Y', strtotime($discount->updated_at)) }}</p>
+												</div>
+
+												<ul class="description-list">
+													<li>
+														<i data-feather="play-circle"></i>
+														<div class="class-des">
+															{{ __('Classes') }}:
+															@php
+																$data = App\CourseClass::where('course_id', $discount->id)->count();
+																if ($data > 0) {
+																    echo $data;
+																} else {
+																    echo '0';
+																}
+															@endphp
+														</div>
+													</li>
+													&nbsp;
+													<li>
+														<div>
+															<div class="time-des">
+																<span class="">
+																	<i data-feather="clock"></i>
+																	@php
+																		
+																		$classtwo = App\CourseClass::where('course_id', $discount->id)->sum('duration');
+																		
+																	@endphp
+																	{{ $classtwo }} {{ __('Minutes') }}
+																</span>
+															</div>
+														</div>
+													</li>
+													<li>
+														<div class="lang-des">
+															@if ($discount['language_id'] == !null)
+																@if (isset($c->language))
+																	<i data-feather="globe"></i>
+																	{{ $discount->language['name'] }}
+																@endif
+															@endif
+														</div>
+													</li>
+
+												</ul>
+
+												<div class="product-main-des">
+													<p>{{ $discount->short_detail }}</p>
+												</div>
+												<div>
+													@if ($discount->whatlearns->isNotEmpty())
+														@foreach ($discount->whatlearns as $wl)
+															@if ($wl->status == 1)
+																<div class="product-learn-dtl">
+																	<ul>
+																		<li><i data-feather="check-circle"></i>{{ str_limit($wl['detail'], $limit = 120, $end = '...') }}
+																		</li>
+																	</ul>
+																</div>
+															@endif
+														@endforeach
+													@endif
+												</div>
+												<div class="des-btn-block">
+													<div class="row">
+														<div class="col-lg-8">
+															@if ($discount->type == 1)
+																@if (Auth::check())
+																	@if (Auth::User()->role == 'admin')
+																		<div class="protip-btn">
+																			<a href="{{ route('course.content', ['id' => $discount->id, 'slug' => $discount->slug]) }}"
+																				class="btn secondary" title="course">{{ __('Go To Course') }}</a>
 																		</div>
 																	@else
-																		<div class="protip-btn">
-																			<form id="demo-form2" method="post"
-																				action="{{ route('addtocart', ['course_id' => $discount->id, 'price' => $discount->price, 'discount_price' => $discount->discount_price]) }}"
-																				data-parsley-validate class="form-horizontal form-label-left">
-																				{{ csrf_field() }}
+																		@php
+																			$order = App\Order::where('user_id', Auth::User()->id)
+																			    ->where('course_id', $discount->id)
+																			    ->first();
+																		@endphp
+																		@if (!empty($order) && $order->status == 1)
+																			<div class="protip-btn">
+																				<a href="{{ route('course.content', ['id' => $discount->id, 'slug' => $discount->slug]) }}"
+																					class="btn secondary" title="course">{{ __('Go To Course') }}</a>
+																			</div>
+																		@else
+																			@php
+																				$cart = App\Cart::where('user_id', Auth::User()->id)
+																				    ->where('course_id', $discount->id)
+																				    ->first();
+																			@endphp
+																			@if (!empty($cart))
+																				<div class="protip-btn">
+																					<form id="demo-form2" method="post" action="{{ route('remove.item.cart', $cart->id) }}">
+																						{{ csrf_field() }}
 
-																				<input type="hidden" name="category_id" value="{{ $discount->category['id'] ?? '-' }}" />
-
-																				<div class="box-footer">
-																					<button type="submit" class="btn btn-primary">{{ __('Add To Cart') }}</button>
+																						<div class="box-footer">
+																							<button type="submit" class="btn btn-primary">{{ __('Remove From Cart') }}</button>
+																						</div>
+																					</form>
 																				</div>
-																			</form>
+																			@else
+																				<div class="protip-btn">
+																					<form id="demo-form2" method="post"
+																						action="{{ route('addtocart', ['course_id' => $discount->id, 'price' => $discount->price, 'discount_price' => $discount->discount_price]) }}"
+																						data-parsley-validate class="form-horizontal form-label-left">
+																						{{ csrf_field() }}
+
+																						<input type="hidden" name="category_id" value="{{ $discount->category['id'] ?? '-' }}" />
+
+																						<div class="box-footer">
+																							<button type="submit" class="btn btn-primary">{{ __('Add To Cart') }}</button>
+																						</div>
+																					</form>
+																				</div>
+																			@endif
+																		@endif
+																	@endif
+																@else
+																	@if ($gsetting->guest_enable == 1)
+																		<form id="demo-form2" method="post" action="{{ route('guest.addtocart', $discount->id) }}"
+																			data-parsley-validate class="form-horizontal form-label-left">
+																			{{ csrf_field() }}
+
+
+																			<div class="box-footer">
+																				<button type="submit" class="btn btn-primary"><i
+																						data-feather="shopping-cart"></i>&nbsp;{{ __('Add To Cart') }}</button>
+																			</div>
+																		</form>
+																	@else
+																		<div class="protip-btn">
+																			<a href="{{ route('login') }}" class="btn btn-primary"><i
+																					data-feather="shopping-cart"></i>&nbsp;{{ __('Add To Cart') }}</a>
 																		</div>
 																	@endif
 																@endif
-															@endif
-														@else
-															@if ($gsetting->guest_enable == 1)
-																<form id="demo-form2" method="post" action="{{ route('guest.addtocart', $discount->id) }}"
-																	data-parsley-validate class="form-horizontal form-label-left">
-																	{{ csrf_field() }}
-
-
-																	<div class="box-footer">
-																		<button type="submit" class="btn btn-primary"><i
-																				data-feather="shopping-cart"></i>&nbsp;{{ __('Add To Cart') }}</button>
-																	</div>
-																</form>
 															@else
-																<div class="protip-btn">
-																	<a href="{{ route('login') }}" class="btn btn-primary"><i
-																			data-feather="shopping-cart"></i>&nbsp;{{ __('Add To Cart') }}</a>
-																</div>
-															@endif
-														@endif
-													@else
-														@if (Auth::check())
-															@if (Auth::User()->role == 'admin')
-																<div class="protip-btn">
-																	<a href="{{ route('course.content', ['id' => $discount->id, 'slug' => $discount->slug]) }}"
-																		class="btn secondary" title="course">{{ __('Go To Course') }}</a>
-																</div>
-															@else
-																@php
-																	$enroll = App\Order::where('user_id', Auth::User()->id)
-																	    ->where('course_id', $discount->id)
-																	    ->first();
-																@endphp
-																@if ($enroll == null)
+																@if (Auth::check())
+																	@if (Auth::User()->role == 'admin')
+																		<div class="protip-btn">
+																			<a href="{{ route('course.content', ['id' => $discount->id, 'slug' => $discount->slug]) }}"
+																				class="btn secondary" title="course">{{ __('Go To Course') }}</a>
+																		</div>
+																	@else
+																		@php
+																			$enroll = App\Order::where('user_id', Auth::User()->id)
+																			    ->where('course_id', $discount->id)
+																			    ->first();
+																		@endphp
+																		@if ($enroll == null)
+																			<div class="protip-btn">
+																				<a href="{{ url('enroll/show', $c->id) }}" class="btn btn-primary" title="Enroll Now"><i
+																						data-feather="shopping-cart"></i>{{ __('Enroll Now') }}</a>
+																			</div>
+																		@else
+																			<div class="protip-btn">
+																				<a href="{{ route('course.content', ['id' => $discount->id, 'slug' => $discount->slug]) }}"
+																					class="btn secondary" title="Cart">{{ __('Go To Course') }}</a>
+																			</div>
+																		@endif
+																	@endif
+																@else
 																	<div class="protip-btn">
-																		<a href="{{ url('enroll/show', $c->id) }}" class="btn btn-primary" title="Enroll Now"><i
+																		<a href="{{ route('login') }}" class="btn btn-primary" title="Enroll Now"><i
 																				data-feather="shopping-cart"></i>{{ __('Enroll Now') }}</a>
 																	</div>
-																@else
-																	<div class="protip-btn">
-																		<a href="{{ route('course.content', ['id' => $discount->id, 'slug' => $discount->slug]) }}"
-																			class="btn secondary" title="Cart">{{ __('Go To Course') }}</a>
-																	</div>
 																@endif
 															@endif
-														@else
-															<div class="protip-btn">
-																<a href="{{ route('login') }}" class="btn btn-primary" title="Enroll Now"><i
-																		data-feather="shopping-cart"></i>{{ __('Enroll Now') }}</a>
+														</div>
+														<div class="col-lg-4">
+															<div class="img-wishlist">
+																<div class="protip-wishlist">
+																	<ul>
+																		@if (Auth::check())
+																			@php
+																				$wish = App\Wishlist::where('user_id', Auth::User()->id)
+																				    ->where('course_id', $discount->id)
+																				    ->first();
+																			@endphp
+																			@if ($wish == null)
+																				<li class="protip-wish-btn">
+																					<form id="demo-form2" method="post" action="{{ url('show/wishlist', $discount->id) }}"
+																						data-parsley-validate class="form-horizontal form-label-left">
+																						{{ csrf_field() }}
+
+																						<input type="hidden" name="user_id" value="{{ Auth::User()->id }}" />
+																						<input type="hidden" name="course_id" value="{{ $discount->id }}" />
+
+																						<button class="wishlisht-btn" title="{{ __('Add to wishlist') }}" type="submit"><i
+																								data-feather="heart"></i></button>
+																					</form>
+																				</li>
+																			@else
+																				<li class="protip-wish-btn-two">
+																					<form id="demo-form2" method="post" action="{{ url('remove/wishlist', $discount->id) }}"
+																						data-parsley-validate class="form-horizontal form-label-left">
+																						{{ csrf_field() }}
+
+																						<input type="hidden" name="user_id" value="{{ Auth::User()->id }}" />
+																						<input type="hidden" name="course_id" value="{{ $discount->id }}" />
+
+																						<button class="wishlisht-btn heart-fill" title="{{ __('Remove from Wishlist') }}"
+																							type="submit"><i data-feather="heart"></i></button>
+																					</form>
+																				</li>
+																			@endif
+																		@else
+																			<li class="protip-wish-btn"><a href="{{ route('login') }}" title="heart"><i
+																						data-feather="heart"></i></a>
+																			</li>
+																		@endif
+																	</ul>
+																</div>
 															</div>
-														@endif
-													@endif
-												</div>
-												<div class="col-lg-4">
-													<div class="img-wishlist">
-														<div class="protip-wishlist">
-															<ul>
-																@if (Auth::check())
-																	@php
-																		$wish = App\Wishlist::where('user_id', Auth::User()->id)
-																		    ->where('course_id', $discount->id)
-																		    ->first();
-																	@endphp
-																	@if ($wish == null)
-																		<li class="protip-wish-btn">
-																			<form id="demo-form2" method="post" action="{{ url('show/wishlist', $discount->id) }}"
-																				data-parsley-validate class="form-horizontal form-label-left">
-																				{{ csrf_field() }}
-
-																				<input type="hidden" name="user_id" value="{{ Auth::User()->id }}" />
-																				<input type="hidden" name="course_id" value="{{ $discount->id }}" />
-
-																				<button class="wishlisht-btn" title="{{ __('Add to wishlist') }}" type="submit"><i
-																						data-feather="heart"></i></button>
-																			</form>
-																		</li>
-																	@else
-																		<li class="protip-wish-btn-two">
-																			<form id="demo-form2" method="post" action="{{ url('remove/wishlist', $discount->id) }}"
-																				data-parsley-validate class="form-horizontal form-label-left">
-																				{{ csrf_field() }}
-
-																				<input type="hidden" name="user_id" value="{{ Auth::User()->id }}" />
-																				<input type="hidden" name="course_id" value="{{ $discount->id }}" />
-
-																				<button class="wishlisht-btn heart-fill" title="{{ __('Remove from Wishlist') }}"
-																					type="submit"><i data-feather="heart"></i></button>
-																			</form>
-																		</li>
-																	@endif
-																@else
-																	<li class="protip-wish-btn"><a href="{{ route('login') }}" title="heart"><i
-																				data-feather="heart"></i></a></li>
-																@endif
-															</ul>
 														</div>
 													</div>
 												</div>
@@ -715,17 +758,17 @@
 										</div>
 									</div>
 								</div>
+							@endif
+						@endforeach
+					</div>
+					<div class="row">
+						<div class="col-lg-12 text-center">
+							<div class="view-button" style="padding-bottom: 15px">
+								<a href="{{ url('topdiscounted/view') }}" class="btn secondary" title="View More">View
+									More
+								</a>
 							</div>
 						</div>
-					@endif
-				@endforeach
-			</div>
-			<div class="row">
-				<div class="col-lg-12 text-center">
-					<div class="view-button" style="padding-bottom: 15px">
-						<a href="{{ url('topdiscounted/view') }}" class="btn secondary" title="View More">View
-							More
-						</a>
 					</div>
 				</div>
 			</div>
@@ -869,11 +912,7 @@
 															@php
 																$reviewsrating = App\ReviewRating::where('course_id', $recent_course->id)->first();
 															@endphp
-															<!-- @if (!empty($reviewsrating))
-<li>
-																																												<b>{{ round($overallrating, 1) }}</b>
-																																								</li>
-@endif -->
+
 
 															<li class="reviews">
 																(@php
@@ -1218,7 +1257,7 @@
 
 			<div class="row">
 
-				<div class="col-lg-12">
+				<div class="col-lg-12 col-md-12 col-xl-12">
 					<div class="learning-courses">
 						@if (isset($categories))
 							<ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -1235,17 +1274,26 @@
 
 
 							@foreach ($categories as $cate)
-								<div class="tab-pane fade show active" id="content-tabs" role="tabpanel" aria-labelledby="home-tab">
+								<div class="col-lg-12">
+									<div class="tab-pane fade show active" id="content-tabs" role="tabpanel" aria-labelledby="home-tab">
 
-									<div id="tabShow">
+										<div id="tabShow">
+
+										</div>
 
 									</div>
-
 								</div>
 							@endforeach
 						@endif
 					</div>
 				</div>
+				{{-- <div class="col-lg-3">
+                    <div class="tab-badges-2 text-center">
+                        <img src="{{ url('images/badges/1.png') }}" class="img-fluid" alt="">
+                        <div class="tab-badges-heading-2">Trusted User</div>
+                        <p>Member since</p>
+                    </div>
+                </div> --}}
 			</div>
 		</div>
 	</section>
@@ -2908,9 +2956,9 @@
 
 
 											</div>
-											@if (asset('images/meeting_icons/zoom.png') == !null)
-												<div class="meeting-icon"><img src="{{ asset('images/meeting_icons/zoom.png') }}" class="img-circle"
-														alt=""></div>
+											@if (asset('images/meeting_icons/zoom.webp') == !null)
+												<div class="meeting-icon"><img src="{{ asset('images/meeting_icons/zoom.webp') }}"
+														class="img-circle" alt=""></div>
 											@endif
 
 
@@ -3462,31 +3510,31 @@
 @endif
 <!-- Bundle end -->
 <!-- recommendations start -->
-<section id="border-recommendation" style="margin-left: 0"
+<section id="border-recommendation" style="margin: 0"
 	class="border-recommendation row mt-5 moto-widget moto-widget-block moto-background-fixed moto-spacing-top-large moto-spacing-right-auto moto-spacing-bottom-medium moto-spacing-left-auto">
 	<div class="recommendation-main-block">
 		<div class="container">
 			<div class="row no-gutters justify-content-start">
 				<div class="col-lg-12 col-sm-12 d-flex flex-column">
-					<div class="moto-widget-text-content moto-widget-text-editable text-left">
+					<div class="moto-widget-text-content moto-widget-text-editable">
 						<p class="moto-text_system_13 animate2">
 							<span
 								class="display-9 my-3 font-weight-bold moto-color1_3 animate2">{{ __('frontstaticword.Download App Now') }}</span>
 						</p>
-						<div class="dez-separator bg-primary"></div>
+						<div class="dez-separator"></div>
 						<br>
 						<div class="row justify-content-start">
-							<div class="col-md-6 col-lg-3 mb-3 mb-md-0">
+							<div class="col-md-6 col-lg-3 mb-3 mb-md-0 download-button">
 								<div class="paly-image">
 									<a href="#">
-										<img src="{{ asset('images/application/playstore.png') }}" class="img-fluid" alt="">
+										<img src="{{ asset('images/application/playstore.webp') }}" class="img-fluid" alt="">
 									</a>
 								</div>
 							</div>
-							<div class="col-md-6 col-lg-3">
+							<div class="col-md-6 col-lg-3 download-button">
 								<div class="app-image">
 									<a href="#">
-										<img src="{{ asset('images/application/appstore.png') }}" class="img-fluid" alt="">
+										<img src="{{ asset('images/application/appstore.webp') }}" class="img-fluid" alt="">
 									</a>
 								</div>
 							</div>
@@ -3656,8 +3704,7 @@
 										@endphp
 
 										<a href="{{ route('instructor.profile', ['id' => $inst->id, 'name' => $fullnameIns]) }}"
-											class="btn btn-primary" title="View Profile"><i data-feather="eye"
-												style="color: #141d46 !important;"></i>View Profile</a>
+											class="btn btn-primary" title="View Profile"><i data-feather="eye"></i>View Profile</a>
 									</div>
 								</div>
 							</div>
@@ -3831,7 +3878,8 @@ body {
 }
 
 .background-slider-block {
-	background-color: #141d46;
+	background-image: linear-gradient(to Right, #007b4e, #749862);
+	/* background-color: #007b4e; */
 	/* padding-top: 10px; */
 	padding-bottom: 160px;
 }
@@ -3854,68 +3902,32 @@ body {
 	border-radius: 6px;
 	font-weight: 500;
 	font-size: 15px;
-	background: #2380c4;
-	color: #fff;
+	background: #dde5d9 !important;
+	color: #007b4e !important;
 	text-decoration: none;
-	transition: all 0.18s linear 0s;
+	transition: all 0.25s linear 0s;
 }
 
 .home-btn .secondary:hover {
-	background-color: #dae0e1;
-	border: 1px solid #141d46;
-	color: #141d46;
+	background-color: #007b4e !important;
+	border: 1px solid #007b4e !important;
+	color: #dde5d9 !important;
+	box-shadow: 0px 0px 6px 6px #dde5d938 !important;
 	text-decoration: none;
-	transition: all 0.18s linear 0s;
+	transition: all 0.25s linear 0s;
 }
 
-.home-btn .watch {
-	display: flex;
-	background: rgb(255, 255, 255);
-	min-width: 200px;
-	border-radius: 200px;
-	padding-block: 10px;
-	padding-inline: 10px 0px;
-	margin-top: -20px;
-	font-size: 15px;
-	justify-content: center;
-	position: relative;
-	text-decoration: none;
-	transition: all 0.18s linear 0s;
-}
 
-.home-btn .watch:hover {
-	background-color: #2380c4;
-	border: 1px solid #141d46;
-	color: #FFF;
-	text-decoration: none;
-	transition: all 0.18s linear 0s;
-}
-
-.home-btn .watch svg:hover {
-	/* background-color: #2380c4;
-border: 1px solid #141d46; */
-	color: #FFF !important;
-	text-decoration: none;
-	transition: all 0.18s linear 0s;
-}
-
-.watch svg {
-	position: absolute;
-	left: 0px;
-	right: 0px;
-	margin-inline: 8px auto;
-	text-decoration: none;
-	transition: all 0.18s linear 0s;
-}
 
 .slug {
 	padding: 10px !important;
 }
 
 .moto-widget {
-	background-image: url('images/joininstructor/download_app.png');
+	background-image: url('images/joininstructor/download_app.webp');
 	background-position: center;
 	background-repeat: no-repeat;
+	background-size: cover;
 }
 
 .container-fluid,
@@ -4226,20 +4238,11 @@ border: 1px solid #141d46; */
 	letter-spacing: 0px;
 }
 
-.dez-separator {
-	display: inline-block;
-	height: 3px;
-	width: 180px;
-	margin-bottom: 10px;
-	position: relative;
-	/*-moz-transition: all 0.5s;*/
-	/*-webkit-transition: all 0.5s;*/
-	/*transition: all 0.5s;*/
-}
 
-.bg-primary {
-	background-color: #ffffff !important;
-}
+
+/* .bg-primary {
+background-color: #ffffff !important;
+} */
 
 .animate1,
 .animate2,
@@ -4290,19 +4293,36 @@ section {
 	justify-content: center;
 }
 
-.secondary {
+.view-button .secondary {
 	padding: 7px 15px;
 	border-radius: 3px;
 	font-weight: 500;
 	font-size: 15px;
-	background: #2380c4;
-	color: var(--text-white-color);
+	background: #007b4e !important;
+	color: #dde5d9 !important;
 }
 
-.secondary:hover {
-	background-color: #dae0e1;
-	border: 1px solid #141d46;
-	color: #141d46;
+.view-button .secondary:hover {
+	background-color: #dde5d9 !important;
+	border: 1px solid #dde5d9 !important;
+	color: #007b4e !important;
+	box-shadow: 0px 0px 6px 6px #007b4e4b !important;
+}
+
+.instructor-button .secondary {
+	padding: 7px 15px;
+	border-radius: 3px;
+	font-weight: 500;
+	font-size: 15px;
+	background: #007b4e !important;
+	color: #dde5d9 !important;
+}
+
+.instructor-button .secondary:hover {
+	background-color: #dde5d9 !important;
+	border: 1px solid #dde5d9 !important;
+	color: #007b4e !important;
+	box-shadow: 0px 0px 6px 6px #007b4e4b !important;
 }
 
 .alert {
@@ -4318,5 +4338,117 @@ section {
 .categories-heading {
 	font-size: 2.5rem;
 	margin-bottom: 5rem;
+}
+
+.tab-badges {
+	background: linear-gradient(to right, #002913e0, #007b4ea8), url('/images/slider/Untitled-3.png') no-repeat top 4% center !important;
+	background-size: cover !important;
+	text-align: center !important;
+	background-color: #007b4e0f !important;
+	box-shadow: 0px 0px 10px 1px rgb(0 0 0 / 10%) !important;
+	border: 2px solid transparent !important;
+	border-radius: 6px !important;
+	padding: 50px 0 !important;
+	-webkit-transition: all 0.5s ease !important;
+	-ms-transition: all 0.5s ease !important;
+	-o-transition: all 0.5s ease !important;
+	-moz-transition: all 0.5s ease !important;
+	transition: all 0.5s ease !important;
+}
+
+.tab-badges img {
+	width: 200px !important;
+	height: 100px;
+	display: inline !important;
+	margin-bottom: 20px;
+}
+
+.tab-badges-heading {
+	font-size: 25px !important;
+	font-weight: 600;
+	margin-bottom: 10px;
+	color: #ffffff;
+}
+
+.ads-text {
+	font-size: 12px !important;
+	font-weight: 400;
+	color: #ffffff !important;
+}
+
+.tab-badges-2 p {
+	font-size: 12px !important;
+	font-weight: 400;
+	color: #ffffff !important;
+}
+
+.tab-badges-2 {
+	/* text-align: center;
+			background-color: #FFF;
+			box-shadow: 0px 0px 10px 1px rgb(0 0 0 / 10%);
+			border: 2px solid transparent;
+			border-radius: 6px;
+			margin-bottom: 20px;
+			padding: 140px 0;
+			-webkit-transition: all 0.5s ease;
+			-ms-transition: all 0.5s ease;
+			-o-transition: all 0.5s ease;
+			-moz-transition: all 0.5s ease;
+			transition: all 0.5s ease; */
+
+	text-align: center;
+	background-color: #007b4e0f;
+	box-shadow: 0px 0px 10px 1px rgb(0 0 0 / 10%);
+	border: 2px solid transparent;
+	border-radius: 6px;
+	margin-top: 65px;
+	/* margin-left: 10%; */
+	height: 400px;
+	width: 100%;
+	/* padding: 50px 0; */
+	-webkit-transition: all 0.5s ease;
+	-ms-transition: all 0.5s ease;
+	-o-transition: all 0.5s ease;
+	-moz-transition: all 0.5s ease;
+	transition: all 0.5s ease;
+}
+
+.tab-badges-2 img {
+	width: 50px !important;
+	height: 50px;
+	display: inline !important;
+	margin-bottom: 20px;
+}
+
+.tab-badges-heading-2 {
+	font-size: 14px;
+	font-weight: 600;
+	margin-bottom: 10px;
+}
+
+.tab-badges-2 p {
+	font-size: 12px !important;
+	font-weight: 400;
+	color: #73726C;
+}
+
+.banner-ads {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	align-items: center;
+}
+
+.ads-section {
+	display: flex;
+	justify-content: center;
+}
+
+#ads-view-slider .owl-prev {
+	display: none !important;
+}
+
+#ads-view-slider .owl-next {
+	display: none !important;
 }
 </style>

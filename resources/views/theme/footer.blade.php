@@ -1,4 +1,17 @@
-<footer id="footer" class="footer-main-block">
+<footer id="footer" class="footer-main-block tf__footer_2">
+    <div class="container">
+        <div class="tf__footer_apply">
+            <div class="tf__footer_apply_overlay">
+                {{-- <a class="venobox" data-autoplay="true" data-vbtype="video" href="https://youtu.be/xsnCYCEbdr4">
+                    <i class="fas fa-play"></i>
+                </a> --}}
+                <h3>Let’s best Something Agency</h3>
+                {{-- <p>There are many variations of passages of agency
+                    Lorem Ipsum Fasts injecte.</p> --}}
+                <a class="apply_btn" href="#">Join as Instructor</a>
+            </div>
+        </div>
+    </div>
     <div class="container-fluid">
         <div class="footer-block">
             <div class="row footer-flex">
@@ -21,7 +34,7 @@
                             </div>
                         </div>
                         <div class="col-lg-8">
-                            <div class="copyright-social text-left text-light">
+                            <div class="copyright-social text-light">
                                 <ul>
                                     <li>WLCD Academy WLCD Academy WLCD</li> 
                                     <li>WLCD Academy WLCD Academy</li> 
@@ -143,7 +156,7 @@
                                 @endif
 
                             </ul> --}}
-                            <div class="copyright-social text-left">
+                            <div class="copyright-social">
                                 <ul>
                             <a href="#"><li>info@wlcd.sy</li></a><br>
                             <a href="#"><li><span class="ltr">+963123456789</span></li></a>

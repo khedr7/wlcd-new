@@ -430,22 +430,13 @@ class MainController extends Controller
 
         $testimonials = Testimonial::where('status', 1)->get();
 
-        $testimonial_result = [];
+        // $testimonial_result = [];
 
         foreach ($testimonials as $testimonial) {
-            $testimonial_result[] = [
-                'id' => $testimonial->id,
-                'client_name' => $testimonial->client_name,
-                'details' => strip_tags($testimonial->details),
-                'status' => $testimonial->status,
-                'image' => $testimonial->image,
-                'imagepath' => url('images/testimonial/' . $testimonial->image),
-                'created_at' => $testimonial->created_at,
-                'updated_at' => $testimonial->created_at,
-            ];
+            $testimonial->details = strip_tags($testimonial->details);  
         }
 
-        return response()->json(['testimonial' => $testimonial_result], 200);
+        return response()->json(['testimonial' => $testimonials], 200);
     }
     //------------SETTINGS-----------------
 
